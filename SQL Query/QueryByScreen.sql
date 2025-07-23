@@ -36,3 +36,17 @@ From
     Templates t
 ORDER BY
     CreatedAT desc, Viewed desc, Copied desc
+
+-- Query tạo Workspace
+INSERT INTO WORKSPACES (Name,Type,Description,CreatedBy) VALUES ('BBV Workspace','IT','This workspace is for bbv VietNam',1)
+
+-- Query lấy tất cả Board trong Workspace có id = 1
+SELECT b.Name,b.BackgroundUrl,b.AccessedAt
+FROM Boards b
+JOIN Workspaces w ON w.Id=b.WorkspaceId
+WHERE
+    w.Id=1
+
+
+    
+
