@@ -47,6 +47,36 @@ JOIN Workspaces w ON w.Id=b.WorkspaceId
 WHERE
     w.Id=1
 
+-- Query lấy tất cả member và permission của member đó trong Workspace id =1
+INSERT INTO Members (UserId,PermissionId,OwnerType,OwnerId) VALUES (2,1,'BOARD',1)
 
-    
+SELECT u.UserName as Username, u.LastActive as UserLastActive,p.Name as PermissionName,p.Code as PermissionCode,b.Id as BoardId,b.Name as BoardName,b.BackgroundUrl as BoardBackground
+FROM Workspaces w
+Join Members m ON m.OwnerId=w.Id
+Join Boards b ON b.WorkspaceId=w.Id
+Join Permissions p ON m.PermissionId=p.Id
+Join Users u ON m.UserId=u.Id
+WHERE m.OwnerType='BOARD' AND w.Id=1
+
+-- Query lấy sharelink Workspace id = 2
+SELECT * 
+FROM ShareLinks s
+JOIN Permissions p ON s.PermissionId=p.Id
+WHERE s.OwnerType='WORKSPACE' AND s.OwnerId=2
+
+-- Query update permision cho ShareLink Workspace id = 2
+UPDATE SL
+SET SL.PermissionId = P.Id
+FROM dbo.ShareLinks SL
+INNER JOIN dbo.Permissions P ON P.Name = 'Admin'
+WHERE SL.OwnerType = 'WORKSPACE' 
+  AND SL.OwnerId = 2;
+
+SELECT * 
+FROM ShareLinks s
+JOIN Permissions p ON s.PermissionId=p.Id
+WHERE s.OwnerType='WORKSPACE' AND s.OwnerId=2
+
+-- Query update status sharelink cho workspace id = 2
+
 
