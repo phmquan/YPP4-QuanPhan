@@ -1,8 +1,99 @@
-﻿-- =================================================================
--- BOARD QUERIES
--- =================================================================
+﻿-- Màn hình 1 Slide 4: Tab Boards
+-- 1. Query 4 suggested template theo Template Category
+SELECT TOP 4 t.Title, t.BackgroundUrl
+FROM Templates t
+JOIN TemplateCategories tc ON tc.id=t.TemplateCategoryId
+Where tc.Name='Geologist II' --':templateCategory'
 
--- Lấy thông tin về các boards mà user có ID = 1 có quyền truy cập thông qua workspace họ tạo
+-- 2. Query 4 Board truy cập gần đây của user
+SELECT TOP 4 b.Name,b.BackgroundUrl
+FROM Boards b
+JOIN BoardUsers bu ON bu.BoardId=b.Id
+JOIN Users u ON u.Id=bu.UserID
+Where u.Id=2 --userId
+ORDER BY bu.AccessedAt DESC
+
+-- 3. Query tất cả Workspace mà User là Member
+SELECT w.Name
+FROM Workspaces w
+JOIN Members m ON m.OwnerId=w.Id
+JOIN OwnerTypes ot ON m.OwnerTypeId=ot.Id
+WHERE ot.Value='Workspace' AND m.UserId=1
+
+--4. Query tất cả Workspace mà User là Member. Trong mỗi workspace đó, lấy tất cả Board mà User cũng là Member
+SELECT 
+    w.Id AS WorkspaceId,
+    w.Name AS WorkspaceName,
+    b.Id AS BoardId,
+    b.Name AS BoardName,
+    b.Description,
+    b.BackgroundUrl,
+    b.CreatedAt
+FROM Workspaces w
+--Tìm Workspace mà User là Member
+JOIN Members mw ON mw.OwnerId = w.Id
+JOIN OwnerTypes otw ON otw.Id = mw.OwnerTypeId AND otw.Value = 'WORKSPACE'
+--Tìm Board tương ứng với Workspace mà User cũng là Member
+JOIN Boards b ON b.WorkspaceId = w.Id
+JOIN Members mb ON mb.Id = b.Id
+JOIN OwnerTypes otb ON otb.Id = mb.OwnerTypeId AND otb.Value = 'BOARD'
+WHERE mw.UserId = 1
+  AND mb.UserId = 1;
+
+
+
+--5. Query tất cả closed boards mà user là member
+SELECT b.Name, w.Name
+FROM Boards b
+JOIN Workspaces w ON w.Id=b.WorkspaceId
+JOIN Members m ON m.OwnerId=b.Id
+JOIN OwnerTypes ot ON m.OwnerTypeId=ot.Id
+WHERE
+    ot.Value='BOARD'
+    AND m.UserId=3
+    AND b.Status='CLOSED'
+
+-- Màn hình 2 Templates tab Slide 5
+-- 6. Lấy ra 10 template categories
+SELECT TOP 10 
+    Name,
+    IconUrl
+FROM TemplateCategories;
+
+--7. Lấy ra New and notable templates
+SELECT 
+    t.Title,
+    t.BackgroundUrl,
+    t.CreatedAt,
+    t.CreatedBy,
+    t.Copied,
+    t.Viewed,
+    t.Description
+FROM Templates t
+ORDER BY 
+    t.CreatedAt DESC, 
+    t.Viewed DESC, 
+    t.Copied DESC;
+
+-- Màn hình 3 Template detail Slide 6
+--8. Lấy ra template detail và Board đi theo template đó
+SELECT t.Title, u.Username,t.Copied,t.Viewed,t.Description,b.Name,b.Status
+FROM Templates t
+JOIN Boards b ON b.id=t.BoardId
+JOIN Users u ON t.CreatedBy=u.Id
+WHERE t.Id=1 --templateId
+
+-- Màn hình 4 Create Workspace Slide 7
+Insert INTO Workspaces (Name, Description,Type) VALUES ('','','')
+
+
+
+
+
+
+
+
+-- Lấy thông tin về các boards mà user có id= :userId có quyền truy cập thông qua workspace họ tạo
 SELECT 
     b.Name, 
     b.Description, 
@@ -18,7 +109,7 @@ SELECT
 FROM Users u
     JOIN Workspaces w ON w.CreatedBy = u.Id
     JOIN Boards b ON b.WorkspaceId = w.Id
-WHERE u.Id = 1;
+WHERE u.Id = :userId;
 
 -- Lấy ra Board mà user ID = 1 là member
 SELECT 
@@ -145,30 +236,6 @@ FROM ShareLinks sl
 WHERE sl.OwnerType = 'WORKSPACE' 
     AND w.Id = 2;
 
--- =================================================================
--- TEMPLATE QUERIES
--- =================================================================
-
--- Lấy ra 10 template categories
-SELECT TOP 10 
-    Name,
-    IconUrl
-FROM TemplateCategories;
-
--- Lấy ra New and notable templates
-SELECT 
-    t.Title,
-    t.BackgroundUrl,
-    t.CreatedAt,
-    t.CreatedBy,
-    t.Copied,
-    t.Viewed,
-    t.Description
-FROM Templates t
-ORDER BY 
-    t.CreatedAt DESC, 
-    t.Viewed DESC, 
-    t.Copied DESC;
 
 -- =================================================================
 -- SETTINGS QUERIES
