@@ -233,10 +233,65 @@ from SettingKeys sk
 join SettingKeySettingOptions skso on skso.SettingKeyId=sk.Id
 join SettingOptions so on so.Id=skso.SettingOptionId
 join OwnerTypes ot on ot.Id=sk.OwnerTypeId AND ot.Value='WORKSPACE'
+
 --22. SettingValue của Workspace cụ thể
-select sk.KeyName,sk.TypeValue,sv.Value,so.DisplayValue
+select 
+    sk.KeyName,
+    sk.TypeValue,
+    sv.Value,
+    so.DisplayValue
 from SettingValues sv
 join SettingKeys sk on sk.Id=sv.SettingKeyId
 join SettingOptions so on so.Id=sv.Value
 join OwnerTypes ot on ot.Id=sk.OwnerTypeId AND ot.Value='WORKSPACE'
 WHERE sv.OwnerId=1
+
+--Màn hình 10: Setting Board
+--23. SettingKey với KeyName='permission.*' với các SettingOption tương ứng cho Board
+select sk.KeyName, so.DisplayValue
+from SettingKeys sk
+join SettingKeySettingOptions skso on skso.SettingKeyId=sk.Id
+join SettingOptions so on so.Id=skso.SettingOptionId
+join OwnerTypes ot on ot.Id=sk.OwnerTypeId AND ot.Value='BOARD'
+where sk.KeyName like 'permissions.%'
+--24. SettingKey và SettingOption tương ứng cho Board
+select sk.KeyName, so.DisplayValue
+from SettingKeys sk
+join SettingKeySettingOptions skso on skso.SettingKeyId=sk.Id
+join SettingOptions so on so.Id=skso.SettingOptionId
+join OwnerTypes ot on ot.Id=sk.OwnerTypeId AND ot.Value='BOARD'
+--25. SettingValue tương ứng với Board
+select sv.OwnerId,sk.KeyName,sk.TypeValue,sv.Value,so.DisplayValue
+from SettingValues sv
+join SettingKeys sk on sk.Id=sv.SettingKeyId
+join SettingOptions so on so.Id=sv.Value
+join OwnerTypes ot on ot.Id=sk.OwnerTypeId AND ot.Value='BOARD'
+where sv.OwnerId=3
+
+--Màn hình 11: Workspace PowerUp
+--26. Query Power-Ups được thêm vào bao nhiêu Board thuộc Workspace
+--1. Lọc ra các Board thuộc Workspace (BoardId, WorkspaceId)
+--2. Lọc ra các Power-Up được thêm vào Board (PowerUpId,BoardId)
+--3. Liệt kê các Power-ups và số Board thuộc Workspace mà Power-ups được thêm vào
+with BoardInWorkspace as
+(
+    select b.Id as BoardId,b.WorkspaceId
+    from Boards b
+    where b.WorkspaceId=1
+),
+PowerUpInBoards as
+(
+    select pu.Id PowerUpId,pu.Name,pu.IconUrl,b.Id as BoardId
+    from PowerUps pu
+    join BoardPowerUps bpu on bpu.PowerUpId=pu.Id
+    join Boards b on b.Id=bpu.BoardId
+)
+select puib.Name,puib.IconUrl,COUNT(puib.BoardId) as BoardUse
+from PowerUpInBoards puib 
+join BoardInWorkspace biw on biw.BoardId=puib.BoardId
+group by puib.Name,puib.IconUrl
+
+--Màn hình 12: Power-Ups Detail
+
+
+
