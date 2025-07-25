@@ -100,7 +100,6 @@ with SettingValueForWorkspace AS
 )
 select w.Name,svfw.Value
 from Workspaces w
-JOIN Members m ON m.OwnerTypeId=w.Id
 JOIN SettingValueForWorkspace svfw ON svfw.OwnerId=w.Id
 WHERE w.Id=1
 
@@ -150,6 +149,7 @@ left join BoardInWorkspace biw
 join Users u on wm.UserId=u.Id
 join Permissions p on wm.PermissionId=p.Id
 group by wm.UserId, u.Username, u.LastActive, p.Name
+
 --14. Lấy ra sharelink của workspace và status của sharelink
 select sl.Token,sl.Status,p.Name
 from ShareLinks sl
@@ -207,6 +207,7 @@ end
 BEGIN
     PRINT 'Record already exists, skipping insert.'
 END
+
 --19. Update Status, Permission của ShareLink
 UPDATE ShareLinks
 SET 
@@ -226,4 +227,16 @@ join Users u on u.Id=m.UserId
 where b.Id=1
 
 --Màn hình 9: Workspace Setting Tab
-
+--21. SettingKey và các SettingOption tương ứng của Workspace
+select sk.KeyName, so.DisplayValue
+from SettingKeys sk
+join SettingKeySettingOptions skso on skso.SettingKeyId=sk.Id
+join SettingOptions so on so.Id=skso.SettingOptionId
+join OwnerTypes ot on ot.Id=sk.OwnerTypeId AND ot.Value='WORKSPACE'
+--22. SettingValue của Workspace cụ thể
+select sk.KeyName,sk.TypeValue,sv.Value,so.DisplayValue
+from SettingValues sv
+join SettingKeys sk on sk.Id=sv.SettingKeyId
+join SettingOptions so on so.Id=sv.Value
+join OwnerTypes ot on ot.Id=sk.OwnerTypeId AND ot.Value='WORKSPACE'
+WHERE sv.OwnerId=1
