@@ -393,3 +393,45 @@ SELECT
 FROM PowerUps pu
     JOIN PowerUpCategories put ON put.Id = pu.PowerUpCategoryId
 WHERE pu.Id = 1;
+
+--Screen 13: BillingPlan
+-- 28. Get Billing Plan
+select 
+    bp.Name, 
+    bp.PricePerUser, 
+    bp.Type
+from BillingPlans bp
+
+--Screen 14: Billing when have Subscription
+-- 29. Get Subscription of specific Workspace
+select 
+    bp.Name, 
+    s.EndDate,
+    bp.PricePerUser,
+    s.MemberCountBilled,
+    bc.Name,
+    bc.Email,
+    so.DisplayValue as Language
+from Subscriptions s
+join BillingPlans bp on bp.Id=s.BillingPlanId
+join BillingContacts bc on s.BillingContactId= bc.Id
+join SettingOptions so on so.Id=bc.Language
+where bc.WorkspaceId=1
+--30. Change PaymentInformation
+update PaymentInformations 
+set 
+    CardNumber='4628151718263',
+    CardBrand='VISA',
+    ExpirationDate='24/12/2025',
+    CVV='247',
+    Country='Vietnam'
+where BillingContactId=1
+--31. Change BillingContact Information
+update BillingContacts
+set Name='Quan Phan', Email='huyhoangnguyen1002@gmail.com'
+where WorkspaceId=1
+--32. Change Additional invoice details
+update BillingContacts
+set AdditionalInvoiceDetail='TBD'
+where WorkspaceId=1
+--33. Query Billing history from Subscription
