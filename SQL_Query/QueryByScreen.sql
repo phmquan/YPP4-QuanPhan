@@ -156,6 +156,7 @@ from ShareLinks sl
 join Workspaces w on w.Id=sl.OwnerId
 join Permissions p on sl.PermissionId=p.Id
 where w.Id=1
+
 --15. Update Status ShareLink của Workspace
 update ShareLinks 
 set Status=1
@@ -167,5 +168,62 @@ where
         where Value='WORKSPACE'
     )
 
+--Màn hình 7: Guest Tab trong Workspace Member
+--16. Query Member của Board thuộc Workspace. Nhưng Member đó không thuộc Workspace
+insert into Members(UserId,PermissionId,OwnerTypeId,OwnerId,InvitedBy,JoinedAt,Status) VALUES (1000,1,1,3,1,'','ACTIVE')
+with WorkspaceBoardMembers as (
+    select m.UserId,b.Id as BoardId,b.WorkspaceId
+    from Members m 
+    join Boards b on b.Id=m.OwnerId
+    join OwnerTypes ot on ot.Id=m.OwnerTypeId AND ot.Value='BOARD'
+    where b.WorkspaceId=3
+),
+WorkspaceMembers as(
+    select m.UserId
+    from Members m
+    join Workspaces w on w.Id=m.OwnerId
+    join OwnerTypes ot on ot.Id=m.OwnerTypeId AND ot.Value='WORKSPACE'
+    where m.OwnerId=3
+)
+select u.Username,u.LastActive, COUNT(wbm.BoardId) as BoardMemberCount
+from WorkspaceBoardMembers wbm
+left join WorkspaceMembers wm on wbm.UserId=wm.UserId
+join Users u on u.Id=wbm.UserId
+where wm.UserId is null
+group by u.Username,u.LastActive
 
+--Màn hình 8: Share Board 
+--17. Add Member vào Board với Permission
+insert into Members(UserId, PermissionId,OwnerTypeId, OwnerId, InvitedBy, JoinedAt, Status) VALUES (1001,1,3,3,1,'','ACTIVE')
+--18. Tạo ShareLink cho Board có Permission (Mỗi Board chỉ có 1 ShareLink)
+if not exists(
+    select 1 
+    from ShareLinks sl 
+    join OwnerTypes ot on ot.Id=sl.OwnerTypeId AND ot.Value='BOARD'
+    where sl.OwnerId=1
+)
+begin insert into ShareLinks(OwnerTypeId,OwnerId,PermissionId,Token,Status) VALUES (3,1,1,'/path',1)
+end
+BEGIN
+    PRINT 'Record already exists, skipping insert.'
+END
+--19. Update Status, Permission của ShareLink
+UPDATE ShareLinks
+SET 
+    Status = 'ENABLED',        
+    PermissionId = 2           
+WHERE 
+    OwnerId = 1
+    AND OwnerTypeId IN (
+        SELECT Id FROM OwnerTypes WHERE Value = 'BOARD'
+    )
+--20. Lấy ra tất cả Member của Board và Permission của Member
+select m.Id, u.Username,p.Name
+from Members m
+join Boards b on b.Id=m.OwnerId
+join Permissions p on p.Id=m.OwnerId
+join Users u on u.Id=m.UserId
+where b.Id=1
+
+--Màn hình 9: Workspace Setting Tab
 
