@@ -1,11 +1,18 @@
-﻿-- Screen 1 Slide 4: Tab Boards
+﻿-- =============================================================================
+-- BOARD MANAGEMENT SYSTEM - SQL QUERIES
+-- =============================================================================
+
+-- -----------------------------------------------------------------------------
+-- SCREEN 1: TAB BOARDS (SLIDE 4)
+-- -----------------------------------------------------------------------------
+
 -- 1. Query 4 suggested templates by Template Category
 SELECT TOP 4 
     t.Title, 
     t.BackgroundUrl
 FROM Templates t
-    JOIN TemplateCategories tc ON tc.id = t.TemplateCategoryId
-WHERE tc.Name = 'Geologist II'; --':templateCategory'
+    JOIN TemplateCategories tc ON tc.Id = t.TemplateCategoryId
+WHERE tc.Name = 'Geologist II'; -- ':templateCategory'
 
 -- 2. Query 4 recently accessed Boards by user
 SELECT TOP 4 
@@ -14,7 +21,7 @@ SELECT TOP 4
 FROM Boards b
     JOIN BoardUsers bu ON bu.BoardId = b.Id
     JOIN Users u ON u.Id = bu.UserID
-WHERE u.Id = 2 --userId
+WHERE u.Id = 2 -- userId
 ORDER BY bu.AccessedAt DESC;
 
 -- 3. Query all Workspaces where User is a Member
@@ -59,7 +66,10 @@ WHERE ot.Value = 'BOARD'
     AND m.UserId = 3
     AND b.Status = 'CLOSED';
 
--- Screen 2 Templates tab Slide 5
+-- -----------------------------------------------------------------------------
+-- SCREEN 2: TEMPLATES TAB (SLIDE 5)
+-- -----------------------------------------------------------------------------
+
 -- 6. Get top 10 template categories
 SELECT TOP 10 
     Name,
@@ -81,7 +91,10 @@ ORDER BY
     t.Viewed DESC, 
     t.Copied DESC;
 
--- Screen 3 Template detail Slide 6
+-- -----------------------------------------------------------------------------
+-- SCREEN 3: TEMPLATE DETAIL (SLIDE 6)
+-- -----------------------------------------------------------------------------
+
 -- 8. Get template details and the Board associated with that template
 SELECT 
     t.Title, 
@@ -92,16 +105,22 @@ SELECT
     b.Name,
     b.Status
 FROM Templates t
-    JOIN Boards b ON b.id = t.BoardId
+    JOIN Boards b ON b.Id = t.BoardId
     JOIN Users u ON t.CreatedBy = u.Id
-WHERE t.Id = 1; --templateId
+WHERE t.Id = 1; -- templateId
 
--- Screen 4: Create Workspace Slide 7
+-- -----------------------------------------------------------------------------
+-- SCREEN 4: CREATE WORKSPACE (SLIDE 7)
+-- -----------------------------------------------------------------------------
+
 -- 9. Insert data into Workspaces
 INSERT INTO Workspaces (Name, Description, Type) 
 VALUES ('', '', '');
 
--- Screen 5: Tab Boards in Workspace with userId = 1 Slide 8
+-- -----------------------------------------------------------------------------
+-- SCREEN 5: TAB BOARDS IN WORKSPACE WITH USERID = 1 (SLIDE 8)
+-- -----------------------------------------------------------------------------
+
 -- 10. Get Workspace Name, SettingKey='visibility' and SettingValue related to SettingKeys of Workspace
 WITH SettingValueForWorkspace AS (
     SELECT 
@@ -146,14 +165,17 @@ FROM Boards b
 WHERE w.Id = 1 
     AND m.UserId = 1;
 
--- Screen 6: Member tab of Workspace Slide 10
+-- -----------------------------------------------------------------------------
+-- SCREEN 6: MEMBER TAB OF WORKSPACE (SLIDE 10)
+-- -----------------------------------------------------------------------------
+
 -- 13. Get all Members in Workspace, number of Boards in Workspace that Member participates in and corresponding permissions in Workspace
 WITH WorkspaceMembers AS (
     SELECT 
         m.UserId, 
         m.PermissionId
     FROM Members m
-        JOIN OwnerTypes ot ON ot.id = m.OwnerTypeId
+        JOIN OwnerTypes ot ON ot.Id = m.OwnerTypeId
     WHERE ot.Value = 'WORKSPACE' 
         AND m.OwnerId = 1
 ),
@@ -206,7 +228,10 @@ WHERE OwnerId = 1
         WHERE Value = 'WORKSPACE'
     );
 
--- Screen 7: Guest Tab in Workspace Member
+-- -----------------------------------------------------------------------------
+-- SCREEN 7: GUEST TAB IN WORKSPACE MEMBER
+-- -----------------------------------------------------------------------------
+
 -- 16. Query Members of Boards belonging to Workspace, but Members who are not part of the Workspace
 INSERT INTO Members (UserId, PermissionId, OwnerTypeId, OwnerId, InvitedBy, JoinedAt, Status) 
 VALUES (1000, 1, 1, 3, 1, '', 'ACTIVE');
@@ -242,7 +267,10 @@ GROUP BY
     u.Username,
     u.LastActive;
 
--- Screen 8: Share Board 
+-- -----------------------------------------------------------------------------
+-- SCREEN 8: SHARE BOARD
+-- -----------------------------------------------------------------------------
+
 -- 17. Add Member to Board with Permission
 INSERT INTO Members (UserId, PermissionId, OwnerTypeId, OwnerId, InvitedBy, JoinedAt, Status) 
 VALUES (1001, 1, 3, 3, 1, '', 'ACTIVE');
@@ -286,7 +314,10 @@ FROM Members m
     JOIN Users u ON u.Id = m.UserId
 WHERE b.Id = 1;
 
--- Screen 9: Workspace Setting Tab
+-- -----------------------------------------------------------------------------
+-- SCREEN 9: WORKSPACE SETTING TAB
+-- -----------------------------------------------------------------------------
+
 -- 21. SettingKeys and corresponding SettingOptions for Workspace
 SELECT 
     sk.KeyName, 
@@ -310,7 +341,10 @@ FROM SettingValues sv
         AND ot.Value = 'WORKSPACE'
 WHERE sv.OwnerId = 1;
 
--- Screen 10: Board Settings
+-- -----------------------------------------------------------------------------
+-- SCREEN 10: BOARD SETTINGS
+-- -----------------------------------------------------------------------------
+
 -- 23. SettingKeys with KeyName='permission.*' and corresponding SettingOptions for Board
 SELECT 
     sk.KeyName, 
@@ -346,7 +380,10 @@ FROM SettingValues sv
         AND ot.Value = 'BOARD'
 WHERE sv.OwnerId = 3;
 
--- Screen 11: Workspace PowerUp
+-- -----------------------------------------------------------------------------
+-- SCREEN 11: WORKSPACE POWER-UP
+-- -----------------------------------------------------------------------------
+
 -- 26. Query how many Boards in Workspace have Power-Ups added
 -- 1. Filter Boards belonging to Workspace (BoardId, WorkspaceId)
 -- 2. Filter Power-Ups added to Boards (PowerUpId, BoardId)
@@ -378,7 +415,10 @@ GROUP BY
     puib.Name,
     puib.IconUrl;
 
--- Screen 12: Power-Ups Detail
+-- -----------------------------------------------------------------------------
+-- SCREEN 12: POWER-UPS DETAIL
+-- -----------------------------------------------------------------------------
+
 -- 27. Query Power-Up details
 SELECT 
     pu.Name,
@@ -394,127 +434,154 @@ FROM PowerUps pu
     JOIN PowerUpCategories put ON put.Id = pu.PowerUpCategoryId
 WHERE pu.Id = 1;
 
---Screen 13: BillingPlan
+-- -----------------------------------------------------------------------------
+-- SCREEN 13: BILLING PLAN
+-- -----------------------------------------------------------------------------
+
 -- 28. Get Billing Plan
-select 
+SELECT 
     bp.Name, 
     bp.PricePerUser, 
     bp.Type
-from BillingPlans bp
+FROM BillingPlans bp;
 
---Screen 14: Billing when have Subscription
+-- -----------------------------------------------------------------------------
+-- SCREEN 14: BILLING WHEN HAVE SUBSCRIPTION
+-- -----------------------------------------------------------------------------
+
 -- 29. Get Subscription of specific Workspace
-select 
+SELECT 
     bp.Name, 
     s.EndDate,
     bp.PricePerUser,
     s.MemberCountBilled,
     bc.Name,
     bc.Email,
-    so.DisplayValue as Language
-from Subscriptions s
-join BillingPlans bp on bp.Id=s.BillingPlanId
-join BillingContacts bc on s.BillingContactId= bc.Id
-join SettingOptions so on so.Id=bc.Language
-where bc.WorkspaceId=1
---30. Change PaymentInformation
-update PaymentInformations 
-set 
-    CardNumber='4628151718263',
-    CardBrand='VISA',
-    ExpirationDate='24/12/2025',
-    CVV='247',
-    Country='Vietnam'
-where BillingContactId=1
---31. Change BillingContact Information
-update BillingContacts
-set Name='Quan Phan', Email='huyhoangnguyen1002@gmail.com'
-where WorkspaceId=1
---32. Change Additional invoice details
-update BillingContacts
-set AdditionalInvoiceDetail='TBD'
-where WorkspaceId=1
---33. Query Billing history from Subscription
-select 
+    so.DisplayValue AS Language
+FROM Subscriptions s
+    JOIN BillingPlans bp ON bp.Id = s.BillingPlanId
+    JOIN BillingContacts bc ON s.BillingContactId = bc.Id
+    JOIN SettingOptions so ON so.Id = bc.Language
+WHERE bc.WorkspaceId = 1;
+
+-- 30. Change Payment Information
+UPDATE PaymentInformations 
+SET 
+    CardNumber = '4628151718263',
+    CardBrand = 'VISA',
+    ExpirationDate = '24/12/2025',
+    CVV = '247',
+    Country = 'Vietnam'
+WHERE BillingContactId = 1;
+
+-- 31. Change BillingContact Information
+UPDATE BillingContacts
+SET Name = 'Quan Phan', 
+    Email = 'huyhoangnguyen1002@gmail.com'
+WHERE WorkspaceId = 1;
+
+-- 32. Change Additional invoice details
+UPDATE BillingContacts
+SET AdditionalInvoiceDetail = 'TBD'
+WHERE WorkspaceId = 1;
+
+-- 33. Query Billing history from Subscription
+SELECT 
     s.StartDate, 
     s.EndDate,
     bp.Name,
     bp.Type,
     bp.PricePerUser,
     s.MemberCountBilled,
-    bp.PricePerUser*s.MemberCountBilled as TotalBill
-from Subscriptions s
-join BillingPlans bp on bp.Id=s.BillingPlanId
-join BillingContacts bc on bc.Id=s.BillingContactId
-where bc.WorkspaceId=1
+    bp.PricePerUser * s.MemberCountBilled AS TotalBill
+FROM Subscriptions s
+    JOIN BillingPlans bp ON bp.Id = s.BillingPlanId
+    JOIN BillingContacts bc ON bc.Id = s.BillingContactId
+WHERE bc.WorkspaceId = 1;
 
---Screen 15: Export Workspace
+-- -----------------------------------------------------------------------------
+-- SCREEN 15: EXPORT WORKSPACE
+-- -----------------------------------------------------------------------------
+
 -- 34. Create Export for Workspace
-insert into Exports(WorkspaceId,CreatedBy,CreatedAt,Size) values (1,1,'',255)
+INSERT INTO Exports (WorkspaceId, CreatedBy, CreatedAt, Size) 
+VALUES (1, 1, '', 255);
+
 -- 35. Query Export from specific Workspace
-select e.CreatedAt,e.Size
-from Exports e
-where e.WorkspaceId=1
+SELECT 
+    e.CreatedAt,
+    e.Size
+FROM Exports e
+WHERE e.WorkspaceId = 1;
 
---Screen 16: User Profile and Visibility
---36. Query Username and Bio
-select u.Username,u.Bio
-from Users u
-where u.id=1
---37. Update Username and Bio
-update Users
-set Username='flame',Bio='YPP4'
-where Id=1
+-- -----------------------------------------------------------------------------
+-- SCREEN 16: USER PROFILE AND VISIBILITY
+-- -----------------------------------------------------------------------------
 
---Screen 17: Board Screen
---38.Create Board
-insert into 
-    Boards(Name,Description,CreatedAt,CreatedBy,AccessedAt,IsStar,BackgroundUrl,WorkspaceId,Status) values
-    ('bbv-VietNam','','',1,'',0,'image.png',1,'ACTIVE')
---39. Create Stage in Board
-insert into 
-    Stages(Title,CreatedAt,BoardId,Status,Position)
-values
-    ('bbv','',1,'ACTIVE',1)
+-- 36. Query Username and Bio
+SELECT 
+    u.Username,
+    u.Bio
+FROM Users u
+WHERE u.Id = 1;
 
---Screen 18: Stage Position
---40. Update Stage Position
-update Stages
-set BoardId=1,Position=5
-where BoardId=5
+-- 37. Update Username and Bio
+UPDATE Users
+SET Username = 'flame',
+    Bio = 'YPP4'
+WHERE Id = 1;
 
---Screen 19: Stage Card
---41. Query all card in Stage
+-- -----------------------------------------------------------------------------
+-- SCREEN 17: BOARD SCREEN
+-- -----------------------------------------------------------------------------
+
+-- 38. Create Board
+INSERT INTO Boards (Name, Description, CreatedAt, CreatedBy, AccessedAt, IsStar, BackgroundUrl, WorkspaceId, Status) 
+VALUES ('bbv-VietNam', '', '', 1, '', 0, 'image.png', 1, 'ACTIVE');
+
+-- 39. Create Stage in Board
+INSERT INTO Stages (Title, CreatedAt, BoardId, Status, Position)
+VALUES ('bbv', '', 1, 'ACTIVE', 1);
+
+-- -----------------------------------------------------------------------------
+-- SCREEN 18: STAGE POSITION
+-- -----------------------------------------------------------------------------
+
+-- 40. Update Stage Position
+UPDATE Stages
+SET BoardId = 1,
+    Position = 5
+WHERE BoardId = 5;
+
+-- -----------------------------------------------------------------------------
+-- SCREEN 19: STAGE CARD
+-- -----------------------------------------------------------------------------
+
+-- 41. Query all card in Stage
 WITH CountAttachmentCardStage AS (
     SELECT 
-        c.Id          AS CardId,
-        COUNT(a.Id)   AS CountAttachment
+        c.Id AS CardId,
+        COUNT(a.Id) AS CountAttachment
     FROM Cards c
-    LEFT JOIN Attachments a 
-        ON a.CardId = c.Id
+        LEFT JOIN Attachments a ON a.CardId = c.Id
     WHERE c.StageId = 1
     GROUP BY c.Id
 ),
 LabelAgg AS (
     SELECT
         cl.CardId,
-        STRING_AGG(l.Title, ', ')
-            WITHIN GROUP (ORDER BY l.Title) AS Labels
+        STRING_AGG(l.Title, ', ') WITHIN GROUP (ORDER BY l.Title) AS Labels
     FROM CardLabels cl
-    JOIN Labels l 
-        ON l.Id = cl.LabelId
+        JOIN Labels l ON l.Id = cl.LabelId
     GROUP BY cl.CardId
 ),
 MemberAgg AS (
     SELECT
         cam.CardId,
-        STRING_AGG(u.Username, ', ')
-            WITHIN GROUP (ORDER BY u.Username) AS AssignedMembers
+        STRING_AGG(u.Username, ', ') WITHIN GROUP (ORDER BY u.Username) AS AssignedMembers
     FROM CardAssignMembers cam
-    JOIN Members m 
-        ON m.Id = cam.MemberId
-    JOIN Users u 
-        ON u.Id = m.UserId
+        JOIN Members m ON m.Id = cam.MemberId
+        JOIN Users u ON u.Id = m.UserId
     GROUP BY cam.CardId
 )
 SELECT
@@ -531,66 +598,170 @@ SELECT
     ma.AssignedMembers,
     cacs.CountAttachment
 FROM Cards c
-JOIN Stages s 
-    ON c.StageId = s.Id
-LEFT JOIN CountAttachmentCardStage cacs 
-    ON c.Id = cacs.CardId
-LEFT JOIN LabelAgg la 
-    ON c.Id = la.CardId
-LEFT JOIN MemberAgg ma 
-    ON c.Id = ma.CardId
+    JOIN Stages s ON c.StageId = s.Id
+    LEFT JOIN CountAttachmentCardStage cacs ON c.Id = cacs.CardId
+    LEFT JOIN LabelAgg la ON c.Id = la.CardId
+    LEFT JOIN MemberAgg ma ON c.Id = ma.CardId
 WHERE c.StageId = 1
 ORDER BY c.Position;
 
+-- -----------------------------------------------------------------------------
+-- SCREEN 20: CARD DETAIL
+-- -----------------------------------------------------------------------------
 
---Screen 20: Card Detail
---42. Query Card Detail
-with MemberAgg AS (
+-- 42. Query Card Detail
+WITH MemberAgg AS (
     SELECT
         cam.CardId,
-        STRING_AGG(u.Username, ', ')
-            WITHIN GROUP (ORDER BY u.Username) AS AssignedMembers
+        STRING_AGG(u.Username, ', ') WITHIN GROUP (ORDER BY u.Username) AS AssignedMembers
     FROM CardAssignMembers cam
-    JOIN Members m 
-        ON m.Id = cam.MemberId
-    JOIN Users u 
-        ON u.Id = m.UserId
+        JOIN Members m ON m.Id = cam.MemberId
+        JOIN Users u ON u.Id = m.UserId
     GROUP BY cam.CardId
 ),
 LabelAgg AS (
     SELECT
         cl.CardId,
-        STRING_AGG(l.Title, ', ')
-            WITHIN GROUP (ORDER BY l.Title) AS Labels
+        STRING_AGG(l.Title, ', ') WITHIN GROUP (ORDER BY l.Title) AS Labels
     FROM CardLabels cl
-    JOIN Labels l 
-        ON l.Id = cl.LabelId
+        JOIN Labels l ON l.Id = cl.LabelId
     GROUP BY cl.CardId
 )
-select 
+SELECT 
     c.Title,
     c.Description,
     c.StartDate,
     c.DueDate,
     c.Location
+FROM Cards c
+    LEFT JOIN MemberAgg ma ON c.Id = ma.CardId
+    LEFT JOIN LabelAgg la ON c.Id = la.CardId
+WHERE c.Id = 1;
+
+-- -----------------------------------------------------------------------------
+-- SCREEN 21: CARD COMMENT, CARD POSITION
+-- -----------------------------------------------------------------------------
+
+-- 43. Query Comment
+SELECT 
+    comment.Content,
+    comment.CreatedAt
+FROM Comments comment
+    JOIN Cards c ON c.Id = comment.CardId
+WHERE c.Id = 1;
+
+-- 44. Query Activities related to Card
+SELECT 
+    u.Username,
+    a.Description,
+    a.CreatedAt
+FROM Activities a
+    JOIN Users u ON u.Id = a.UserId
+    JOIN OwnerTypes ot ON ot.Id = a.OwnerTypeId 
+        AND ot.Value = 'CARD'
+WHERE a.OwnerId = 1;
+Go
+-- 45. Get MovedCard Data (Store Procedure)
+create procedure sp_GetMoveCardData
+    @UserId int,
+    @SelectedBoardId int = null,
+    @SelectedListId int = null
+as
+begin
+    set NOCOUNT ON;
+    -- Get Boards User is Member
+    select
+        b.Id as BoardId,
+        b.Name as BoardName
+    from Boards b
+    join Members m on m.OwnerId=b.Id
+    where m.UserId= @UserId
+    -- Get Stage in Board
+    if @SelectedBoardId is not null
+    begin
+        select
+            s.Id as StageId,
+            s.Title as StageTitle
+        from Stages s
+        where s.BoardId=@SelectedBoardId
+        order by s.Position asc
+    end
+    -- Get MaxPosition Card can be in Stage
+    if @SelectedListId is not null
+    begin
+        select
+            count(*) +1 as MaxPosition
+        from Cards c
+        where c.StageId=@SelectedListId
+    end
+end
+Go
+EXEC sp_GetMoveCardData @UserId = 1, @SelectedBoardId = 1, @SelectedListId = 1;
+--46. Query current position of Card
+select c.Position as CardPosition,s.Title as StageTitle,b.Name as BoardName
 from Cards c
-left join MemberAgg ma on c.Id=ma.CardId
-left join LabelAgg la on c.Id=la.CardId
+join Stages s on s.Id=c.StageId
+join Boards b on s.BoardId=b.id
 where c.Id=1
+--47.Move card to a different list
+DECLARE @CardId INT = 42;
+DECLARE @TargetListId INT = 5;
+DECLARE @NewPosition INT = 2;
 
+BEGIN TRANSACTION;
 
---Screen 21:Card Comment, Card Position
---43. Query Comment
-select comment.Content,comment.CreatedAt
-from Comments comment
-join Cards c on c.Id=comment.CardId
-where c.Id=1
---44. Query Activities
-select u.Username,a.Description,a.CreatedAt
-from Activities a
-join Users u on u.Id=a.UserId
-join OwnerTypes ot on ot.Id=a.OwnerTypeId and ot.Value='CARD'
-where a.OwnerId=1
---45. Change Position of Card
---1.Load Option of Board
+UPDATE Cards
+SET Position = Position + 1
+WHERE StageId = @TargetListId
+  AND Position >= @NewPosition;
+
+UPDATE Cards
+SET 
+    StageId = @TargetListId,
+    Position = @NewPosition
+WHERE Id = @CardId;
+
+COMMIT;
+
+-- -----------------------------------------------------------------------------
+-- SCREEN 22: CARD COVER
+-- -----------------------------------------------------------------------------
+
+--48. Update Card Cover (Color, Unsplash, Attachment)
+-- Update Card Cover to Color 
+update Cards
+set CoverType='COLOR', CoverValue='5'
+where Id=1
+-- Update Card Cover to Unsplash Image
+update Cards
+set CoverType='UNSPLASH', CoverValue='unsplashimage.png'
+where Id=1
+-- Update Card Cover to Attachment
+update Cards
+set CoverType='ATTACHMENT', CoverValue=''
+where Id=1
+
+-- -----------------------------------------------------------------------------
+-- SCREEN 23: LABEL AND COLOR (Slide 32)
+-- -----------------------------------------------------------------------------
+
+-- 49. Get all Label and check Label added to Card
+select
+    l.Title as LabelTitle,
+    c.Name as Color,
+    c.Icon as ColorIcon,
+    case    
+        when cl.CardId is not null then 1
+        else 0
+    end as IsChecked
+from Labels l
+join Colors c on c.Id=l.ColorId
+left join CardLabels cl on cl.LabelId=l.Id
+where cl.CardId=1
+order by l.Title
+--50. Get all Color 
+select top 10
+    c.Name,c.Icon
+from Colors c
+
 
