@@ -727,41 +727,49 @@ COMMIT;
 -- SCREEN 22: CARD COVER
 -- -----------------------------------------------------------------------------
 
---48. Update Card Cover (Color, Unsplash, Attachment)
+-- 48. Update Card Cover (Color, Unsplash, Attachment)
+
 -- Update Card Cover to Color 
-update Cards
-set CoverType='COLOR', CoverValue='5'
-where Id=1
+UPDATE Cards
+SET CoverType = 'COLOR', 
+    CoverValue = '5'
+WHERE Id = 1;
+
 -- Update Card Cover to Unsplash Image
-update Cards
-set CoverType='UNSPLASH', CoverValue='unsplashimage.png'
-where Id=1
+UPDATE Cards
+SET CoverType = 'UNSPLASH', 
+    CoverValue = 'unsplashimage.png'
+WHERE Id = 1;
+
 -- Update Card Cover to Attachment
-update Cards
-set CoverType='ATTACHMENT', CoverValue=''
-where Id=1
+UPDATE Cards
+SET CoverType = 'ATTACHMENT', 
+    CoverValue = ''
+WHERE Id = 1;
 
 -- -----------------------------------------------------------------------------
 -- SCREEN 23: LABEL AND COLOR (Slide 32)
 -- -----------------------------------------------------------------------------
 
 -- 49. Get all Label and check Label added to Card
-select
-    l.Title as LabelTitle,
-    c.Name as Color,
-    c.Icon as ColorIcon,
-    case    
-        when cl.CardId is not null then 1
-        else 0
-    end as IsChecked
-from Labels l
-join Colors c on c.Id=l.ColorId
-left join CardLabels cl on cl.LabelId=l.Id
-where cl.CardId=1
-order by l.Title
---50. Get all Color 
-select top 10
-    c.Name,c.Icon
-from Colors c
+SELECT
+    l.Title AS LabelTitle,
+    c.Name AS Color,
+    c.Icon AS ColorIcon,
+    CASE    
+        WHEN cl.CardId IS NOT NULL THEN 1
+        ELSE 0
+    END AS IsChecked
+FROM Labels l
+    JOIN Colors c ON c.Id = l.ColorId
+    LEFT JOIN CardLabels cl ON cl.LabelId = l.Id
+WHERE cl.CardId = 1
+ORDER BY l.Title;
+
+-- 50. Get all Color 
+SELECT TOP 10
+    c.Name,
+    c.Icon
+FROM Colors c;
 
 
