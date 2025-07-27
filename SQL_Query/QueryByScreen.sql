@@ -435,3 +435,162 @@ update BillingContacts
 set AdditionalInvoiceDetail='TBD'
 where WorkspaceId=1
 --33. Query Billing history from Subscription
+select 
+    s.StartDate, 
+    s.EndDate,
+    bp.Name,
+    bp.Type,
+    bp.PricePerUser,
+    s.MemberCountBilled,
+    bp.PricePerUser*s.MemberCountBilled as TotalBill
+from Subscriptions s
+join BillingPlans bp on bp.Id=s.BillingPlanId
+join BillingContacts bc on bc.Id=s.BillingContactId
+where bc.WorkspaceId=1
+
+--Screen 15: Export Workspace
+-- 34. Create Export for Workspace
+insert into Exports(WorkspaceId,CreatedBy,CreatedAt,Size) values (1,1,'',255)
+-- 35. Query Export from specific Workspace
+select e.CreatedAt,e.Size
+from Exports e
+where e.WorkspaceId=1
+
+--Screen 16: User Profile and Visibility
+--36. Query Username and Bio
+select u.Username,u.Bio
+from Users u
+where u.id=1
+--37. Update Username and Bio
+update Users
+set Username='flame',Bio='YPP4'
+where Id=1
+
+--Screen 17: Board Screen
+--38.Create Board
+insert into 
+    Boards(Name,Description,CreatedAt,CreatedBy,AccessedAt,IsStar,BackgroundUrl,WorkspaceId,Status) values
+    ('bbv-VietNam','','',1,'',0,'image.png',1,'ACTIVE')
+--39. Create Stage in Board
+insert into 
+    Stages(Title,CreatedAt,BoardId,Status,Position)
+values
+    ('bbv','',1,'ACTIVE',1)
+
+--Screen 18: Stage Position
+--40. Update Stage Position
+update Stages
+set BoardId=1,Position=5
+where BoardId=5
+
+--Screen 19: Stage Card
+--41. Query all card in Stage
+WITH CountAttachmentCardStage AS (
+    SELECT 
+        c.Id          AS CardId,
+        COUNT(a.Id)   AS CountAttachment
+    FROM Cards c
+    LEFT JOIN Attachments a 
+        ON a.CardId = c.Id
+    WHERE c.StageId = 1
+    GROUP BY c.Id
+),
+LabelAgg AS (
+    SELECT
+        cl.CardId,
+        STRING_AGG(l.Title, ', ')
+            WITHIN GROUP (ORDER BY l.Title) AS Labels
+    FROM CardLabels cl
+    JOIN Labels l 
+        ON l.Id = cl.LabelId
+    GROUP BY cl.CardId
+),
+MemberAgg AS (
+    SELECT
+        cam.CardId,
+        STRING_AGG(u.Username, ', ')
+            WITHIN GROUP (ORDER BY u.Username) AS AssignedMembers
+    FROM CardAssignMembers cam
+    JOIN Members m 
+        ON m.Id = cam.MemberId
+    JOIN Users u 
+        ON u.Id = m.UserId
+    GROUP BY cam.CardId
+)
+SELECT
+    c.Id,
+    c.Title,
+    c.CoverType,
+    c.CoverValue,
+    c.StartDate,
+    c.DueDate,
+    c.Location,
+    c.Position,
+    c.Status,
+    la.Labels,
+    ma.AssignedMembers,
+    cacs.CountAttachment
+FROM Cards c
+JOIN Stages s 
+    ON c.StageId = s.Id
+LEFT JOIN CountAttachmentCardStage cacs 
+    ON c.Id = cacs.CardId
+LEFT JOIN LabelAgg la 
+    ON c.Id = la.CardId
+LEFT JOIN MemberAgg ma 
+    ON c.Id = ma.CardId
+WHERE c.StageId = 1
+ORDER BY c.Position;
+
+
+--Screen 20: Card Detail
+--42. Query Card Detail
+with MemberAgg AS (
+    SELECT
+        cam.CardId,
+        STRING_AGG(u.Username, ', ')
+            WITHIN GROUP (ORDER BY u.Username) AS AssignedMembers
+    FROM CardAssignMembers cam
+    JOIN Members m 
+        ON m.Id = cam.MemberId
+    JOIN Users u 
+        ON u.Id = m.UserId
+    GROUP BY cam.CardId
+),
+LabelAgg AS (
+    SELECT
+        cl.CardId,
+        STRING_AGG(l.Title, ', ')
+            WITHIN GROUP (ORDER BY l.Title) AS Labels
+    FROM CardLabels cl
+    JOIN Labels l 
+        ON l.Id = cl.LabelId
+    GROUP BY cl.CardId
+)
+select 
+    c.Title,
+    c.Description,
+    c.StartDate,
+    c.DueDate,
+    c.Location
+from Cards c
+left join MemberAgg ma on c.Id=ma.CardId
+left join LabelAgg la on c.Id=la.CardId
+where c.Id=1
+
+
+--Screen 21:Card Comment, Card Position
+--43. Query Comment
+select comment.Content,comment.CreatedAt
+from Comments comment
+join Cards c on c.Id=comment.CardId
+where c.Id=1
+--44. Query Activities
+select u.Username,a.Description,a.CreatedAt
+from Activities a
+join Users u on u.Id=a.UserId
+join OwnerTypes ot on ot.Id=a.OwnerTypeId and ot.Value='CARD'
+where a.OwnerId=1
+--45. Change Position of Card
+--1.Load Option of Board
+
