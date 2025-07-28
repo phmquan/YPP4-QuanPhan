@@ -558,6 +558,10 @@ WHERE BoardId = 5;
 -- -----------------------------------------------------------------------------
 
 -- 41. Query all card in Stage
+insert into Members(UserId,PermissionId,OwnerTypeId,OwnerId,InvitedBy,JoinedAt,Status) values
+    (20,1,1001,26,1,'','ACTIVE'),
+    (30,1,1001,26,1,'','ACTIVE')
+
 WITH CountAttachmentCardStage AS (
     SELECT 
         c.Id AS CardId,
@@ -577,12 +581,13 @@ LabelAgg AS (
 ),
 MemberAgg AS (
     SELECT
-        cam.CardId,
+        m.OwnerId as CardId,
+        STRING_AGG(u.Id, ', ') AS AssignedMemberId,
         STRING_AGG(u.Username, ', ') WITHIN GROUP (ORDER BY u.Username) AS AssignedMembers
-    FROM CardAssignMembers cam
-        JOIN Members m ON m.Id = cam.MemberId
-        JOIN Users u ON u.Id = m.UserId
-    GROUP BY cam.CardId
+    FROM Members m
+    join OwnerTypes ot on ot.Id=m.OwnerTypeId and ot.Value='CARD'
+    join Users u on u.Id=m.UserId
+    GROUP BY m.OwnerId
 )
 SELECT
     c.Id,
@@ -612,12 +617,13 @@ ORDER BY c.Position;
 -- 42. Query Card Detail
 WITH MemberAgg AS (
     SELECT
-        cam.CardId,
+        m.OwnerId as CardId,
+        STRING_AGG(u.Id, ', ') AS AssignedMemberId,
         STRING_AGG(u.Username, ', ') WITHIN GROUP (ORDER BY u.Username) AS AssignedMembers
-    FROM CardAssignMembers cam
-        JOIN Members m ON m.Id = cam.MemberId
-        JOIN Users u ON u.Id = m.UserId
-    GROUP BY cam.CardId
+    FROM Members m
+    join OwnerTypes ot on ot.Id=m.OwnerTypeId and ot.Value='CARD'
+    join Users u on u.Id=m.UserId
+    GROUP BY m.OwnerId
 ),
 LabelAgg AS (
     SELECT
@@ -632,11 +638,13 @@ SELECT
     c.Description,
     c.StartDate,
     c.DueDate,
-    c.Location
+    c.Location,
+    ma.AssignedMemberId,
+    ma.AssignedMembers
 FROM Cards c
     LEFT JOIN MemberAgg ma ON c.Id = ma.CardId
     LEFT JOIN LabelAgg la ON c.Id = la.CardId
-WHERE c.Id = 1;
+WHERE c.Id = 26;
 
 -- -----------------------------------------------------------------------------
 -- SCREEN 21: CARD COMMENT, CARD POSITION
@@ -771,5 +779,49 @@ SELECT TOP 10
     c.Name,
     c.Icon
 FROM Colors c;
+Go
+
+-- -----------------------------------------------------------------------------
+-- SCREEN 24: CHECKLIST AND CHECKLIST ITEM (Slide 34)
+-- -----------------------------------------------------------------------------
+--51. Query all CheckList in specific Card
+SELECT cl.Id as CheckListId,cl.[Name] as CheckListName
+    FROM CheckLists cl
+    WHERE cl.CardId = 1;
+--52. Query all CheckListItem in CheckList of specific Card
+select 
+        cli.Name as ItemName,
+        cli.DueDate as DueDate,
+        m.Id as MemberId,
+        u.Username as Username,
+        cli.Status as IsCompleteItem,
+        cli.CheckListId as CheckListID
+    from CheckListItems cli
+    join CheckLists cl on cl.Id=cli.CheckListId
+    left join Members m on m.Id=cli.MemberId
+    left join Users u on u.Id=m.UserId
+    where cl.CardId=1;
+   
+-- -----------------------------------------------------------------------------
+-- SCREEN 25: CARD ATTACHMENT (Slide 36)
+-- -----------------------------------------------------------------------------
+--52. Get all Attachment of a specific Card
+select 
+    a.Id as AttachmentId,
+    a.Link as AttachmentLink,
+    a.FileType as AttachmentFileType,
+    a.FilePath as AttachmentFilePath,
+    a.Name,
+    a.UploadAt
+from Attachments a
+join Cards c on a.CardId=c.Id
+where c.Id=1
+
+
+-- -----------------------------------------------------------------------------
+-- SCREEN 26: CUSTOM FIELD (Slide 38)
+-- -----------------------------------------------------------------------------
+--53. Query All CustomField, FieldItem 
+
 
 
