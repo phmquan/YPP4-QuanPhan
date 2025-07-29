@@ -37,6 +37,7 @@ WHERE ot.Value = 'Workspace'
 SELECT 
     w.Id AS WorkspaceId,
     w.Name AS WorkspaceName,
+    w.IconUrl AS WorkspaceIcon
     b.Id AS BoardId,
     b.Name AS BoardName,
     b.Description,
@@ -58,7 +59,7 @@ WHERE mw.UserId = 1
 -- 5. Query all closed boards where user is a member
 SELECT 
     b.Name, 
-    w.Name
+    w.Name,
 FROM Boards b
     JOIN Workspaces w ON w.Id = b.WorkspaceId
     JOIN Members m ON m.OwnerId = b.Id
@@ -199,7 +200,7 @@ BoardMembers AS (
 SELECT
     u.Username, 
     u.LastActive,
-    p.Name,
+    p.Name as Permission,
     COUNT(bm.BoardId) AS NumBoardsJoined
 FROM WorkspaceMembers wm
     LEFT JOIN BoardMembers bm ON bm.UserId = wm.UserId
@@ -236,11 +237,7 @@ WHERE OwnerId = 1
 -- SCREEN 7: GUEST TAB IN WORKSPACE MEMBER
 -- -----------------------------------------------------------------------------
 
--- 16. Insert Member data (example)
-INSERT INTO Members (UserId, PermissionId, OwnerTypeId, OwnerId, InvitedBy, JoinedAt, Status) 
-VALUES (1000, 1, 1, 3, 1, '', 'ACTIVE');
-
--- Query Members of Boards belonging to Workspace, but Members who are not part of the Workspace
+--16 Query Members of Boards belonging to Workspace, but Members who are not part of the Workspace
 WITH WorkspaceBoardMembers AS (
     SELECT 
         m.UserId,
@@ -273,7 +270,7 @@ GROUP BY
     u.LastActive;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 8: SHARE BOARD
+-- SCREEN 8: SHARE BOARD (Slide 12)
 -- -----------------------------------------------------------------------------
 
 -- 17. Add Member to Board with Permission
@@ -320,7 +317,7 @@ FROM Members m
 WHERE b.Id = 1;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 9: WORKSPACE SETTING TAB
+-- SCREEN 9: WORKSPACE SETTING TAB (Slide 14)
 -- -----------------------------------------------------------------------------
 
 -- 21. SettingKeys and corresponding SettingOptions for Workspace
@@ -347,7 +344,7 @@ FROM SettingValues sv
 WHERE sv.OwnerId = 1;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 10: BOARD SETTINGS
+-- SCREEN 10: BOARD SETTINGS (Slide 15)
 -- -----------------------------------------------------------------------------
 
 -- 23. SettingKeys with KeyName='permission.*' and corresponding SettingOptions for Board
@@ -386,7 +383,7 @@ FROM SettingValues sv
 WHERE sv.OwnerId = 3;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 11: WORKSPACE POWER-UP
+-- SCREEN 11: WORKSPACE POWER-UP (Slide 17)
 -- -----------------------------------------------------------------------------
 
 -- 26. Query how many Boards in Workspace have Power-Ups added
@@ -411,7 +408,7 @@ PowerUpInBoards AS (
         JOIN Boards b ON b.Id = bpu.BoardId
 )
 SELECT 
-    puib.Name,
+    puib.Name as PowerUpName,
     puib.IconUrl,
     COUNT(puib.BoardId) AS BoardUse
 FROM PowerUpInBoards puib 
@@ -421,7 +418,7 @@ GROUP BY
     puib.IconUrl;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 12: POWER-UPS DETAIL
+-- SCREEN 12: POWER-UPS DETAIL (Slide 18)
 -- -----------------------------------------------------------------------------
 
 -- 27. Query Power-Up details
@@ -440,7 +437,7 @@ FROM PowerUps pu
 WHERE pu.Id = 1;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 13: BILLING PLAN
+-- SCREEN 13: BILLING PLAN (Slide 20)
 -- -----------------------------------------------------------------------------
 
 -- 28. Get Billing Plan
@@ -451,7 +448,7 @@ SELECT
 FROM BillingPlans bp;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 14: BILLING WHEN HAVE SUBSCRIPTION
+-- SCREEN 14: BILLING WHEN HAVE SUBSCRIPTION (Slide 21)
 -- -----------------------------------------------------------------------------
 
 -- 29. Get Subscription of specific Workspace
@@ -485,7 +482,9 @@ SET
     Name = 'Quan Phan', 
     Email = 'huyhoangnguyen1002@gmail.com'
 WHERE WorkspaceId = 1;
-
+-- -----------------------------------------------------------------------------
+-- SCREEN 15: BILLING HISTORY (Slide 22)
+-- -----------------------------------------------------------------------------
 -- 32. Change Additional invoice details
 UPDATE BillingContacts
 SET AdditionalInvoiceDetail = 'TBD'
@@ -506,7 +505,7 @@ FROM Subscriptions s
 WHERE bc.WorkspaceId = 1;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 15: EXPORT WORKSPACE
+-- SCREEN 16: EXPORT WORKSPACE  (Slide 24)
 -- -----------------------------------------------------------------------------
 
 -- 34. Create Export for Workspace
@@ -521,7 +520,7 @@ FROM Exports e
 WHERE e.WorkspaceId = 1;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 16: USER PROFILE AND VISIBILITY
+-- SCREEN 17: USER PROFILE AND VISIBILITY (Slide 25)
 -- -----------------------------------------------------------------------------
 
 -- 36. Query Username and Bio
@@ -539,7 +538,7 @@ SET
 WHERE Id = 1;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 17: BOARD SCREEN
+-- SCREEN 18: BOARD SCREEN (Slide 26)
 -- -----------------------------------------------------------------------------
 
 -- 38. Create Board
@@ -551,7 +550,7 @@ INSERT INTO Stages (Title, CreatedAt, BoardId, Status, Position)
 VALUES ('bbv', '', 1, 'ACTIVE', 1);
 
 -- -----------------------------------------------------------------------------
--- SCREEN 18: STAGE POSITION
+-- SCREEN 19: STAGE POSITION (Slide 27)
 -- -----------------------------------------------------------------------------
 
 -- 40. Update Stage Position
@@ -562,7 +561,7 @@ SET
 WHERE BoardId = 5;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 19: STAGE CARD
+-- SCREEN 20: STAGE CARD (Slide 28)
 -- -----------------------------------------------------------------------------
 
 -- 41. Query all card in Stage
@@ -616,7 +615,7 @@ WHERE c.StageId = 1
 ORDER BY c.Position;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 20: CARD DETAIL
+-- SCREEN 21: CARD DETAIL (Slide 29)
 -- -----------------------------------------------------------------------------
 
 -- 42. Query Card Detail
@@ -653,7 +652,7 @@ FROM Cards c
 WHERE c.Id = 26;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 21: CARD COMMENT, CARD POSITION
+-- SCREEN 22: CARD COMMENT, CARD POSITION (SLide 30)
 -- -----------------------------------------------------------------------------
 
 -- 43. Query Comment
@@ -733,7 +732,6 @@ DECLARE @CardId INT = 42;
 DECLARE @TargetListId INT = 5;
 DECLARE @NewPosition INT = 2;
 
-BEGIN TRANSACTION;
 
 -- Update positions of existing cards
 UPDATE Cards
@@ -748,10 +746,9 @@ SET
     Position = @NewPosition
 WHERE Id = @CardId;
 
-COMMIT;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 22: CARD COVER
+-- SCREEN 23: CARD COVER (Slide 31)
 -- -----------------------------------------------------------------------------
 
 -- 48. Update Card Cover (Color, Unsplash, Attachment)
@@ -778,7 +775,7 @@ SET
 WHERE Id = 1;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 23: LABEL AND COLOR (Slide 32)
+-- SCREEN 24: LABEL AND COLOR (Slide 32)
 -- -----------------------------------------------------------------------------
 
 -- 49. Get all Label and check Label added to Card
@@ -804,7 +801,7 @@ FROM Colors c;
 GO
 
 -- -----------------------------------------------------------------------------
--- SCREEN 24: CHECKLIST AND CHECKLIST ITEM (Slide 34)
+-- SCREEN 25: CHECKLIST AND CHECKLIST ITEM (Slide 34)
 -- -----------------------------------------------------------------------------
 
 -- 51. Query all CheckList in specific Card
@@ -829,7 +826,7 @@ FROM CheckListItems cli
 WHERE cl.CardId = 1;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 25: CARD ATTACHMENT (Slide 36)
+-- SCREEN 26: CARD ATTACHMENT (Slide 36)
 -- -----------------------------------------------------------------------------
 
 -- 53. Get all Attachment of a specific Card
@@ -846,7 +843,7 @@ WHERE c.Id = 1;
 GO
 
 -- -----------------------------------------------------------------------------
--- SCREEN 26: CUSTOM FIELD (Slide 38)
+-- SCREEN 27: CUSTOM FIELD (Slide 38)
 -- -----------------------------------------------------------------------------
 
 -- 54. Query All CustomField, FieldItem of Board (store procedure)
@@ -856,13 +853,15 @@ AS
 BEGIN
     -- Query all CustomFields and FieldItem if have dropdown CustomField been add to Board
     SELECT 
+        cf.Id,
         cf.Title,
         cf.Position,
         cf.FieldType
     FROM CustomFields cf
     WHERE cf.BoardId = @BoardId;
 
-    SELECT 
+    SELECT
+        cf.Id as CustomFieldId,
         fi.Value AS FieldItemValue,
         fi.Priority AS FieldItemPriority,
         c.Name AS Color,
@@ -870,13 +869,13 @@ BEGIN
     FROM FieldItems fi
         JOIN CustomFields cf ON cf.Id = fi.CustomFieldId 
             AND cf.FieldType = 'DROPDOWN'
-        JOIN Colors c ON c.Id = fi.ColorId
+        LEFT JOIN Colors c ON fi.ColorId=c.Id
     WHERE cf.BoardId = @BoardId;
 END;
 GO
 
 -- Execute stored procedure example
-EXEC sp_GetAllCustomFieldAndFieldValue @BoardId = 3;
+EXEC sp_GetAllCustomFieldAndFieldValue @BoardId = 25;
 
 -- 55. Query FieldValue of CustomField in specific Card
 SELECT 
@@ -888,10 +887,10 @@ FROM FieldValues fv
     JOIN CustomFields cf ON cf.Id = fv.CustomFieldId
     LEFT JOIN FieldItems fi ON fi.Id = TRY_CAST(fv.Value AS INT) 
         AND cf.FieldType = 'DROPDOWN'
-WHERE fv.CardId = 1;
+WHERE fv.CardId = 10;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 27: CARD STICKER (Slide 40)
+-- SCREEN 28: CARD STICKER (Slide 40)
 -- -----------------------------------------------------------------------------
 
 -- 56. Query all Stickers
@@ -921,7 +920,7 @@ FROM Stickers s
 WHERE sta.BoardId = 1;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 28: HOME TAB (Slide 42)
+-- SCREEN 29: HOME TAB (Slide 42)
 -- -----------------------------------------------------------------------------
 
 -- 59. Get user's recent activities across all accessible boards/workspaces
@@ -946,7 +945,7 @@ FROM Activities a
     INNER JOIN Users u ON a.UserId = u.Id
     INNER JOIN OwnerTypes ot ON a.OwnerTypeId = ot.Id
     -- Get all memberships for the current user
-    INNER JOIN Members m ON m.UserId = 15
+    INNER JOIN Members m ON m.UserId = 3
     INNER JOIN OwnerTypes mot ON m.OwnerTypeId = mot.Id
     -- Context joins
     LEFT JOIN Cards c ON ot.Value = 'CARD' AND a.OwnerId = c.Id
@@ -987,7 +986,7 @@ FROM Boards b
 WHERE bu.UserID = 2;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 29: NOTIFICATION (Slide 43)
+-- SCREEN 30: NOTIFICATION (Slide 43)
 -- -----------------------------------------------------------------------------
 
 -- 61. Get all notification of specific User
@@ -1000,7 +999,7 @@ FROM Notifications n
 WHERE a.UserId = 5;
 
 -- -----------------------------------------------------------------------------
--- SCREEN 30: BOARD COLLECTION (Slide 45)
+-- SCREEN 31: BOARD COLLECTION (Slide 45)
 -- -----------------------------------------------------------------------------
 
 -- 62. Get all Collection and Board belong to Collections in specific Workspace
