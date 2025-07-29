@@ -37,7 +37,7 @@ WHERE ot.Value = 'Workspace'
 SELECT 
     w.Id AS WorkspaceId,
     w.Name AS WorkspaceName,
-    w.IconUrl AS WorkspaceIcon
+    w.IconUrl AS WorkspaceIcon,
     b.Id AS BoardId,
     b.Name AS BoardName,
     b.Description,
@@ -59,7 +59,7 @@ WHERE mw.UserId = 1
 -- 5. Query all closed boards where user is a member
 SELECT 
     b.Name, 
-    w.Name,
+    w.Name
 FROM Boards b
     JOIN Workspaces w ON w.Id = b.WorkspaceId
     JOIN Members m ON m.OwnerId = b.Id
@@ -117,7 +117,7 @@ WHERE t.Id = 1; -- templateId
 
 -- 9. Insert data into Workspaces
 INSERT INTO Workspaces (Name, Description, Type) 
-VALUES ('', '', '');
+VALUES ('Quan', 'BBV-YPP4', 'ENGINEERING_IT');
 
 -- -----------------------------------------------------------------------------
 -- SCREEN 5: TAB BOARDS IN WORKSPACE WITH USERID = 1 (SLIDE 8)
@@ -331,6 +331,7 @@ FROM SettingKeys sk
         AND ot.Value = 'WORKSPACE';
 
 -- 22. SettingValues of specific Workspace
+
 SELECT 
     sk.KeyName,
     sk.TypeValue,
