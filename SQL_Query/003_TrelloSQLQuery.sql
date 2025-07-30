@@ -21,6 +21,7 @@ FROM Boards b
     JOIN Users u ON u.Id = bu.UserID
 WHERE u.Id = 2 -- userId
 ORDER BY bu.AccessedAt DESC;
+--2.1. Query all IsStar Board where User is a Member
 
 -- 3. Query all Workspaces where User is a Member
 SELECT 
@@ -177,19 +178,18 @@ VALUES ('Quan', 'BBV-YPP4', 'ENGINEERING_IT');
 
 -- 11. Get Workspace Name, SettingKey='visibility' and SettingValue 
 --     related to SettingKeys of Workspace
-
 WITH SettingValueForWorkspace AS (
     SELECT 
         sv.Id as SettingValueId,
         sv.OwnerId,
         sk.Id,
-        sk.TypeValue,
+        sk.DataTypeId,
         sk.KeyName,
         so.DisplayValue 
     FROM SettingValues sv
         JOIN SettingKeys sk ON sk.Id = sv.SettingKeyId
-        LEFT JOIN SettingOptions so ON sv.SettingValue = so.Id 
-            AND sk.TypeValue='TEXT'
+        LEFT JOIN SettingOptions so ON sv.SettingContent= so.Id 
+            AND sk.DataTypeId=1
         JOIN OwnerTypes ot ON ot.Id = sk.OwnerTypeId 
             AND ot.OwnerTypeValue = 'WORKSPACE'
     WHERE sk.KeyName = 'Visibility'
@@ -200,7 +200,7 @@ SELECT
     svfw.DisplayValue as Visibility
 FROM Workspaces w
     JOIN SettingValueForWorkspace svfw ON svfw.OwnerId = w.Id
-WHERE w.Id = 1;
+WHERE w.Id = 2;
 
 -- 12. Get 4 suggested Boards by Template Category Type 
 SELECT TOP 4 
@@ -271,7 +271,7 @@ SELECT
     STRING_AGG(biw.BackgroundUrl, ', ') AS JoinedBoardBackground
 FROM WorkspaceMembers wm
     LEFT JOIN BoardMembers bm ON bm.UserId = wm.UserId
-    LEFT JOIN BoardInWorkspace biw ON bm.BoardId = biw.BoardId
+    JOIN BoardInWorkspace biw ON bm.BoardId = biw.BoardId
     JOIN Users u ON wm.UserId = u.Id
     JOIN RolePermissions p ON wm.PermissionId = p.Id
 GROUP BY 
@@ -405,12 +405,12 @@ FROM SettingKeys sk
 
 SELECT 
     sk.KeyName,
-    sk.TypeValue,
+    sk.DataTypeId,
     sv.SettingValue,
     so.DisplayValue
 FROM SettingValues sv
     JOIN SettingKeys sk ON sk.Id = sv.SettingKeyId
-    LEFT JOIN SettingOptions so ON so.Id = sv.SettingValue AND sk.TypeValue='TEXT'
+    LEFT JOIN SettingOptions so ON so.Id = sv.SettingValue AND sk.DataTypeId=3
     JOIN OwnerTypes ot ON ot.Id = sk.OwnerTypeId 
         AND ot.OwnerTypeValue = 'WORKSPACE'
 WHERE sv.OwnerId = 1;
@@ -423,11 +423,11 @@ WHERE sv.OwnerId = 1;
 SELECT
     sk.Id as SettingKeyId,
     sk.KeyName,
-    sk.TypeValue,
+    sk.DataTypeId,
     so.DisplayValue
 FROM SettingKeys sk
     JOIN SettingKeySettingOptions skso ON skso.SettingKeyId = sk.Id
-    LEFT JOIN SettingOptions so ON so.Id = skso.SettingOptionId AND sk.TypeValue='TEXT'
+    LEFT JOIN SettingOptions so ON so.Id = skso.SettingOptionId AND sk.DataTypeId=3
     JOIN OwnerTypes ot ON ot.Id = sk.OwnerTypeId 
         AND ot.OwnerTypeValue = 'BOARD'
 WHERE sk.KeyName LIKE 'permissions.%';
@@ -436,11 +436,11 @@ WHERE sk.KeyName LIKE 'permissions.%';
 SELECT 
     sk.Id as SettingKeyId,
     sk.KeyName,
-    sk.TypeValue,
+    sk.DataTypeId,
     so.DisplayValue
 FROM SettingKeys sk
     JOIN SettingKeySettingOptions skso ON skso.SettingKeyId = sk.Id
-    LEFT JOIN SettingOptions so ON so.Id = skso.SettingOptionId AND sk.TypeValue='TEXT'
+    LEFT JOIN SettingOptions so ON so.Id = skso.SettingOptionId AND sk.DataTypeId=3
     JOIN OwnerTypes ot ON ot.Id = sk.OwnerTypeId 
         AND ot.OwnerTypeValue = 'BOARD';
 
@@ -449,12 +449,12 @@ SELECT
     sv.Id as SettingValueId,
     sv.OwnerId,
     sk.KeyName,
-    sk.TypeValue,
-    sv.SettingValue,
+    sk.DataTypeId,
+    sv.SettingContent,
     so.DisplayValue
 FROM SettingValues sv
     JOIN SettingKeys sk ON sk.Id = sv.SettingKeyId
-    LEFT JOIN SettingOptions so ON so.Id = sv.SettingValue AND sk.TypeValue='TEXT'
+    LEFT JOIN SettingOptions so ON so.Id = sv.SettingValue AND sk.DataTypeId=3
     JOIN OwnerTypes ot ON ot.Id = sk.OwnerTypeId 
         AND ot.OwnerTypeValue = 'BOARD'
 WHERE sv.OwnerId = 3;
@@ -940,37 +940,38 @@ BEGIN
         cf.Id,
         cf.Title,
         cf.Position,
-        cf.FieldType
+        cf.DataTypeId
     FROM CustomFields cf
     WHERE cf.BoardId = @BoardId;
 
     SELECT
         cf.Id as CustomFieldId,
+        fi.Id as FieldItemId,
         fi.FieldItemValue AS FieldItemValue,
         fi.Priority AS FieldItemPriority,
         c.ColorName AS Color,
         c.Icon AS ColorIcon
     FROM FieldItems fi
         JOIN CustomFields cf ON cf.Id = fi.CustomFieldId 
-            AND cf.FieldType = 'DROPDOWN'
+            AND cf.DataTypeId = 1
         LEFT JOIN Colors c ON fi.ColorId=c.Id
     WHERE cf.BoardId = @BoardId;
 END;
 GO
 
 -- Execute stored procedure example
-EXEC sp_GetAllCustomFieldAndFieldValue @BoardId = 10;
+EXEC sp_GetAllCustomFieldAndFieldValue @BoardId = 491;
 
 -- 56. Query FieldValue of CustomField in specific Card
 SELECT 
     cf.Title, 
-    cf.FieldType, 
+    cf.DataTypeId, 
     fv.FieldValue AS FieldValue, 
     fi.FieldItemValue AS FieldItemValue
 FROM FieldValues fv
     JOIN CustomFields cf ON cf.Id = fv.CustomFieldId
     LEFT JOIN FieldItems fi ON fi.Id = TRY_CAST(fv.FieldValue AS INT) 
-        AND cf.FieldType = 'DROPDOWN'
+        AND cf.DataTypeId = 1
 WHERE fv.CardId = 10;
 
 -- -----------------------------------------------------------------------------
