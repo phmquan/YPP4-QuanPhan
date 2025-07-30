@@ -50,10 +50,10 @@ FROM Workspaces w
         AND otw.OwnerTypeValue = 'WORKSPACE'
     -- Find Boards corresponding to Workspace where User is also a Member
     JOIN Boards b ON b.WorkspaceId = w.Id
-    JOIN Members mb ON mb.Id = b.Id
+    JOIN Members mb ON mb.OwnerId = b.Id
     JOIN OwnerTypes otb ON otb.Id = mb.OwnerTypeId 
         AND otb.OwnerTypeValue = 'BOARD'
-WHERE mw.UserId = 1
+WHERE mb.UserId = 1
     
 
 -- 5. Query all closed boards where user is a member
@@ -65,21 +65,22 @@ SELECT
 FROM Boards b
     JOIN Workspaces w ON w.Id = b.WorkspaceId
     JOIN Members m ON m.OwnerId = b.Id
-    JOIN OwnerTypes ot ON m.OwnerTypeId = ot.Id
-WHERE ot.OwnerTypeValue = 'BOARD'
-    AND m.UserId = 3
+    JOIN OwnerTypes ot ON m.OwnerTypeId = ot.Id 
+        AND ot.OwnerTypeValue = 'BOARD'
+WHERE m.UserId = 3
     AND b.BoardStatus = 'CLOSED';
 --6. Delete Or Reopen a closed board
 DECLARE @BoardId INT
-update Boards
-set BoardStatus='DELETE' -- or  'ACTIVE'
-where Id=@BoardId
+UPDATE Boards
+SET BoardStatus='CLOSED' -- or  'ACTIVE'
+WHERE Id=3
+
 -- -----------------------------------------------------------------------------
 -- SCREEN 2: TEMPLATES TAB (SLIDE 5)
 -- -----------------------------------------------------------------------------
 
 -- 7. Get top 14 template categories
-SELECT TOP 10 
+SELECT TOP 14
     Id as CategoryId,
     CategoryName,
     IconUrl
@@ -100,12 +101,13 @@ ORDER BY
     t.CreatedAt DESC, 
     t.Viewed DESC, 
     t.Copied DESC;
-
+go
 -- -----------------------------------------------------------------------------
 -- SCREEN 3: TEMPLATE DETAIL (SLIDE 6)
 -- -----------------------------------------------------------------------------
 
 -- 9. Get template details and the Board associated with that template
+--9.1.Get All Template Detail
 SELECT 
     t.Id as TemplateId,
     t.Title, 
@@ -120,6 +122,46 @@ FROM Templates t
     JOIN Boards b ON b.Id = t.BoardId
     JOIN Users u ON t.CreatedBy = u.Id
 WHERE t.Id = 1; -- templateId
+GO
+--9.2.Get all Stage, Card belong to Board in Template (Store Procedure)
+
+ALTER PROCEDURE GetBoardDetail
+    @BoardId INT
+AS
+BEGIN
+    --Get BoardDetail
+    SELECT 
+        b.Id as BoardId,
+        b.BoardName,
+        b.BackgroundUrl,
+        b.BoardStatus
+    FROM Boards b
+    WHERE b.Id=@BoardId
+    --Get Stage in Board
+    SELECT s.Id as StageId, s.Title as StageTitle,s.Position as StagePosition,c.ColorName as BackgroundColor
+    FROM Stages s
+    JOIN Colors c on c.Id=s.ColorId
+    where s.BoardId=@BoardId
+    --Get Card in Stage
+    SELECT 
+        c.Id as CardId,
+        c.Title as CardTitle,
+        c.StageId,
+        c.CoverType,
+        c.CoverValue,
+        color.ColorName,
+        a.FilePath,
+        c.Position,
+        c.CardDescription
+    FROM CARDS c
+    JOIN Stages s on s.Id=c.StageId
+    LEFT JOIN Colors color on TRY_CAST(CASE WHEN c.CoverType = 'COLOR' THEN c.CoverValue ELSE NULL END AS INT) = color.Id
+    LEFT JOIN Attachments a on TRY_CAST(CASE WHEN c.CoverType = 'ATTACHMENT' THEN c.CoverValue ELSE NULL END AS INT) = a.Id
+    where s.BoardId=@BoardId
+    order by StageId
+END
+GO
+EXEC GetBoardDetail @BoardId=1
 
 -- -----------------------------------------------------------------------------
 -- SCREEN 4: CREATE WORKSPACE (SLIDE 7)
@@ -135,14 +177,19 @@ VALUES ('Quan', 'BBV-YPP4', 'ENGINEERING_IT');
 
 -- 11. Get Workspace Name, SettingKey='visibility' and SettingValue 
 --     related to SettingKeys of Workspace
+
 WITH SettingValueForWorkspace AS (
     SELECT 
+        sv.Id as SettingValueId,
         sv.OwnerId,
+        sk.Id,
+        sk.TypeValue,
         sk.KeyName,
-        so.SettingOptionValue
+        so.DisplayValue 
     FROM SettingValues sv
         JOIN SettingKeys sk ON sk.Id = sv.SettingKeyId
-        JOIN SettingOptions so ON sv.SettingValue = so.Id
+        LEFT JOIN SettingOptions so ON sv.SettingValue = so.Id 
+            AND sk.TypeValue='TEXT'
         JOIN OwnerTypes ot ON ot.Id = sk.OwnerTypeId 
             AND ot.OwnerTypeValue = 'WORKSPACE'
     WHERE sk.KeyName = 'Visibility'
@@ -150,12 +197,12 @@ WITH SettingValueForWorkspace AS (
 SELECT 
     w.Id as WorkspaceId,
     w.WorkspaceName,
-    svfw.SettingOptionValue
+    svfw.DisplayValue as Visibility
 FROM Workspaces w
     JOIN SettingValueForWorkspace svfw ON svfw.OwnerId = w.Id
 WHERE w.Id = 1;
 
--- 12. Get 4 suggested Boards by Template Category Type with status as Template
+-- 12. Get 4 suggested Boards by Template Category Type 
 SELECT TOP 4 
     b.Id,
     b.BoardName,
@@ -180,14 +227,14 @@ FROM Boards b
     JOIN OwnerTypes ot ON ot.Id = m.OwnerTypeId 
         AND ot.OwnerTypeValue = 'BOARD'
 WHERE w.Id = 1 
-    AND m.UserId = 1;
+    
 
 -- -----------------------------------------------------------------------------
 -- SCREEN 6: MEMBER TAB OF WORKSPACE (SLIDE 10)
 -- -----------------------------------------------------------------------------
 
 -- 14. Get all Members in Workspace, number of Boards in Workspace that Member 
---     participates in and corresponding permissions in Workspace
+--     participates in and corresponding RolePermissions in Workspace
 WITH WorkspaceMembers AS (
     SELECT 
         m.UserId, 
@@ -198,7 +245,10 @@ WITH WorkspaceMembers AS (
         AND m.OwnerId = 1
 ),
 BoardInWorkspace AS (
-    SELECT b.Id AS BoardId
+    SELECT 
+        b.Id AS BoardId,
+        b.BoardName as BoardName,
+        b.BackgroundUrl
     FROM Boards b
     WHERE b.WorkspaceId = 1
 ),
@@ -216,7 +266,9 @@ SELECT
     u.Email as UserEmail,
     u.LastActive,
     p.PermissionName as Permission,
-    COUNT(bm.BoardId) AS NumBoardsJoined
+    COUNT(bm.BoardId) AS NumBoardsJoined,
+    STRING_AGG(biw.BoardName, ', ') AS JoinedBoardNames,
+    STRING_AGG(biw.BackgroundUrl, ', ') AS JoinedBoardBackground
 FROM WorkspaceMembers wm
     LEFT JOIN BoardMembers bm ON bm.UserId = wm.UserId
     LEFT JOIN BoardInWorkspace biw ON bm.BoardId = biw.BoardId
