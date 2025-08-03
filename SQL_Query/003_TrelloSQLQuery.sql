@@ -8,8 +8,8 @@ SELECT TOP 4
     t.Title, 
     t.BackgroundUrl
 FROM Templates t
-    JOIN TemplateCategories tc ON tc.Id = t.TemplateCategoryId
-WHERE tc.CategoryName = 'Geologist II'; -- ':templateCategory'
+    JOIN Categories c ON t.CategoryId = c.Id
+WHERE c.CategoryName = 'User'; -- ':templateCategory'
 
 -- 2. Query 4 recently accessed Boards by user
 SELECT TOP 4 
@@ -17,10 +17,11 @@ SELECT TOP 4
     b.BoardName,
     b.BackgroundUrl
 FROM Boards b
-    JOIN BoardUsers bu ON bu.BoardId = b.Id
-    JOIN Users u ON u.Id = bu.UserID
+    JOIN UserViewHistory uvh ON uvh.OwnerId  = b.Id
+    JOIN Categories c on c.Id=uvh.CategoryId and c.CategoryName='Board'
+    JOIN Users u ON u.Id = uvh.UserId
 WHERE u.Id = 2 -- userId
-ORDER BY bu.AccessedAt DESC;
+ORDER BY uvh.AccessedAt DESC;
 --2.1. Query all IsStar Board where User is a Member
 
 -- 3. Query all Workspaces where User is a Member
@@ -29,8 +30,8 @@ SELECT
     w.WorkspaceName
 FROM Workspaces w
     JOIN Members m ON m.OwnerId = w.Id
-    JOIN OwnerTypes ot ON m.OwnerTypeId = ot.Id
-WHERE ot.OwnerTypeValue = 'WORKSPACE' 
+    JOIN Categories ot ON m.CategoryId = ot.Id
+WHERE ot.CategoryName = 'WORKSPACE' 
     AND m.UserId = 1;
     
 -- 4. Query all Workspaces where User is a Member. 
@@ -38,7 +39,7 @@ WHERE ot.OwnerTypeValue = 'WORKSPACE'
 SELECT 
     w.Id AS WorkspaceId,
     w.WorkspaceName,
-    w.IconUrl AS WorkspaceIcon,
+    w.LogoUrl AS WorkspaceIcon,
     b.Id AS BoardId,
     b.BoardName AS BoardName,
     b.BoardDescription,
@@ -47,13 +48,13 @@ SELECT
 FROM Workspaces w
     -- Find Workspaces where User is a Member
     JOIN Members mw ON mw.OwnerId = w.Id
-    JOIN OwnerTypes otw ON otw.Id = mw.OwnerTypeId 
-        AND otw.OwnerTypeValue = 'WORKSPACE'
+    JOIN Categories otw ON otw.Id = mw.CategoryId 
+        AND otw.CategoryName = 'WORKSPACE'
     -- Find Boards corresponding to Workspace where User is also a Member
     JOIN Boards b ON b.WorkspaceId = w.Id
     JOIN Members mb ON mb.OwnerId = b.Id
-    JOIN OwnerTypes otb ON otb.Id = mb.OwnerTypeId 
-        AND otb.OwnerTypeValue = 'BOARD'
+    JOIN Categories otb ON otb.Id = mb.CategoryId 
+        AND otb.CategoryName = 'BOARD'
 WHERE mb.UserId = 1
     
 
@@ -66,8 +67,8 @@ SELECT
 FROM Boards b
     JOIN Workspaces w ON w.Id = b.WorkspaceId
     JOIN Members m ON m.OwnerId = b.Id
-    JOIN OwnerTypes ot ON m.OwnerTypeId = ot.Id 
-        AND ot.OwnerTypeValue = 'BOARD'
+    JOIN Categories ot ON m.CategoryId = ot.Id 
+        AND ot.CategoryName = 'BOARD'
 WHERE m.UserId = 3
     AND b.BoardStatus = 'CLOSED';
 --6. Delete Or Reopen a closed board
@@ -84,8 +85,8 @@ WHERE Id=3
 SELECT TOP 14
     Id as CategoryId,
     CategoryName,
-    IconUrl
-FROM TemplateCategories;
+    Icon
+FROM Categories;
 
 -- 8. Get New and notable templates
 SELECT 
@@ -126,7 +127,7 @@ WHERE t.Id = 1; -- templateId
 GO
 --9.2.Get all Stage, Card belong to Board in Template (Store Procedure)
 
-ALTER PROCEDURE GetBoardDetail
+CREATE PROCEDURE GetBoardDetail
     @BoardId INT
 AS
 BEGIN
@@ -148,16 +149,16 @@ BEGIN
         c.Id as CardId,
         c.Title as CardTitle,
         c.StageId,
-        c.CoverType,
+        c.CoverValue,
         c.CoverValue,
         color.ColorName,
-        a.FilePath,
+        a.AttachmentPath,
         c.Position,
         c.CardDescription
     FROM CARDS c
     JOIN Stages s on s.Id=c.StageId
-    LEFT JOIN Colors color on TRY_CAST(CASE WHEN c.CoverType = 'COLOR' THEN c.CoverValue ELSE NULL END AS INT) = color.Id
-    LEFT JOIN Attachments a on TRY_CAST(CASE WHEN c.CoverType = 'ATTACHMENT' THEN c.CoverValue ELSE NULL END AS INT) = a.Id
+    LEFT JOIN Colors color on TRY_CAST(CASE WHEN c.CategoryId = 'COLOR' THEN c.CoverValue ELSE NULL END AS INT) = color.Id
+    LEFT JOIN Attachments a on TRY_CAST(CASE WHEN c.CategoryId = 'ATTACHMENT' THEN c.CoverValue ELSE NULL END AS INT) = a.Id
     where s.BoardId=@BoardId
     order by StageId
 END
@@ -169,7 +170,7 @@ EXEC GetBoardDetail @BoardId=1
 -- -----------------------------------------------------------------------------
 
 -- 10. Insert data into Workspaces
-INSERT INTO Workspaces (WorkspaceName, WorkspaceDescription, WorkspaceType) 
+INSERT INTO Workspaces (WorkspaceName, WorkspaceDescription, CategoryId) 
 VALUES ('Quan', 'BBV-YPP4', 'ENGINEERING_IT');
 
 -- -----------------------------------------------------------------------------
@@ -183,15 +184,15 @@ WITH SettingValueForWorkspace AS (
         sv.Id as SettingValueId,
         sv.OwnerId,
         sk.Id,
-        sk.DataTypeId,
+        sk.CategoryId,
         sk.KeyName,
         so.DisplayValue 
     FROM SettingValues sv
         JOIN SettingKeys sk ON sk.Id = sv.SettingKeyId
-        LEFT JOIN SettingOptions so ON sv.SettingContent= so.Id 
-            AND sk.DataTypeId=1
-        JOIN OwnerTypes ot ON ot.Id = sk.OwnerTypeId 
-            AND ot.OwnerTypeValue = 'WORKSPACE'
+        LEFT JOIN SettingOptions so ON sv.SettingValue= so.Id 
+            AND sk.CategoryId=7
+        JOIN Categories ot ON ot.Id = sk.CategoryId 
+            AND ot.CategoryName = 'WORKSPACE'
     WHERE sk.KeyName = 'Visibility'
 )
 SELECT 
@@ -209,7 +210,7 @@ SELECT TOP 4
     b.BackgroundUrl
 FROM Boards b
     JOIN Templates t ON t.BoardId = b.Id
-    JOIN TemplateCategories tc ON t.TemplateCategoryId = tc.Id
+    JOIN Categories tc ON t.CategoryId = tc.Id
 WHERE tc.CategoryName = 'Operator'
 ORDER BY 
     t.Viewed DESC, 
@@ -224,8 +225,8 @@ SELECT
 FROM Boards b
     JOIN Members m ON m.OwnerId = b.Id
     JOIN Workspaces w ON w.Id = b.WorkspaceId
-    JOIN OwnerTypes ot ON ot.Id = m.OwnerTypeId 
-        AND ot.OwnerTypeValue = 'BOARD'
+    JOIN Categories ot ON ot.Id = m.CategoryId 
+        AND ot.CategoryName = 'BOARD'
 WHERE w.Id = 1 
     
 
@@ -238,10 +239,10 @@ WHERE w.Id = 1
 WITH WorkspaceMembers AS (
     SELECT 
         m.UserId, 
-        m.PermissionId
+        m.RolePermissonId
     FROM Members m
-        JOIN OwnerTypes ot ON ot.Id = m.OwnerTypeId
-    WHERE ot.OwnerTypeValue = 'WORKSPACE' 
+        JOIN Categories ot ON ot.Id = m.CategoryId
+    WHERE ot.CategoryName = 'WORKSPACE' 
         AND m.OwnerId = 1
 ),
 BoardInWorkspace AS (
@@ -257,8 +258,8 @@ BoardMembers AS (
         m.UserId,
         m.OwnerId AS BoardId
     FROM Members m
-        JOIN OwnerTypes ot ON ot.Id = m.OwnerTypeId
-    WHERE ot.OwnerTypeValue = 'BOARD'
+        JOIN Categories ot ON ot.Id = m.CategoryId
+    WHERE ot.CategoryName = 'BOARD'
 )
 SELECT
     u.Id as UserId,
@@ -273,7 +274,7 @@ FROM WorkspaceMembers wm
     LEFT JOIN BoardMembers bm ON bm.UserId = wm.UserId
     JOIN BoardInWorkspace biw ON bm.BoardId = biw.BoardId
     JOIN Users u ON wm.UserId = u.Id
-    JOIN RolePermissions p ON wm.PermissionId = p.Id
+    JOIN RolePermissions p ON wm.RolePermissonId = p.Id
 GROUP BY 
     u.Id, 
     u.Username,
@@ -289,17 +290,18 @@ SELECT
     p.PermissionName
 FROM ShareLinks sl
     JOIN Workspaces w ON w.Id = sl.OwnerId
-    JOIN RolePermissions p ON sl.PermissionId = p.Id
+    JOIN Categories c on c.Id=sl.CategoryId AND c.CategoryName='WORKSPACE'
+    JOIN RolePermissions p ON sl.RolePermissonId = p.Id
 WHERE w.Id = 1;
 
 -- 16. Update ShareLink Status of Workspace
 UPDATE ShareLinks 
 SET ShareLinkStatus = 1
 WHERE OwnerId = 1
-    AND OwnerTypeId IN (
+    AND CategoryId IN (
         SELECT Id
-        FROM OwnerTypes
-        WHERE OwnerTypeValue = 'WORKSPACE'
+        FROM Categories
+        WHERE CategoryName = 'WORKSPACE'
     );
 
 -- -----------------------------------------------------------------------------
@@ -314,16 +316,16 @@ WITH WorkspaceBoardMembers AS (
         b.WorkspaceId
     FROM Members m 
         JOIN Boards b ON b.Id = m.OwnerId
-        JOIN OwnerTypes ot ON ot.Id = m.OwnerTypeId 
-            AND ot.OwnerTypeValue = 'BOARD'
+        JOIN Categories ot ON ot.Id = m.CategoryId 
+            AND ot.CategoryName = 'BOARD'
     WHERE b.WorkspaceId = 3
 ),
 WorkspaceMembers AS (
     SELECT m.UserId
     FROM Members m
         JOIN Workspaces w ON w.Id = m.OwnerId
-        JOIN OwnerTypes ot ON ot.Id = m.OwnerTypeId 
-            AND ot.OwnerTypeValue = 'WORKSPACE'
+        JOIN Categories ot ON ot.Id = m.CategoryId 
+            AND ot.CategoryName = 'WORKSPACE'
     WHERE m.OwnerId = 3
 )
 SELECT
@@ -345,19 +347,19 @@ GROUP BY
 -- -----------------------------------------------------------------------------
 
 -- 18. Add Member to Board with Permission
-INSERT INTO Members (UserId, PermissionId, OwnerTypeId, OwnerId, InvitedBy, JoinedAt, Status) 
+INSERT INTO Members (UserId, RolePermissionId, CategoryId, OwnerId, InvitedBy, JoinedAt, Status) 
 VALUES (1001, 1, 3, 3, 1, '', 'ACTIVE');
 
 -- 19. Create ShareLink for Board with Permission (Each Board has only 1 ShareLink)
 IF NOT EXISTS (
     SELECT 1 
     FROM ShareLinks sl 
-        JOIN OwnerTypes ot ON ot.Id = sl.OwnerTypeId 
-            AND ot.OwnerTypeValue = 'BOARD'
+        JOIN Categories ot ON ot.Id = sl.CategoryId 
+            AND ot.CategoryName = 'BOARD'
     WHERE sl.OwnerId = 1
 )
 BEGIN 
-    INSERT INTO ShareLinks (OwnerTypeId, OwnerId, PermissionId, ShareLinkToken, ShareLinkStatus) 
+    INSERT INTO ShareLinks (CategoryId, OwnerId, RolePermissonId, ShareLinkToken, ShareLinkStatus) 
     VALUES (3, 1, 1, '/path', 1);
 END
 ELSE
@@ -368,12 +370,12 @@ END;
 --20. Update Status and Permission of ShareLink
 UPDATE ShareLinks
 SET ShareLinkStatus = 'ENABLED',        
-    PermissionId = 2           
+    RolePermissonId = 2           
 WHERE OwnerId = 1
-    AND OwnerTypeId IN (
+    AND CategoryId IN (
         SELECT Id 
-        FROM OwnerTypes 
-        WHERE OwnerTypeValue = 'BOARD'
+        FROM Categories 
+        WHERE CategoryName = 'BOARD'
     );
 
 --21. Get all Members of Board and their RolePermissions
@@ -383,7 +385,7 @@ SELECT
     p.PermissionName
 FROM Members m
     JOIN Boards b ON b.Id = m.OwnerId
-    JOIN RolePermissions p ON p.Id = m.PermissionId
+    JOIN RolePermissions p ON p.Id = m.RolePermissonId
     JOIN Users u ON u.Id = m.UserId
 WHERE b.Id = 1;
 
@@ -398,21 +400,21 @@ SELECT
 FROM SettingKeys sk
     JOIN SettingKeySettingOptions skso ON skso.SettingKeyId = sk.Id
     JOIN SettingOptions so ON so.Id = skso.SettingOptionId
-    JOIN OwnerTypes ot ON ot.Id = sk.OwnerTypeId 
-        AND ot.OwnerTypeValue = 'WORKSPACE';
+    JOIN Categories ot ON ot.Id = sk.CategoryId 
+        AND ot.CategoryName = 'WORKSPACE';
 
 -- 23. SettingValues of specific Workspace
 
 SELECT 
     sk.KeyName,
-    sk.DataTypeId,
+    sk.CategoryId,
     sv.SettingValue,
     so.DisplayValue
 FROM SettingValues sv
     JOIN SettingKeys sk ON sk.Id = sv.SettingKeyId
-    LEFT JOIN SettingOptions so ON so.Id = sv.SettingValue AND sk.DataTypeId=3
-    JOIN OwnerTypes ot ON ot.Id = sk.OwnerTypeId 
-        AND ot.OwnerTypeValue = 'WORKSPACE'
+    LEFT JOIN SettingOptions so ON so.Id = sv.SettingValue AND sk.CategoryId=7
+    JOIN Categories ot ON ot.Id = sk.CategoryId 
+        AND ot.CategoryName = 'WORKSPACE'
 WHERE sv.OwnerId = 1;
 
 -- -----------------------------------------------------------------------------
@@ -423,40 +425,40 @@ WHERE sv.OwnerId = 1;
 SELECT
     sk.Id as SettingKeyId,
     sk.KeyName,
-    sk.DataTypeId,
+    sk.CategoryId,
     so.DisplayValue
 FROM SettingKeys sk
     JOIN SettingKeySettingOptions skso ON skso.SettingKeyId = sk.Id
-    LEFT JOIN SettingOptions so ON so.Id = skso.SettingOptionId AND sk.DataTypeId=3
-    JOIN OwnerTypes ot ON ot.Id = sk.OwnerTypeId 
-        AND ot.OwnerTypeValue = 'BOARD'
+    LEFT JOIN SettingOptions so ON so.Id = skso.SettingOptionId AND sk.CategoryId=7
+    JOIN Categories ot ON ot.Id = sk.CategoryId 
+        AND ot.CategoryName = 'BOARD'
 WHERE sk.KeyName LIKE 'permissions.%';
 
 -- 25. SettingKeys and corresponding SettingOptions for Board
 SELECT 
     sk.Id as SettingKeyId,
     sk.KeyName,
-    sk.DataTypeId,
+    sk.CategoryId,
     so.DisplayValue
 FROM SettingKeys sk
     JOIN SettingKeySettingOptions skso ON skso.SettingKeyId = sk.Id
-    LEFT JOIN SettingOptions so ON so.Id = skso.SettingOptionId AND sk.DataTypeId=3
-    JOIN OwnerTypes ot ON ot.Id = sk.OwnerTypeId 
-        AND ot.OwnerTypeValue = 'BOARD';
+    LEFT JOIN SettingOptions so ON so.Id = skso.SettingOptionId AND sk.CategoryId=7
+    JOIN Categories ot ON ot.Id = sk.CategoryId 
+        AND ot.CategoryName = 'BOARD';
 
 -- 26. SettingValues corresponding to Board
 SELECT
     sv.Id as SettingValueId,
     sv.OwnerId,
     sk.KeyName,
-    sk.DataTypeId,
-    sv.SettingContent,
+    sk.CategoryId,
+    sv.SettingValue,
     so.DisplayValue
 FROM SettingValues sv
     JOIN SettingKeys sk ON sk.Id = sv.SettingKeyId
-    LEFT JOIN SettingOptions so ON so.Id = sv.SettingValue AND sk.DataTypeId=3
-    JOIN OwnerTypes ot ON ot.Id = sk.OwnerTypeId 
-        AND ot.OwnerTypeValue = 'BOARD'
+    LEFT JOIN SettingOptions so ON so.Id = sv.SettingValue AND sk.CategoryId=7
+    JOIN Categories ot ON ot.Id = sk.CategoryId 
+        AND ot.CategoryName = 'BOARD'
 WHERE sv.OwnerId = 3;
 
 -- -----------------------------------------------------------------------------
@@ -508,9 +510,9 @@ SELECT
     pu.PolicyUrl,
     pu.IsStaffPick,
     pu.IsIntegration,
-    put.CategoryName AS CategoryName
+    c.CategoryName AS CategoryName
 FROM PowerUps pu
-    JOIN PowerUpCategories put ON put.Id = pu.PowerUpCategoryId
+    JOIN Categories c ON c.Id = pu.CategoryId
 WHERE pu.Id = 1;
 
 -- -----------------------------------------------------------------------------
@@ -522,7 +524,7 @@ SELECT
     bp.Id as BillingPlanId,
     bp.PlanName, 
     bp.PricePerUser, 
-    bp.BIllingPlanType
+    bp.BillingPlanDescription
 FROM BillingPlans bp;
 
 -- -----------------------------------------------------------------------------
@@ -575,7 +577,7 @@ SELECT
     s.StartDate, 
     s.EndDate,
     bp.PlanName,
-    bp.BIllingPlanType,
+    bp.BillingPlanDescription,
     bp.PricePerUser,
     s.MemberCountBilled,
     bp.PricePerUser * s.MemberCountBilled AS TotalBill
@@ -670,15 +672,15 @@ MemberAgg AS (
         STRING_AGG(u.Id, ', ') AS AssignedMemberId,
         STRING_AGG(u.Username, ', ') WITHIN GROUP (ORDER BY u.Username) AS AssignedMembers
     FROM Members m
-        JOIN OwnerTypes ot ON ot.Id = m.OwnerTypeId 
-            AND ot.OwnerTypeValue = 'CARD'
+        JOIN Categories ot ON ot.Id = m.CategoryId 
+            AND ot.CategoryName = 'CARD'
         JOIN Users u ON u.Id = m.UserId
     GROUP BY m.OwnerId
 )
 SELECT
     c.Id,
     c.Title,
-    c.CoverType,
+    c.CategoryId,
     c.CoverValue,
     c.StartDate,
     c.DueDate,
@@ -708,8 +710,8 @@ WITH MemberAgg AS (
         STRING_AGG(u.Id, ', ') AS AssignedMemberId,
         STRING_AGG(u.Username, ', ') WITHIN GROUP (ORDER BY u.Username) AS AssignedMembers
     FROM Members m
-        JOIN OwnerTypes ot ON ot.Id = m.OwnerTypeId 
-            AND ot.OwnerTypeValue = 'CARD'
+        JOIN Categories ot ON ot.Id = m.CategoryId 
+            AND ot.CategoryName = 'CARD'
         JOIN Users u ON u.Id = m.UserId
     GROUP BY m.OwnerId
 ),
@@ -756,13 +758,13 @@ SELECT
     a.CreatedAt
 FROM Activities a
     JOIN Users u ON u.Id = a.UserId
-    JOIN OwnerTypes ot ON ot.Id = a.OwnerTypeId 
-        AND ot.OwnerTypeValue = 'CARD'
+    JOIN Categories ot ON ot.Id = a.CategoryId 
+        AND ot.CategoryName = 'CARD'
 WHERE a.OwnerId = 1;
 GO
 
 --46. Get MovedCard Data (Store Procedure)
-ALTER PROCEDURE sp_GetMoveCardData
+CREATE PROCEDURE sp_GetMoveCardData
     @UserId INT,
     @SelectedBoardId INT = NULL,
     @SelectedListId INT = NULL
@@ -840,21 +842,21 @@ WHERE Id = @CardId;
 -- Update Card Cover to Color 
 UPDATE Cards
 SET 
-    CoverType = 'COLOR', 
+    CategoryId = 62, --Color
     CoverValue = '5'
 WHERE Id = 1;
 
 -- Update Card Cover to Unsplash Image
 UPDATE Cards
 SET 
-    CoverType = 'UNSPLASH', 
+    CategoryId= 63, --Unsplash
     CoverValue = 'unsplashimage.png'
 WHERE Id = 1;
 
 -- Update Card Cover to Attachment
 UPDATE Cards
 SET 
-    CoverType = 'ATTACHMENT', 
+    CategoryId = 64, 
     CoverValue = ''
 WHERE Id = 1;
 
@@ -916,11 +918,10 @@ WHERE cl.CardId = 1;
 -- 54. Get all Attachment of a specific Card
 SELECT 
     a.Id AS AttachmentId,
-    a.Link AS AttachmentLink,
-    a.FileType AS AttachmentFileType,
-    a.FilePath AS AttachmentFilePath,
+    a.AttachmentPath AS AttachmentLink,
+    a.CategoryId AS AttachmentFileType,
     a.AttachmentName,
-    a.UploadAt
+    a.CreatedAt
 FROM Attachments a
     JOIN Cards c ON a.CardId = c.Id
 WHERE c.Id = 1;
@@ -931,7 +932,7 @@ GO
 -- -----------------------------------------------------------------------------
 
 -- 55. Query All CustomField, FieldItem of Board (store procedure)
-ALTER PROCEDURE sp_GetAllCustomFieldAndFieldValue
+CREATE PROCEDURE sp_GetAllCustomFieldAndFieldValue
     @BoardId INT
 AS
 BEGIN
@@ -940,7 +941,7 @@ BEGIN
         cf.Id,
         cf.Title,
         cf.Position,
-        cf.DataTypeId
+        cf.CategoryId
     FROM CustomFields cf
     WHERE cf.BoardId = @BoardId;
 
@@ -948,12 +949,12 @@ BEGIN
         cf.Id as CustomFieldId,
         fi.Id as FieldItemId,
         fi.FieldItemValue AS FieldItemValue,
-        fi.Priority AS FieldItemPriority,
+        fi.Position AS FieldItemPriority,
         c.ColorName AS Color,
         c.Icon AS ColorIcon
     FROM FieldItems fi
         JOIN CustomFields cf ON cf.Id = fi.CustomFieldId 
-            AND cf.DataTypeId = 1
+            AND cf.CategoryId = 1
         LEFT JOIN Colors c ON fi.ColorId=c.Id
     WHERE cf.BoardId = @BoardId;
 END;
@@ -965,13 +966,13 @@ EXEC sp_GetAllCustomFieldAndFieldValue @BoardId = 491;
 -- 56. Query FieldValue of CustomField in specific Card
 SELECT 
     cf.Title, 
-    cf.DataTypeId, 
+    cf.CategoryId, 
     fv.FieldValue AS FieldValue, 
     fi.FieldItemValue AS FieldItemValue
 FROM FieldValues fv
     JOIN CustomFields cf ON cf.Id = fv.CustomFieldId
     LEFT JOIN FieldItems fi ON fi.Id = TRY_CAST(fv.FieldValue AS INT) 
-        AND cf.DataTypeId = 1
+        AND cf.CategoryId = 1
 WHERE fv.CardId = 10;
 
 -- -----------------------------------------------------------------------------
@@ -1020,41 +1021,41 @@ SELECT TOP 100
     b.BoardName AS BoardName,
     -- Activity context
     CASE 
-        WHEN ot.OwnerTypeValue = 'BOARD' THEN 'Board activity'
-        WHEN ot.OwnerTypeValue = 'CARD' THEN 'Card: ' + c.Title
-        WHEN ot.OwnerTypeValue = 'WORKSPACE' THEN 'Workspace activity'
-        ELSE ot.OwnerTypeValue
+        WHEN ot.CategoryName = 'BOARD' THEN 'Board activity'
+        WHEN ot.CategoryName = 'CARD' THEN 'Card: ' + c.Title
+        WHEN ot.CategoryName = 'WORKSPACE' THEN 'Workspace activity'
+        ELSE ot.CategoryName
     END AS ActivityDescription,
-    ot.OwnerTypeValue AS ActivityType
+    ot.CategoryName AS ActivityType
 FROM Activities a
     INNER JOIN Users u ON a.UserId = u.Id
-    INNER JOIN OwnerTypes ot ON a.OwnerTypeId = ot.Id
+    INNER JOIN Categories ot ON a.CategoryId = ot.Id
     -- Get all memberships for the current user
     INNER JOIN Members m ON m.UserId = 3
-    INNER JOIN OwnerTypes mot ON m.OwnerTypeId = mot.Id
+    INNER JOIN Categories mot ON m.CategoryId = mot.Id
     -- Context joins
-    LEFT JOIN Cards c ON ot.OwnerTypeValue = 'CARD' AND a.OwnerId = c.Id
+    LEFT JOIN Cards c ON ot.CategoryName = 'CARD' AND a.OwnerId = c.Id
     LEFT JOIN Stages s ON c.StageId = s.Id
-    LEFT JOIN Boards b ON (ot.OwnerTypeValue = 'BOARD' AND a.OwnerId = b.Id) 
-        OR (ot.OwnerTypeValue = 'CARD' AND s.BoardId = b.Id)
+    LEFT JOIN Boards b ON (ot.CategoryName = 'BOARD' AND a.OwnerId = b.Id) 
+        OR (ot.CategoryName = 'CARD' AND s.BoardId = b.Id)
     LEFT JOIN Workspaces w ON b.WorkspaceId = w.Id 
-        OR (ot.OwnerTypeValue = 'WORKSPACE' AND a.OwnerId = w.Id)
+        OR (ot.CategoryName = 'WORKSPACE' AND a.OwnerId = w.Id)
 WHERE 
     -- User has access through board membership
-    (mot.OwnerTypeValue = 'BOARD' AND (
-        (ot.OwnerTypeValue = 'BOARD' AND m.OwnerId = a.OwnerId) OR
-        (ot.OwnerTypeValue = 'CARD' AND m.OwnerId = s.BoardId)
+    (mot.CategoryName = 'BOARD' AND (
+        (ot.CategoryName = 'BOARD' AND m.OwnerId = a.OwnerId) OR
+        (ot.CategoryName = 'CARD' AND m.OwnerId = s.BoardId)
     ))
     OR
     -- User has access through workspace membership
-    (mot.OwnerTypeValue = 'WORKSPACE' AND (
-        (ot.OwnerTypeValue = 'WORKSPACE' AND m.OwnerId = a.OwnerId) OR
-        (ot.OwnerTypeValue = 'BOARD' AND m.OwnerId = b.WorkspaceId) OR
-        (ot.OwnerTypeValue = 'CARD' AND m.OwnerId = w.Id)
+    (mot.CategoryName = 'WORKSPACE' AND (
+        (ot.CategoryName = 'WORKSPACE' AND m.OwnerId = a.OwnerId) OR
+        (ot.CategoryName = 'BOARD' AND m.OwnerId = b.WorkspaceId) OR
+        (ot.CategoryName = 'CARD' AND m.OwnerId = w.Id)
     ))
     OR
     -- User is directly assigned to the card
-    (mot.OwnerTypeValue = 'CARD' AND ot.OwnerTypeValue = 'CARD' AND m.OwnerId = a.OwnerId)
+    (mot.CategoryName = 'CARD' AND ot.CategoryName = 'CARD' AND m.OwnerId = a.OwnerId)
 ORDER BY a.CreatedAt DESC;
 
 -- 61. Get recently viewed Board which user is a member
@@ -1066,9 +1067,9 @@ SELECT TOP 8
         ELSE 0
     END AS IsTemplate
 FROM Boards b
-    JOIN BoardUsers bu ON bu.BoardId = b.Id
+    JOIN UserViewHistories uvh ON uvh.OwnerId = b.Id
     JOIN Workspaces w ON w.Id = b.WorkspaceId
-WHERE bu.UserID = 2;
+WHERE uvh.UserID = 2;
 
 -- -----------------------------------------------------------------------------
 -- SCREEN 30: NOTIFICATION (Slide 43)
@@ -1078,7 +1079,7 @@ WHERE bu.UserID = 2;
 SELECT 
     a.ActivityDescription,
     a.CreatedAt,
-    n.NotificationStatus AS NotificationStatus
+    n.IsRead AS NotificationStatus
 FROM Notifications n
     JOIN Activities a ON a.Id = n.ActivityId
 WHERE a.UserId = 5;
