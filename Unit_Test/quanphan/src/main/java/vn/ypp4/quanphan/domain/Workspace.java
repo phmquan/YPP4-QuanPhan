@@ -19,5 +19,4 @@ public class Workspace {
     private WorkspaceTypeEnum Type;
     private Instant CreatedAt;
     private int CreatedBy;
-
 }

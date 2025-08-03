@@ -1,0 +1,57 @@
+package vn.ypp4.quanphan.service;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.Instant;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
+import vn.ypp4.quanphan.domain.User;
+import vn.ypp4.quanphan.domain.Workspace;
+
+@Service
+@RequiredArgsConstructor
+public class UserService {
+    private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<User> userRowMapper = new RowMapper<User>() {
+        @Override
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new User(
+                    rs.getInt("id"),
+                    rs.getString("Username"),
+                    rs.getString("Bio"),
+                    rs.getString("Email"),
+                    rs.getTimestamp("LastActive").toInstant(),
+                    rs.getTimestamp("CreatedAt").toInstant(),
+                    rs.getString("PictureUrl"));
+        }
+    };
+
+    public User createUser(String Username, String Bio, String Email, Instant LastActive, Instant CreatedAt,
+            String PictureUrl) {
+        if (Username == null) {
+            throw new IllegalArgumentException("Username cannot be null or empty for user");
+        }
+        if (Email == null) {
+            throw new IllegalArgumentException("Email cannot be null");
+        }
+        if (CreatedAt == null) {
+            throw new IllegalArgumentException("CreatedAt cannot be null");
+        }
+        jdbcTemplate.update(
+                "INSERT INTO Users (Username,Bio,Email,LastActive,CreatedAt,PictureUrl) VALUES (?,?,?,?,?,?)",
+                Username, Bio, Email, java.sql.Timestamp.from(LastActive), java.sql.Timestamp.from(CreatedAt),
+                PictureUrl);
+        return getUserByEmail(Email);
+    }
+
+    public User getUserByEmail(String email) {
+        return jdbcTemplate.queryForObject(
+                "SELECT * FROM Users WHERE name = ?",
+                userRowMapper,
+                email);
+    }
+}
