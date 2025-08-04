@@ -69,7 +69,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserById(int id) {
+
+        return jdbcTemplate.queryForObject("SELECT Username,Email FROM Users Where Id=?", userRowMapper, id);
+    }
+
+    @Override
     public int UpdateUserById(int id, String username, String bio, String pictureUrl) {
+        User currentUser = getUserById(id);
         return jdbcTemplate.update(
                 "UPDATE Users Set Username = ?, Bio  WHERE Id=?", userRowMapper, id);
     }
