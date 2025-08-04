@@ -1,6 +1,10 @@
-package vn.ypp4.quanphan.WorkspaceUnitTest;
+package vn.ypp4.quanphan.workspace;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.time.Instant;
@@ -22,6 +26,7 @@ class WorkspaceServiceUnitTest {
     @Mock
     private JdbcTemplate jdbcTemplate;
 
+    @Spy
     @InjectMocks
     private WorkspaceServiceImpl workspaceServiceImpl;
 
@@ -121,9 +126,23 @@ class WorkspaceServiceUnitTest {
 
     @Test
     void testUpdateWorkspaceById() {
-        when(jdbcTemplate.update(anyString(), any(), any(), anyInt(), any(), anyInt(), any(), anyInt())).thenReturn(1);
+        // Tạo mock Workspace
+        Workspace mockWorkspace = new Workspace();
+        mockWorkspace.setId(1);
+        mockWorkspace.setWorkspaceName("Old name");
+        mockWorkspace.setWorkspaceDescription("Old desc");
+
+        // Gán mock trả về khi gọi getWorkspaceById
+        doReturn(mockWorkspace).when(workspaceServiceImpl).getWorkspaceById(1);
+
+        // Gán mock trả về khi update
+        when(jdbcTemplate.update(anyString(), any(), any(), anyInt(), any(), anyInt(), any(), anyInt()))
+                .thenReturn(1);
+
+        // Gọi phương thức test
         int rows = workspaceServiceImpl.updateWorkspaceById(1, "Updated", "Updated desc", 13, Instant.now(), 101,
                 "logo2.png");
+
         assertEquals(1, rows);
     }
 
