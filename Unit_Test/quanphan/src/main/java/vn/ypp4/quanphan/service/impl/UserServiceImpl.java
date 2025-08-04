@@ -53,14 +53,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByEmail(String email) {
         return jdbcTemplate.queryForObject(
-                "SELECT Username,Email FROM Users WHERE name = ?",
+                "SELECT Username,Email FROM Users WHERE Email = ?",
                 userRowMapper,
                 email);
     }
 
     @Override
     public List<User> getAllUser() {
-        return jdbcTemplate.query("SELECT Username,Email From User", userRowMapper);
+        return jdbcTemplate.query("SELECT Username,Email From Users", userRowMapper);
     }
 
     @Override
@@ -77,8 +77,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public int UpdateUserById(int id, String username, String bio, String pictureUrl) {
         User currentUser = getUserById(id);
+        currentUser.setUsername(username.isBlank() ? currentUser.getUsername() : username);
+        currentUser.setBio(bio.isBlank() ? currentUser.getBio() : bio);
+        currentUser.setPictureUrl(pictureUrl.isBlank() ? currentUser.getPictureUrl() : pictureUrl);
         return jdbcTemplate.update(
-                "UPDATE Users Set Username = ?, Bio  WHERE Id=?", userRowMapper, id);
+                "UPDATE Users Set Username = ?, Bio = ?, PictureUrl=?  WHERE Id=?",
+                userRowMapper,
+                currentUser.getUsername(), currentUser.getBio(), currentUser.getPictureUrl(), currentUser.getId());
     }
 
 }
