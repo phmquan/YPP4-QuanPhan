@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+#Java Project
+.mvn/wrapper
+mvnw
+mvnw.cmd
+pom.xml

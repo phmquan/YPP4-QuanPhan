@@ -17,7 +17,7 @@ SELECT TOP 4
     b.BoardName,
     b.BackgroundUrl
 FROM Boards b
-    JOIN UserViewHistory uvh ON uvh.OwnerId  = b.Id
+    JOIN UserViewHistories uvh ON uvh.OwnerId  = b.Id
     JOIN Categories c on c.Id=uvh.CategoryId and c.CategoryName='Board'
     JOIN Users u ON u.Id = uvh.UserId
 WHERE u.Id = 2 -- userId
@@ -86,7 +86,8 @@ SELECT TOP 14
     Id as CategoryId,
     CategoryName,
     Icon
-FROM Categories;
+FROM Categories
+WHERE CategoryTypeId=3
 
 -- 8. Get New and notable templates
 SELECT 
@@ -127,7 +128,7 @@ WHERE t.Id = 1; -- templateId
 GO
 --9.2.Get all Stage, Card belong to Board in Template (Store Procedure)
 
-CREATE PROCEDURE GetBoardDetail
+ALTER PROCEDURE GetBoardDetail
     @BoardId INT
 AS
 BEGIN
@@ -157,8 +158,8 @@ BEGIN
         c.CardDescription
     FROM CARDS c
     JOIN Stages s on s.Id=c.StageId
-    LEFT JOIN Colors color on TRY_CAST(CASE WHEN c.CategoryId = 'COLOR' THEN c.CoverValue ELSE NULL END AS INT) = color.Id
-    LEFT JOIN Attachments a on TRY_CAST(CASE WHEN c.CategoryId = 'ATTACHMENT' THEN c.CoverValue ELSE NULL END AS INT) = a.Id
+    LEFT JOIN Colors color on TRY_CAST(CASE WHEN c.CategoryId = 60 THEN c.CoverValue ELSE NULL END AS INT) = color.Id
+    LEFT JOIN Attachments a on TRY_CAST(CASE WHEN c.CategoryId = 61 THEN c.CoverValue ELSE NULL END AS INT) = a.Id
     where s.BoardId=@BoardId
     order by StageId
 END
@@ -347,7 +348,7 @@ GROUP BY
 -- -----------------------------------------------------------------------------
 
 -- 18. Add Member to Board with Permission
-INSERT INTO Members (UserId, RolePermissionId, CategoryId, OwnerId, InvitedBy, JoinedAt, Status) 
+INSERT INTO Members (UserId, RolePermissonId, CategoryId, OwnerId, InvitedBy, JoinedAt, MemberStatus) 
 VALUES (1001, 1, 3, 3, 1, '', 'ACTIVE');
 
 -- 19. Create ShareLink for Board with Permission (Each Board has only 1 ShareLink)
@@ -412,10 +413,9 @@ SELECT
     so.DisplayValue
 FROM SettingValues sv
     JOIN SettingKeys sk ON sk.Id = sv.SettingKeyId
-    LEFT JOIN SettingOptions so ON so.Id = sv.SettingValue AND sk.CategoryId=7
-    JOIN Categories ot ON ot.Id = sk.CategoryId 
-        AND ot.CategoryName = 'WORKSPACE'
-WHERE sv.OwnerId = 1;
+    LEFT JOIN SettingOptions so ON so.Id = sv.SettingValue AND sk.IsBoolean=0
+    
+WHERE sv.OwnerId = 1 and sk.CategoryId=1;
 
 -- -----------------------------------------------------------------------------
 -- SCREEN 10: BOARD SETTINGS (Slide 15)

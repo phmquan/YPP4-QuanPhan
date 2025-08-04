@@ -1,8 +1,9 @@
-package vn.ypp4.quanphan.service;
+package vn.ypp4.quanphan.service.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,11 +11,11 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import vn.ypp4.quanphan.domain.User;
-import vn.ypp4.quanphan.domain.Workspace;
+import vn.ypp4.quanphan.service.interf.UserService;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserService {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<User> userRowMapper = new RowMapper<User>() {
         @Override
@@ -30,6 +31,7 @@ public class UserService {
         }
     };
 
+    @Override
     public User createUser(String Username, String Bio, String Email, Instant LastActive, Instant CreatedAt,
             String PictureUrl) {
         if (Username == null) {
@@ -48,10 +50,28 @@ public class UserService {
         return getUserByEmail(Email);
     }
 
+    @Override
     public User getUserByEmail(String email) {
         return jdbcTemplate.queryForObject(
-                "SELECT * FROM Users WHERE name = ?",
+                "SELECT Username,Email FROM Users WHERE name = ?",
                 userRowMapper,
                 email);
     }
+
+    @Override
+    public List<User> getAllUser() {
+        return jdbcTemplate.query("SELECT Username,Email From User", userRowMapper);
+    }
+
+    @Override
+    public int DeleteUserById(int id) {
+        return jdbcTemplate.update("DELETE FROM Users WHERE Id=?", userRowMapper, id);
+    }
+
+    @Override
+    public int UpdateUserById(int id, String username, String bio, String pictureUrl) {
+        return jdbcTemplate.update(
+                "UPDATE Users Set Username = ?, Bio  WHERE Id=?", userRowMapper, id);
+    }
+
 }
