@@ -9,6 +9,8 @@ public interface UserService {
     User createUser(String username, String bio, String email, Instant lastActive, Instant createdAt,
             String pictureUrl);
 
+    User getUserById(int id);
+
     User getUserByEmail(String email);
 
     List<User> getAllUser();
