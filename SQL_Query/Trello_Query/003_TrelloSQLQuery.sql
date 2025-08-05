@@ -1,7 +1,12 @@
 -- -----------------------------------------------------------------------------
 -- SCREEN 1: TAB BOARDS (SLIDE 4)
 -- -----------------------------------------------------------------------------
-
+-- Query Starred Board By User
+select b.Id,b.BoardName,b.BackgroundUrl
+from UserStarredBoards usb
+join Boards b on b.Id=usb.BoardId
+where usb.UserId=1
+order by CreatedAt desc
 -- 1. Query 4 suggested templates by Template Category
 SELECT TOP 4 
     t.Id as TemplateId,
@@ -20,9 +25,8 @@ FROM Boards b
     JOIN UserViewHistories uvh ON uvh.OwnerId  = b.Id
     JOIN Categories c on c.Id=uvh.CategoryId and c.CategoryName='Board'
     JOIN Users u ON u.Id = uvh.UserId
-WHERE u.Id = 2 -- userId
+WHERE u.Id = 1 -- userId
 ORDER BY uvh.AccessedAt DESC;
---2.1. Query all IsStar Board where User is a Member
 
 -- 3. Query all Workspaces where User is a Member
 SELECT 
@@ -82,12 +86,11 @@ WHERE Id=3
 -- -----------------------------------------------------------------------------
 
 -- 7. Get top 14 template categories
-SELECT TOP 14
-    Id as CategoryId,
-    CategoryName,
-    Icon
-FROM Categories
-WHERE CategoryTypeId=3
+Select Top 7
+    c.Id,c.CategoryName,c.Icon
+from Categories c
+join CategoryTypes ct on ct.Id=c.CategoryTypeId and ct.Id=6
+
 
 -- 8. Get New and notable templates
 SELECT 
