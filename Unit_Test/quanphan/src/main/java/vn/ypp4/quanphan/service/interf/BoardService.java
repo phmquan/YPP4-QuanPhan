@@ -12,13 +12,21 @@ public interface BoardService {
 
     Board getBoardById(int id);
 
-    Board getBoardByWorkspace(int WorkspaceId);
+    List<Board> getBoardByWorkspaceId(int WorkspaceId);
 
-    Board getBoardByWorkspaceAndStatus(int WorkspaceId, String status);
+    List<Board> getBoardByWorkspaceAndStatus(int WorkspaceId, String status);
 
     List<Board> getAllBoard();
 
+    List<Board> getBoardByStatus(String status);
+
     int updateBoardById(int id, String username, String bio, String pictureUrl);
+
+    int updateBoardStatus(int id, String status);
+
+    int archiveBoard(int id);
+
+    int restoreBoard(int id);
 
     int deleteBoardById(int id);
 }

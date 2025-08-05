@@ -1,35 +1,22 @@
 package vn.ypp4.quanphan.service.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import vn.ypp4.quanphan.domain.User;
 import vn.ypp4.quanphan.service.interf.UserService;
+import vn.ypp4.quanphan.service.mapper.UserRowMapper;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<User> userRowMapper = new RowMapper<User>() {
-        @Override
-        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new User(
-                    rs.getInt("id"),
-                    rs.getString("Username"),
-                    rs.getString("Bio"),
-                    rs.getString("Email"),
-                    rs.getTimestamp("LastActive").toInstant(),
-                    rs.getTimestamp("CreatedAt").toInstant(),
-                    rs.getString("PictureUrl"));
-        }
-    };
+    private final UserRowMapper userRowMapper;
 
     @Override
     public User createUser(String Username, String Bio, String Email, Instant LastActive, Instant CreatedAt,
