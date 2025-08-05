@@ -98,7 +98,7 @@ public class UserServiceUnitTest {
     @Test
     void testDeleteUserById() {
         when(jdbcTemplate.update(anyString(), any(RowMapper.class), eq(1))).thenReturn(1);
-        int rows = userServiceImpl.DeleteUserById(1);
+        int rows = userServiceImpl.deleteUserById(1);
         assertEquals(1, rows);
     }
 
@@ -123,7 +123,7 @@ public class UserServiceUnitTest {
         when(jdbcTemplate.queryForObject(anyString(), ArgumentMatchers.<RowMapper<User>>any(), eq(1)))
                 .thenReturn(sampleUser);
         when(jdbcTemplate.update(anyString(), any(RowMapper.class), any(), any(), any(), anyInt())).thenReturn(1);
-        int rows = userServiceImpl.UpdateUserById(1, "updated", "updated bio", "updated.png");
+        int rows = userServiceImpl.updateUserById(1, "updated", "updated bio", "updated.png");
         assertEquals(1, rows);
     }
 }
