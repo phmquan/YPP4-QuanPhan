@@ -15,7 +15,7 @@ public interface UserService {
 
     List<User> getAllUser();
 
-    int UpdateUserById(int id, String username, String bio, String pictureUrl);
+    int updateUserById(int id, String username, String bio, String pictureUrl);
 
-    int DeleteUserById(int id);
+    int deleteUserById(int id);
 }

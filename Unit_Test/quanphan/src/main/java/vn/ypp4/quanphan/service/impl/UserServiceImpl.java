@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int DeleteUserById(int id) {
+    public int deleteUserById(int id) {
         return jdbcTemplate.update("DELETE FROM Users WHERE Id=?", userRowMapper, id);
     }
 
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int UpdateUserById(int id, String username, String bio, String pictureUrl) {
+    public int updateUserById(int id, String username, String bio, String pictureUrl) {
         User currentUser = getUserById(id);
         currentUser.setUsername(username.isBlank() ? currentUser.getUsername() : username);
         currentUser.setBio(bio.isBlank() ? currentUser.getBio() : bio);
