@@ -96,3 +96,13 @@ where uf.OwnerId=@CurrentUserLogin
 order by uf.UserFileName asc
 
 --screen 6: Share with me
+-- 8. Get Folder and File share with current user login, order by share date
+select f.FolderId,uf.FileId,f.FolderName,uf.UserFileName,c.ColorName as FolderColor,a.Email as SharerEmail,s.CreatedAt as ShareDate
+from Share s
+join Account a on a.UserId=s.Sharer
+join SharedUser su on s.ShareId=su.ShareId
+join ObjectType ot on ot.ObjectTypeId=s.ObjectTypeId
+left join Folder f on s.ObjectId=f.FolderId and ot.ObjectTypeId=1
+join Color c on c.ColorId=f.ColorId and ot.ObjectTypeId=1
+left join UserFile uf on s.ObjectId=uf.FileId and ot.ObjectTypeId=2
+where su.UserId=2
