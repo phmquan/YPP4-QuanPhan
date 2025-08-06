@@ -33,12 +33,33 @@ BEGIN
     WHERE trow.ListTemplateId = @ListTemplateId
     FOR JSON PATH, ROOT('rows');
 
-    -- Xoá cache cũ nếu có
+    
     DELETE FROM CachedListTemplateJson WHERE ListTemplateId = @ListTemplateId;
 
-    -- Lưu cache mới
+   
     INSERT INTO CachedListTemplateJson (ListTemplateId, CachedJson)
     VALUES (@ListTemplateId, @json);
 END;
 Go
 EXEC sp_CacheTemplateJson @ListTemplateId = 2
+
+SELECT
+        tcol.Id AS colId,
+        tcol.ColumnName,
+        sdt.Icon,
+        trow.Id rowid,
+        tcell.CellValue,
+        tcol.ListTemplateId
+    FROM 
+        TemplateColumn tcol
+    INNER JOIN
+        SystemDataType sdt ON tcol.SystemDataTypeId = sdt.Id
+    INNER JOIN
+        TemplateSampleRow trow ON tcol.ListTemplateId = trow.ListTemplateId
+    INNER JOIN 
+        TemplateSampleCell tcell 
+            ON tcol.Id = tcell.TemplateColumnId 
+            AND trow.Id = tcell.TemplateSampleRowId
+    WHERE 
+        tcol.ListTemplateId = 1
+
