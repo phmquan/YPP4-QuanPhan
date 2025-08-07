@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiFunction;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,6 @@ public class QuerySimulateServiceUnitTest {
 
     private List<Card> cards;
     private List<Stage> stages;
-    private BiFunction<Stage, Card, Boolean> joinCondition;
 
     @BeforeEach
     void setUp() {
@@ -39,7 +37,7 @@ public class QuerySimulateServiceUnitTest {
         stages = Arrays.asList(
                 new Stage(1, "Stage 1"),
                 new Stage(2, "Stage 2"));
-        joinCondition = (stage, card) -> stage.getId() == card.getStageId();
+
     }
 
     @Test

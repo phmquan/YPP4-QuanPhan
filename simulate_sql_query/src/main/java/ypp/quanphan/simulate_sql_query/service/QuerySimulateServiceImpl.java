@@ -6,19 +6,18 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import ypp.quanphan.simulate_sql_query.domain.PairEntity;
 
-public class QuerySimulateServiceImpl implements QuerySimulateService {
+public class QuerySimulateServiceImpl {
 
-    @Override
     public <L, R> Map<String, Object> aggregateFunctions(List<L> leftEntities, List<R> rightEntities,
             Function<L, Number> leftNumericField, Function<R, Number> rightNumericField) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public <L, R> List<PairEntity<L, R>> crossJoin(List<L> leftEntities, List<R> rightEntities) {
         List<PairEntity<L, R>> result = new ArrayList<>();
         for (L left : leftEntities) {
@@ -29,20 +28,43 @@ public class QuerySimulateServiceImpl implements QuerySimulateService {
         return result;
     }
 
-    @Override
     public <L> List<L> filter(List<L> entities, Predicate<L> condition) {
-        // TODO Auto-generated method stub
-        return null;
+        return entities.stream()
+                .filter(condition)
+                .collect(Collectors.toList());
     }
 
-    @Override
     public <L, R> List<PairEntity<L, R>> fullOuterJoin(List<L> leftEntities, List<R> rightEntities,
             BiFunction<L, R, Boolean> joinCondition) {
-        // TODO Auto-generated method stub
-        return null;
+        List<PairEntity<L, R>> result = new ArrayList<>();
+        // Result of left join
+        for (L left : leftEntities) {
+            boolean hasMatch = false;
+            for (R right : rightEntities) {
+                if (joinCondition.apply(left, right)) {
+                    result.add(new PairEntity<L, R>(left, right));
+                    hasMatch = true;
+                }
+                if (!hasMatch) {
+                    result.add(new PairEntity<L, R>(left, null));
+                }
+            }
+        }
+        for (R right : rightEntities) {
+            boolean hasMatch = false;
+            for (L left : leftEntities) {
+                if (joinCondition.apply(left, right)) {
+                    hasMatch = true;
+                    break;
+                }
+            }
+            if (!hasMatch) {
+                result.add(new PairEntity<>(null, right));
+            }
+        }
+        return result;
     }
 
-    @Override
     public <L, R> List<PairEntity<L, R>> innerJoin(List<L> leftEntities, List<R> rightEntities,
             BiFunction<L, R, Boolean> joinCondition) {
         List<PairEntity<L, R>> result = new ArrayList<>();
@@ -56,7 +78,6 @@ public class QuerySimulateServiceImpl implements QuerySimulateService {
         return result;
     }
 
-    @Override
     public <L, R> List<PairEntity<L, R>> leftJoin(List<L> leftEntities, List<R> rightEntities,
             BiFunction<L, R, Boolean> joinCondition) {
         List<PairEntity<L, R>> result = new ArrayList<>();
@@ -75,7 +96,6 @@ public class QuerySimulateServiceImpl implements QuerySimulateService {
         return result;
     }
 
-    @Override
     public <L, R> List<PairEntity<L, R>> rightJoin(List<L> leftEntities, List<R> rightEntities,
             BiFunction<L, R, Boolean> joinCondition) {
         List<PairEntity<L, R>> result = new ArrayList<>();

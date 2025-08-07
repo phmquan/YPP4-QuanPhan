@@ -1,4 +1,4 @@
--- -----------------------------------------------------------------------------
+﻿-- -----------------------------------------------------------------------------
 -- SCREEN 1: TAB BOARDS (SLIDE 4)
 -- -----------------------------------------------------------------------------
 -- Query Starred Board By User
@@ -935,7 +935,7 @@ GO
 -- -----------------------------------------------------------------------------
 
 -- 55. Query All CustomField, FieldItem of Board (store procedure)
-CREATE PROCEDURE sp_GetAllCustomFieldAndFieldValue
+CREATE OR ALTER PROCEDURE sp_GetAllCustomFieldAndFieldValue
     @BoardId INT
 AS
 BEGIN
@@ -944,8 +944,9 @@ BEGIN
         cf.Id,
         cf.Title,
         cf.Position,
-        cf.CategoryId
+        c.CategoryName
     FROM CustomFields cf
+    JOIN Categories c ON c.Id=cf.CategoryId
     WHERE cf.BoardId = @BoardId;
 
     SELECT
@@ -957,26 +958,53 @@ BEGIN
         c.Icon AS ColorIcon
     FROM FieldItems fi
         JOIN CustomFields cf ON cf.Id = fi.CustomFieldId 
-            AND cf.CategoryId = 1
+        JOIN Categories ctg on ctg.Id=cf.CategoryId and ctg.CategoryName='DROPDOWN'
         LEFT JOIN Colors c ON fi.ColorId=c.Id
     WHERE cf.BoardId = @BoardId;
 END;
 GO
 
 -- Execute stored procedure example
-EXEC sp_GetAllCustomFieldAndFieldValue @BoardId = 491;
+EXEC sp_GetAllCustomFieldAndFieldValue @BoardId = 4;
 
--- 56. Query FieldValue of CustomField in specific Card
+-- 56. Query CustomField and value of all Cards in Board except dropdown type
+DECLARE @cols NVARCHAR(MAX)
+DECLARE @query NVARCHAR(MAX)
+
+
+SELECT @cols = STUFF((
+    SELECT DISTINCT ',' + QUOTENAME(cf.Title)
+    FROM CustomFields cf
+    WHERE cf.BoardId = 1 and cf.CategoryId <> 7
+    FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 1, '')
+
+
+SET @query = '
 SELECT 
-    cf.Title, 
-    cf.CategoryId, 
-    fv.FieldValue AS FieldValue, 
-    fi.FieldItemValue AS FieldItemValue
-FROM FieldValues fv
-    JOIN CustomFields cf ON cf.Id = fv.CustomFieldId
-    LEFT JOIN FieldItems fi ON fi.Id = TRY_CAST(fv.FieldValue AS INT) 
-        AND cf.CategoryId = 1
-WHERE fv.CardId = 10;
+    CardId,
+    CardTitle,
+    ' + @cols + '
+FROM (
+    SELECT 
+        c.Id AS CardId,
+        c.Title AS CardTitle,
+        cf.Title AS CustomFieldTitle,
+        fv.FieldValue
+    FROM Cards c
+        INNER JOIN Stages s ON c.StageId = s.Id
+        INNER JOIN Boards b ON s.BoardId = b.Id
+        LEFT JOIN FieldValues fv ON c.Id = fv.CardId
+        LEFT JOIN CustomFields cf ON fv.CustomFieldId = cf.Id AND cf.BoardId = 1
+    Where b.Id=1 and cf.CategoryId <> 7
+) AS SourceTable
+PIVOT (
+    MAX(FieldValue)
+    FOR CustomFieldTitle IN (' + @cols + ')
+) AS PivotTable
+ORDER BY CardId'
+
+-- Thực thi câu query động
+EXEC(@query)
 
 -- -----------------------------------------------------------------------------
 -- SCREEN 28: CARD STICKER (Slide 40)
