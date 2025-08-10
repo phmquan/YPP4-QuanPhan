@@ -6,21 +6,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import vn.ypp4.quanphan.util.constant.BoardStatusEnum;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Board {
+public class CustomFieldValue {
     private int id;
-    private String boardName;
-    private String boardDescription;
+    private int customFieldId;
+    private int cardId;
+    private String value;
     private LocalDateTime createdAt;
     private int createdBy;
-    private String backgroundUrl;
-    private int workspaceId;
-    private BoardStatusEnum boardStatus;
     private LocalDateTime updatedAt;
     private int updatedBy;
 }
