@@ -11,13 +11,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
-    private int id;
-    private String username;
-    private String bio;
-    private String email;
-    private LocalDateTime lastActive;
+public class CommentReaction {
+    private int commentId;
+    private int reactionId;
+    private int createdBy;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private String pictureUrl;
 }

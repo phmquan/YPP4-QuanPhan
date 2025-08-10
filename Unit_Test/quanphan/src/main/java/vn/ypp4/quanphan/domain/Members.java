@@ -11,13 +11,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class Members {
     private int id;
-    private String username;
-    private String bio;
-    private String email;
-    private LocalDateTime lastActive;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private String pictureUrl;
+    private int userId;
+    private int rolePermissionId;
+    private int ownerTypeId;
+    private int ownerId;
+    private int invitedBy;
+    private LocalDateTime joinedAt;
+    private String memberStatus;
 }

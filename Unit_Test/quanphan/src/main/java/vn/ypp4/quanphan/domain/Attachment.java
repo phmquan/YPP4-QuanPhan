@@ -11,14 +11,14 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+public class Attachment {
     private int id;
-    private String categoryName;
-    private String categoryDescription;
-    private int categoryTypeId;
+    private int cardId;
+    private int attachmentTypeId;
+    private String attachmentPath;
+    private String attachmentName;
     private LocalDateTime createdAt;
     private int createdBy;
-    private String icon;
-    private int position;
-    private boolean isActive;
+    private String size;
+    private boolean isCover;
 }

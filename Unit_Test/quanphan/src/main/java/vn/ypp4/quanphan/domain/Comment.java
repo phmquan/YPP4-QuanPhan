@@ -11,14 +11,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+public class Comment {
     private int id;
-    private String categoryName;
-    private String categoryDescription;
-    private int categoryTypeId;
+    private String content;
+    private int cardId;
     private LocalDateTime createdAt;
     private int createdBy;
-    private String icon;
-    private int position;
-    private boolean isActive;
+    private LocalDateTime updatedAt;
+    private int updatedBy;
 }

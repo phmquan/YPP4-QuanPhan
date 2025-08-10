@@ -11,14 +11,15 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+public class Stage {
     private int id;
-    private String categoryName;
-    private String categoryDescription;
-    private int categoryTypeId;
+    private String title;
     private LocalDateTime createdAt;
     private int createdBy;
-    private String icon;
+    private int boardId;
+    private String stageStatus;
+    private int colorId;
     private int position;
-    private boolean isActive;
+    private LocalDateTime updatedAt;
+    private int updatedBy;
 }

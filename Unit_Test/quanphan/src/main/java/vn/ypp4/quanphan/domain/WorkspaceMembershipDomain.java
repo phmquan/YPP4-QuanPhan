@@ -11,14 +11,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+public class WorkspaceMembershipDomain {
     private int id;
-    private String categoryName;
-    private String categoryDescription;
-    private int categoryTypeId;
+    private int workspaceId;
+    private String domain;
     private LocalDateTime createdAt;
-    private int createdBy;
-    private String icon;
-    private int position;
-    private boolean isActive;
 }

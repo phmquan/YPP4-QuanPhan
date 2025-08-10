@@ -11,14 +11,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
-    private int id;
-    private String categoryName;
-    private String categoryDescription;
-    private int categoryTypeId;
+public class UserStarredBoard {
+    private int userId;
+    private int boardId;
     private LocalDateTime createdAt;
-    private int createdBy;
-    private String icon;
-    private int position;
-    private boolean isActive;
+    private boolean starredBoardsStatus;
 }
