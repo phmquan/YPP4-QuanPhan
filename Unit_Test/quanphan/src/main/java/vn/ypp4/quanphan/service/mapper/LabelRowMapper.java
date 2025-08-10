@@ -3,22 +3,21 @@ package vn.ypp4.quanphan.service.mapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import vn.ypp4.quanphan.domain.Workspace;
+import vn.ypp4.quanphan.domain.Label;
 
-public class WorkspaceRowMapper extends BaseRowMapper<Workspace> {
+public class LabelRowMapper extends BaseRowMapper<Label> {
 
     @Override
-    protected Workspace mapRowInternal(ResultSet rs, int rowNum) throws SQLException {
-        return new Workspace(
+    protected Label mapRowInternal(ResultSet rs, int rowNum) throws SQLException {
+        return new Label(
                 rs.getInt("Id"),
-                rs.getString("WorkspaceName"),
-                rs.getString("WorkspaceDescription"),
-                rs.getInt("TypeId"),
+                rs.getString("Title"),
                 rs.getTimestamp("CreatedAt") != null ? rs.getTimestamp("CreatedAt").toLocalDateTime() : null,
                 rs.getInt("CreatedBy"),
                 rs.getTimestamp("UpdatedAt") != null ? rs.getTimestamp("UpdatedAt").toLocalDateTime() : null,
                 rs.getInt("UpdatedBy"),
-                rs.getString("LogoUrl"));
+                rs.getInt("ColorId"),
+                rs.getBoolean("IsDefault"),
+                rs.getInt("BoardId"));
     }
-
 }
