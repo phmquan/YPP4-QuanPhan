@@ -14,8 +14,9 @@ public class UserRowMapper extends BaseRowMapper<User> {
                 rs.getString("Username"),
                 rs.getString("Bio"),
                 rs.getString("Email"),
-                rs.getTimestamp("LastActive").toInstant(),
-                rs.getTimestamp("CreatedAt").toInstant(),
+                rs.getTimestamp("LastActive") != null ? rs.getTimestamp("LastActive").toLocalDateTime() : null,
+                rs.getTimestamp("CreatedAt") != null ? rs.getTimestamp("CreatedAt").toLocalDateTime() : null,
+                rs.getTimestamp("UpdatedAt") != null ? rs.getTimestamp("UpdatedAt").toLocalDateTime() : null,
                 rs.getString("PictureUrl"));
     }
 
