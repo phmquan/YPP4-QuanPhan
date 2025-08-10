@@ -37,7 +37,15 @@ FROM Workspace w
     JOIN OwnerType owt ON m.OwnerTypeId = owt.Id
 WHERE owt.OwnerTypeValue = 'workspace' 
     AND m.UserId = 1;
-    
+
+--Get User Infor by Email
+select usr.FullName,usr.PictureUrl,usr.Email
+from Users usr
+where usr.Email=''
+--Update Username and Bio by Id
+update Users 
+set Username='',Bio=''
+where Email=''
 -- 4. Query all Workspace where User is a Member. 
 --    For each workspace, get all Board where User is also a Member
 SELECT 
@@ -85,7 +93,7 @@ WHERE Id=3
 -- SCREEN 2: TEMPLATES TAB (SLIDE 5)
 -- -----------------------------------------------------------------------------
 
--- 7. Get top 14 template categories
+-- 7. Get top 7 template categories
 Select Top 7
     tpc.Id,tpc.DisplayValue,tpc.IconUrl
 from TemplateCategory tpc
@@ -132,10 +140,11 @@ GO
 
 --9.2.Get all Stage, Card belong to Board in Template (Store Procedure)
 
-ALTER PROCEDURE GetBoardDetail
-    @BoardId INT
+CREATE OR ALTER PROCEDURE GetBoardDetail
+    @BoardTemplateId INT
 AS
 BEGIN
+    
     --Get BoardDetail
     SELECT 
         b.Id as BoardId,
@@ -143,32 +152,38 @@ BEGIN
         b.BackgroundUrl,
         b.BoardStatus
     FROM Board b
-    WHERE b.Id=@BoardId
+    WHERE b.Id=@BoardTemplateId
     --Get Stage in Board
     SELECT s.Id as StageId, s.Title as StageTitle,s.Position as StagePosition,c.ColorName as BackgroundColor
     FROM Stage s
     JOIN Color c on c.Id=s.ColorId
-    where s.BoardId=@BoardId
+    where s.BoardId=@BoardTemplateId
     --Get Card in Stage
     SELECT 
-        c.Id as CardId,
-        c.Title as CardTitle,
-        c.StageId,
-        c.CoverValue,
-        c.CoverValue,
+        crd.Id AS CardId,
+        crd.Title AS CardTitle,
+        crd.StageId,
+        crd.CoverValue,
         color.ColorName,
         a.AttachmentPath,
-        c.Position,
-        c.CardDescription
-    FROM CARDS c
-    JOIN Stage s on s.Id=c.StageId
-    LEFT JOIN Color color on TRY_CAST(CASE WHEN c.CardCoverTypeId = 60 THEN c.CoverValue ELSE NULL END AS INT) = color.Id
-    LEFT JOIN Attachment a on TRY_CAST(CASE WHEN c.CardCoverTypeId = 61 THEN c.CoverValue ELSE NULL END AS INT) = a.Id
-    where s.BoardId=@BoardId
-    order by StageId
+        crd.Position,
+        crd.CardDescription
+    FROM CARDS crd
+    JOIN Stage s 
+        ON s.Id = crd.StageId
+    JOIN CardCoverType cct 
+        ON cct.Id = crd.CardCoverTypeId
+    LEFT JOIN Color color 
+        ON cct.TypeValue = 'color'
+        AND TRY_CAST(crd.CoverValue AS INT) = color.Id
+    LEFT JOIN Attachment a 
+        ON cct.TypeValue = 'attachment'
+        AND TRY_CAST(crd.CoverValue AS INT) = a.Id
+    WHERE s.BoardId = @BoardTemplateId
+    ORDER BY StageId;
 END
 GO
-EXEC GetBoardDetail @BoardId=1
+EXEC GetBoardDetail @BoardTemplateId=20
 
 -- -----------------------------------------------------------------------------
 -- SCREEN 4: CREATE workspace (SLIDE 7)
@@ -198,7 +213,7 @@ WITH SettingValueForWorkspace AS (
             AND sk.IsBoolean=0
         JOIN OwnerType owt ON owt.Id = sk.OwnerTypeId 
             AND owt.OwnerTypeValue = 'workspace'
-    WHERE sk.KeyName = 'visibility'
+    WHERE sk.KeyName = 'workspacevisibility'
 )
 SELECT 
     w.Id as WorkspaceId,
@@ -207,7 +222,12 @@ SELECT
 FROM Workspace w
     JOIN SettingValueForWorkspace svfw ON svfw.OwnerId = w.Id
 WHERE w.Id = 2;
-
+-- Get Starred Board of User from a specific Workspace
+select brd.Id,brd.BoardName,brd.BackgroundUrl
+from UserStarredBoard usb
+join Board brd on brd.Id=usb.BoardId and usb.UserId=1
+join Workspace wrs on wrs.Id=brd.WorkspaceId and wrs.Id=1
+order by usb.CreatedAt desc
 -- 12. Get 4 suggested Board by Template Category Type 
 SELECT TOP 4 
     b.Id,
@@ -224,6 +244,7 @@ ORDER BY
 -- 13. Get "Your boards" section: Get Board belonging to Workspace 
 --     where User is also a Member of the Board
 SELECT 
+    w.Id as WorkspaceId,
     b.Id as BoardId,
     b.BoardName,
     b.BackgroundUrl
@@ -232,7 +253,7 @@ FROM Board b
     JOIN Workspace w ON w.Id = b.WorkspaceId
     JOIN OwnerType owt ON owt.Id = m.OwnerTypeId 
         AND owt.OwnerTypeValue = 'board'
-WHERE w.Id = 1 
+WHERE w.Id = 1 AND m.UserId=2
     
 
 -- -----------------------------------------------------------------------------
@@ -393,6 +414,11 @@ FROM Members m
     JOIN RolePermission p ON p.Id = m.RolePermissonId
     JOIN Users u ON u.Id = m.UserId
 WHERE b.Id = 1;
+-- Get ShareLink relate to Board
+select srl.Id as ShareLinkId, srl.ShareLinkStatus as ShareToken, srl.ShareLinkStatus
+from ShareLink srl
+JOIN OwnerType owt on owt.Id=srl.OwnerTypeId AND owt.OwnerTypeValue='board'
+where srl.OwnerId=1 and srl.ShareLinkStatus=1
 
 -- -----------------------------------------------------------------------------
 -- SCREEN 9: workspace SETTING TAB (Slide 14)
@@ -426,7 +452,7 @@ WHERE sv.OwnerId = 1 AND owt.OwnerTypeValue='workspace';
 -- SCREEN 10: board SETTINGS (Slide 15)
 -- -----------------------------------------------------------------------------
 
--- 24. SettingKey with KeyName='permission.*' and corresponding SettingOption for Board
+-- 24. SettingKey and corresponding SettingOption for Board
 SELECT
     sk.Id as SettingKeyId,
     sk.KeyName,
@@ -434,9 +460,9 @@ SELECT
     so.DisplayValue
 FROM SettingKey sk
     JOIN SettingKeySettingOption skso ON skso.SettingKeyId = sk.Id
-    LEFT JOIN SettingOption so ON so.Id = skso.SettingOptionId AND sk.OwnerTypeId=7
     JOIN OwnerType owt ON owt.Id = sk.OwnerTypeId 
         AND owt.OwnerTypeValue = 'board'
+    LEFT JOIN SettingOption so ON so.Id = skso.SettingOptionId  
 WHERE sk.KeyName LIKE 'permissions.%';
 
 -- 25. SettingKey and corresponding SettingOption for Board
@@ -447,24 +473,26 @@ SELECT
     so.DisplayValue
 FROM SettingKey sk
     JOIN SettingKeySettingOption skso ON skso.SettingKeyId = sk.Id
-    LEFT JOIN SettingOption so ON so.Id = skso.SettingOptionId AND sk.OwnerTypeId=7
     JOIN OwnerType owt ON owt.Id = sk.OwnerTypeId 
-        AND owt.OwnerTypeValue = 'board';
+        AND owt.OwnerTypeValue = 'board'
+    LEFT JOIN SettingOption so ON so.Id = skso.SettingOptionId 
+    
 
 -- 26. SettingValue corresponding to Board
 SELECT
     sv.Id as SettingValueId,
     sv.OwnerId,
     sk.KeyName,
-    sk.OwnerTypeId,
-    sv.SettingContent,
+    sk.IsBoolean,
+    owt.OwnerTypeValue,
+    sv.SettingContent as SettingValue,
     so.DisplayValue
 FROM SettingValue sv
     JOIN SettingKey sk ON sk.Id = sv.SettingKeyId
-    LEFT JOIN SettingOption so ON so.Id = sv.SettingContent AND sk.OwnerTypeId=7
     JOIN OwnerType owt ON owt.Id = sk.OwnerTypeId 
         AND owt.OwnerTypeValue = 'board'
-WHERE sv.OwnerId = 3;
+    LEFT JOIN SettingOption so ON so.Id = sv.SettingContent and sk.IsBoolean=0
+WHERE sv.OwnerId = 1;
 
 -- -----------------------------------------------------------------------------
 -- SCREEN 11: workspace POWER-UP (Slide 17)
@@ -703,12 +731,83 @@ FROM Cards c
     LEFT JOIN MemberAgg ma ON c.Id = ma.CardId
 WHERE c.StageId = 1
 ORDER BY c.Position;
-
+GO
 -- -----------------------------------------------------------------------------
 -- SCREEN 21: CARD DETAIL (Slide 29)
 -- -----------------------------------------------------------------------------
 
---43. Query Card Detail
+-- Get All Stage and Card Detail relate to board
+CREATE OR ALTER PROCEDURE GetBoardStagesAndCards
+    @BoardId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Common Table Expressions để gom dữ liệu phụ trợ cho card
+    WITH MemberAgg AS (
+        SELECT
+            m.OwnerId AS CardId,
+            STRING_AGG(CAST(u.Id AS VARCHAR(20)), ', ') AS AssignedMemberId,
+            STRING_AGG(u.Username, ', ') WITHIN GROUP (ORDER BY u.Username) AS AssignedMembers
+        FROM Members m
+            JOIN OwnerType owt ON owt.Id = m.OwnerTypeId 
+                AND owt.OwnerTypeValue = 'CARD'
+            JOIN Users u ON u.Id = m.UserId
+        GROUP BY m.OwnerId
+    ),
+    AttachmentAgg AS (
+        SELECT
+            tch.CardId,
+            COUNT(tch.Id) AS AttachmentCount
+        FROM Attachment tch
+        GROUP BY tch.CardId
+    ),
+    CommentAgg AS (
+        SELECT
+            cmm.CardId,
+            COUNT(cmm.Id) AS CommentCount
+        FROM Comment cmm
+        GROUP BY cmm.CardId
+    ),
+    LabelAgg AS (
+        SELECT
+            cl.CardId,
+            STRING_AGG(CAST(l.Id AS VARCHAR(20)), ', ') WITHIN GROUP (ORDER BY l.Id) AS LabelId,
+            STRING_AGG(l.Title, ', ')  AS LabelTitle
+        FROM CardLabel cl
+            JOIN Labels l ON l.Id = cl.LabelId
+        GROUP BY cl.CardId
+    )
+    SELECT 
+        s.Id AS StageId,
+        s.Title AS StageTitle,
+        s.StageStatus,
+        s.Position,
+        c.Id AS CardId,
+        c.Title AS CardTitle,
+        c.CardDescription,
+        c.StartDate,
+        c.DueDate,
+        c.CardLocation,
+        la.LabelId,
+        la.LabelTitle,
+        ma.AssignedMemberId,
+        ma.AssignedMembers,
+        aa.AttachmentCount,
+        ca.CommentCount
+    FROM Stage s
+        LEFT JOIN Cards c ON c.StageId = s.Id
+        LEFT JOIN MemberAgg ma ON c.Id = ma.CardId
+        LEFT JOIN LabelAgg la ON c.Id = la.CardId
+        LEFT JOIN AttachmentAgg aa ON c.Id = aa.CardId
+        LEFT JOIN CommentAgg ca ON c.Id = ca.CardId
+    WHERE s.BoardId = @BoardId
+    ORDER BY s.Position, c.Id;
+END;
+GO
+EXEC GetBoardStagesAndCards @BoardId = 1;
+
+--Get All Card Detail
 WITH MemberAgg AS (
     SELECT
         m.OwnerId AS CardId,
@@ -719,6 +818,20 @@ WITH MemberAgg AS (
             AND owt.OwnerTypeValue = 'CARD'
         JOIN Users u ON u.Id = m.UserId
     GROUP BY m.OwnerId
+),
+AttachmentAgg AS (
+    SELECT
+        tch.CardId,
+        COUNT(tch.Id) AS AttachmentCount
+    FROM Attachment tch
+    GROUP BY tch.CardId
+),
+CommentAgg AS (
+    SELECT
+        cmm.CardId,
+        COUNT(cmm.Id) AS CommentCount
+    FROM Comment cmm
+    GROUP BY cmm.CardId
 ),
 LabelAgg AS (
     SELECT
@@ -738,12 +851,113 @@ SELECT
     la.LabelId,
     la.LabelTitle,
     ma.AssignedMemberId,
-    ma.AssignedMembers
+    ma.AssignedMembers,
+    aa.AttachmentCount,
+    ca.CommentCount
 FROM Cards c
     LEFT JOIN MemberAgg ma ON c.Id = ma.CardId
     LEFT JOIN LabelAgg la ON c.Id = la.CardId
-WHERE c.Id = 27;
+    LEFT JOIN AttachmentAgg aa ON c.Id=aa.CardId
+    LEFT JOIN CommentAgg ca ON c.Id=ca.CardId
+WHERE c.Id = 1;
+GO
+-- Get Card Detail and Related Information
+CREATE OR ALTER PROCEDURE GetCardDetail
+    @CardId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+   
+    SELECT 
+        c.Id AS CardId,
+        c.Title,
+        c.CardDescription,
+        c.StartDate,
+        c.DueDate,
+        c.CardLocation,
+        c.CreatedAt,
+        c.CreatedBy,
+        c.UpdatedAt,
+        c.UpdatedBy
+    FROM Cards c
+    WHERE c.Id = @CardId;
+
+    -- 2. Members
+    SELECT
+        u.Id AS UserId,
+        u.Username
+    FROM Members m
+        JOIN OwnerType owt ON owt.Id = m.OwnerTypeId 
+            AND owt.OwnerTypeValue = 'CARD'
+        JOIN Users u ON u.Id = m.UserId
+    WHERE m.OwnerId = @CardId;
+
+    -- 3. Labels
+    SELECT
+        l.Id AS LabelId,
+        l.Title AS LabelTitle
+    FROM CardLabel cl
+        JOIN Labels l ON l.Id = cl.LabelId
+    WHERE cl.CardId = @CardId;
+
+    -- 4. Attachments
+    SELECT 
+        a.Id AS AttachmentId,
+        a.AttachmentName,
+        a.AttachmentPath,
+        a.CreatedAt,
+        a.CreatedBy
+    FROM Attachment a
+    WHERE a.CardId = @CardId;
+
+    -- 5. Custom fields + values
+    SELECT
+        cf.Id AS CustomFieldId,
+        cf.Title,
+        cf.Position,
+        fv.FieldValue
+    FROM CustomField cf
+        JOIN FieldValue fv ON fv.CustomFieldId = cf.Id
+    WHERE fv.CardId = @CardId;
+
+    -- 6. Comments + reactions
+    SELECT
+        cm.Id AS CommentId,
+        cm.Content,
+        cm.CreatedAt,
+        cm.CreatedBy
+    FROM Comment cm
+    WHERE cm.CardId = @CardId;
+
+     SELECT
+        cm.Id AS CommentId,
+        cmr.ReactionId,
+        rct.Icon,
+        COUNT(*) AS ReactionCount,
+        STRING_AGG(u.Username, ', ') WITHIN GROUP (ORDER BY u.Username) AS ReactedUsers
+    FROM CommentReaction cmr
+        JOIN Comment cm ON cm.Id = cmr.CommentId
+        JOIN Reaction rct ON rct.Id = cmr.ReactionId
+        JOIN Users u ON u.Id = cmr.CreatedBy
+    WHERE cm.CardId = @CardId
+    GROUP BY cm.Id, cmr.ReactionId, rct.Icon
+    ORDER BY cm.Id, rct.Icon;
+
+    -- 7. Activities
+    SELECT
+        act.Id AS ActivityId,
+        act.ActivityDescription,
+        act.CreatedAt,
+        usr.FullName,
+        usr.PictureUrl
+    FROM Activity act
+    JOIN OwnerType owt on owt.Id=act.OwnerTypeId
+    JOIN Users usr on usr.Id=act.UserId
+    WHERE act.OwnerId = @CardId;
+END;
+GO
+EXEC GetCardDetail @CardId=1
 -- -----------------------------------------------------------------------------
 -- SCREEN 22: CARD COMMENT, CARD POSITION (SLide 30)
 -- -----------------------------------------------------------------------------
@@ -1005,7 +1219,7 @@ PIVOT (
 ) AS PivotTable
 ORDER BY CardId'
 
--- Thực thi câu query động
+
 EXEC(@query)
 
 -- -----------------------------------------------------------------------------
