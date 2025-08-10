@@ -1,5 +1,6 @@
 package vn.ypp4.quanphan.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -11,15 +12,20 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Board {
+public class Cards {
     private int id;
-    private String boardName;
-    private String boardDescription;
+    private int stageId;
+    private String title;
+    private String cardDescription;
     private LocalDateTime createdAt;
     private int createdBy;
-    private String backgroundUrl;
-    private int workspaceId;
-    private String boardStatus;
+    private String cardStatus;
+    private String cardLocation;
+    private LocalDate startDate;
+    private LocalDate dueDate;
+    private int cardCoverTypeId;
+    private String coverValue;
+    private int position;
     private LocalDateTime updatedAt;
     private int updatedBy;
 }

@@ -11,13 +11,17 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class Template {
     private int id;
-    private String username;
-    private String bio;
-    private String email;
-    private LocalDateTime lastActive;
+    private String title;
+    private String templateDescription;
+    private int categoryId;
+    private int viewed;
+    private int copied;
+    private int createdBy;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private String pictureUrl;
+    private int updatedBy;
+    private int boardId;
+    private String backgroundUrl;
 }

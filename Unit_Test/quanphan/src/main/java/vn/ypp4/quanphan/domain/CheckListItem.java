@@ -1,5 +1,6 @@
 package vn.ypp4.quanphan.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -11,14 +12,16 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+public class CheckListItem {
     private int id;
-    private String categoryName;
-    private String categoryDescription;
-    private int categoryTypeId;
+    private String checkListItemName;
+    private int memberId;
+    private int checkListId;
+    private LocalDate dueDate;
+    private boolean checkListItemStatus;
     private LocalDateTime createdAt;
     private int createdBy;
-    private String icon;
+    private LocalDateTime updatedAt;
+    private int updatedBy;
     private int position;
-    private boolean isActive;
 }
