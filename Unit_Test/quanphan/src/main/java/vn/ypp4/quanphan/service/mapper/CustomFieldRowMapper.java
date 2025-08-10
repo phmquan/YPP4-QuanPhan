@@ -3,22 +3,22 @@ package vn.ypp4.quanphan.service.mapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import vn.ypp4.quanphan.domain.Workspace;
+import vn.ypp4.quanphan.domain.CustomField;
 
-public class WorkspaceRowMapper extends BaseRowMapper<Workspace> {
+public class CustomFieldRowMapper extends BaseRowMapper<CustomField> {
 
     @Override
-    protected Workspace mapRowInternal(ResultSet rs, int rowNum) throws SQLException {
-        return new Workspace(
+    protected CustomField mapRowInternal(ResultSet rs, int rowNum) throws SQLException {
+        return new CustomField(
                 rs.getInt("Id"),
-                rs.getString("WorkspaceName"),
-                rs.getString("WorkspaceDescription"),
-                rs.getInt("TypeId"),
+                rs.getString("Title"),
+                rs.getInt("DataTypeId"),
+                rs.getInt("BoardId"),
                 rs.getTimestamp("CreatedAt") != null ? rs.getTimestamp("CreatedAt").toLocalDateTime() : null,
                 rs.getInt("CreatedBy"),
                 rs.getTimestamp("UpdatedAt") != null ? rs.getTimestamp("UpdatedAt").toLocalDateTime() : null,
                 rs.getInt("UpdatedBy"),
-                rs.getString("LogoUrl"));
+                rs.getInt("Position"),
+                rs.getBoolean("IsFrontCardShowed"));
     }
-
 }
