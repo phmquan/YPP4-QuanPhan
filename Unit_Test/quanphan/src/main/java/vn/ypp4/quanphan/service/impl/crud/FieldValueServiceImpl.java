@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import vn.ypp4.quanphan.domain.FieldValue;
-import vn.ypp4.quanphan.service.mapper.FieldValueRowMapper;
+import vn.ypp4.quanphan.service.mapper.row.FieldValueRowMapper;
 
 @Service
 @RequiredArgsConstructor

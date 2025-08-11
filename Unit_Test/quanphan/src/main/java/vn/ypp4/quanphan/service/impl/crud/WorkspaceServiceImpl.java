@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import vn.ypp4.quanphan.domain.Workspace;
-import vn.ypp4.quanphan.service.mapper.WorkspaceRowMapper;
+import vn.ypp4.quanphan.service.mapper.row.WorkspaceRowMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +15,8 @@ public class WorkspaceServiceImpl {
     private final JdbcTemplate jdbcTemplate;
     private final WorkspaceRowMapper workspaceRowMapper;
 
-    public Workspace createWorkspace(String name, String description, int categoryId, LocalDateTime createdAt, int createdBy,
+    public Workspace createWorkspace(String name, String description, int categoryId, LocalDateTime createdAt,
+            int createdBy,
             LocalDateTime updatedAt, int updatedBy, String logoUrl) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be null or empty for workspace");
@@ -29,11 +30,11 @@ public class WorkspaceServiceImpl {
         if (createdAt == null) {
             throw new IllegalArgumentException("CreatedAt cannot be null");
         }
-        
+
         jdbcTemplate.update(
                 "INSERT INTO Workspaces (WorkspaceName, WorkspaceDescription, TypeId, CreatedAt, CreatedBy, UpdatedAt, UpdatedBy, LogoUrl) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 name, description, categoryId, createdAt, createdBy, createdAt, createdBy, logoUrl);
-                
+
         return jdbcTemplate.queryForObject(
                 "SELECT * FROM Workspaces WHERE Id = LAST_INSERT_ID()",
                 workspaceRowMapper);
@@ -62,12 +63,13 @@ public class WorkspaceServiceImpl {
     public int updateWorkspaceById(int id, String name, String description, int categoryId, LocalDateTime updatedAt,
             int updatedBy, String logoUrl) {
         Workspace currentWorkspace = getWorkspaceById(id);
-        
+
         String finalName = (name != null && !name.isBlank()) ? name : currentWorkspace.getWorkspaceName();
-        String finalDescription = (description != null && !description.isBlank()) ? description : currentWorkspace.getWorkspaceDescription();
+        String finalDescription = (description != null && !description.isBlank()) ? description
+                : currentWorkspace.getWorkspaceDescription();
         int finalTypeId = (categoryId != 0) ? categoryId : currentWorkspace.getTypeId();
         String finalLogoUrl = (logoUrl != null && !logoUrl.isBlank()) ? logoUrl : currentWorkspace.getLogoUrl();
-        
+
         return jdbcTemplate.update(
                 "UPDATE Workspaces SET WorkspaceName = ?, WorkspaceDescription = ?, TypeId = ?, UpdatedAt = ?, UpdatedBy = ?, LogoUrl = ? WHERE Id = ?",
                 finalName, finalDescription, finalTypeId, LocalDateTime.now(), updatedBy, finalLogoUrl, id);

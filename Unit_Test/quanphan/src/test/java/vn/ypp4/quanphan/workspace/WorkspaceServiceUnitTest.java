@@ -19,13 +19,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import vn.ypp4.quanphan.domain.Workspace;
 import vn.ypp4.quanphan.service.impl.crud.WorkspaceServiceImpl;
-import vn.ypp4.quanphan.service.mapper.WorkspaceRowMapper;
+import vn.ypp4.quanphan.service.mapper.row.WorkspaceRowMapper;
 
 class WorkspaceServiceUnitTest {
 
     @Mock
     private JdbcTemplate jdbcTemplate;
-    
+
     @Mock
     private WorkspaceRowMapper workspaceRowMapper;
 
@@ -43,7 +43,8 @@ class WorkspaceServiceUnitTest {
 
     @Test
     void testCreateWorkspace_Success() {
-        when(jdbcTemplate.update(anyString(), any(), any(), anyInt(), any(), anyInt(), any(), anyInt(), any())).thenReturn(1);
+        when(jdbcTemplate.update(anyString(), any(), any(), anyInt(), any(), anyInt(), any(), anyInt(), any()))
+                .thenReturn(1);
         when(jdbcTemplate.queryForObject(anyString(), eq(workspaceRowMapper)))
                 .thenReturn(sampleWorkspace);
 
@@ -65,14 +66,16 @@ class WorkspaceServiceUnitTest {
     @Test
     void testCreateWorkspace_ZeroCategoryId() {
         Exception ex = assertThrows(IllegalArgumentException.class,
-                () -> workspaceServiceImpl.createWorkspace("name", "desc", 0, LocalDateTime.now(), 1, null, 0, "logo.png"));
+                () -> workspaceServiceImpl.createWorkspace("name", "desc", 0, LocalDateTime.now(), 1, null, 0,
+                        "logo.png"));
         assertTrue(ex.getMessage().contains("Type cannot be null"));
     }
 
     @Test
     void testCreateWorkspace_ZeroCreatedBy() {
         Exception ex = assertThrows(IllegalArgumentException.class,
-                () -> workspaceServiceImpl.createWorkspace("name", "desc", 13, LocalDateTime.now(), 0, null, 0, "logo.png"));
+                () -> workspaceServiceImpl.createWorkspace("name", "desc", 13, LocalDateTime.now(), 0, null, 0,
+                        "logo.png"));
         assertTrue(ex.getMessage().contains("CreatedBy cannot be null"));
     }
 

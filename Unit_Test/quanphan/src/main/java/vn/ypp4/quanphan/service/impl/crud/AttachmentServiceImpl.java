@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import vn.ypp4.quanphan.domain.Attachment;
-
-import vn.ypp4.quanphan.service.mapper.AttachmentRowMapper;
+import vn.ypp4.quanphan.service.mapper.row.AttachmentRowMapper;
 
 @Service
 @RequiredArgsConstructor
