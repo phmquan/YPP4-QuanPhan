@@ -15,14 +15,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import vn.ypp4.quanphan.domain.User;
 import vn.ypp4.quanphan.service.impl.crud.UserServiceImpl;
-import vn.ypp4.quanphan.service.mapper.UserRowMapper;
-
+import vn.ypp4.quanphan.service.mapper.row.UserRowMapper;
 
 public class UserServiceUnitTest {
 
     @Mock
     private JdbcTemplate jdbcTemplate;
-    
+
     @Mock
     private UserRowMapper userRowMapper;
 
@@ -55,7 +54,8 @@ public class UserServiceUnitTest {
     @Test
     void testCreateUser_NullUsername() {
         Exception ex = assertThrows(IllegalArgumentException.class,
-                () -> userServiceImpl.createUser(null, "bio", "test@email.com", LocalDateTime.now(), LocalDateTime.now(),
+                () -> userServiceImpl.createUser(null, "bio", "test@email.com", LocalDateTime.now(),
+                        LocalDateTime.now(),
                         "pic.png"));
         assertTrue(ex.getMessage().contains("Username cannot be null"));
     }
@@ -63,14 +63,16 @@ public class UserServiceUnitTest {
     @Test
     void testCreateUser_NullEmail() {
         Exception ex = assertThrows(IllegalArgumentException.class,
-                () -> userServiceImpl.createUser("testuser", "bio", null, LocalDateTime.now(), LocalDateTime.now(), "pic.png"));
+                () -> userServiceImpl.createUser("testuser", "bio", null, LocalDateTime.now(), LocalDateTime.now(),
+                        "pic.png"));
         assertTrue(ex.getMessage().contains("Email cannot be null"));
     }
 
     @Test
     void testCreateUser_NullCreatedAt() {
         Exception ex = assertThrows(IllegalArgumentException.class,
-                () -> userServiceImpl.createUser("testuser", "bio", "test@email.com", LocalDateTime.now(), null, "pic.png"));
+                () -> userServiceImpl.createUser("testuser", "bio", "test@email.com", LocalDateTime.now(), null,
+                        "pic.png"));
         assertTrue(ex.getMessage().contains("CreatedAt cannot be null"));
     }
 
