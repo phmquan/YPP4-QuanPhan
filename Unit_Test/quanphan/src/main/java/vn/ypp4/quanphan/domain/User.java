@@ -2,22 +2,21 @@ package vn.ypp4.quanphan.domain;
 
 import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
     private int id;
     private String username;
+    private String fullName;
     private String bio;
     private String email;
     private LocalDateTime lastActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private String pictureUrl;
+    private String avatar;
 }

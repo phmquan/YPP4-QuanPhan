@@ -3,13 +3,13 @@ package vn.ypp4.quanphan.service.mapper.row;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import vn.ypp4.quanphan.domain.UserStarredBoard;
+import vn.ypp4.quanphan.domain.UserFavoritedBoard;
 
-public class UserStarredBoardRowMapper extends BaseRowMapper<UserStarredBoard> {
+public class UserStarredBoardRowMapper extends BaseRowMapper<UserFavoritedBoard> {
 
     @Override
-    protected UserStarredBoard mapRowInternal(ResultSet rs, int rowNum) throws SQLException {
-        return new UserStarredBoard(
+    protected UserFavoritedBoard mapRowInternal(ResultSet rs, int rowNum) throws SQLException {
+        return new UserFavoritedBoard(
                 rs.getInt("UserId"),
                 rs.getInt("BoardId"),
                 rs.getTimestamp("CreatedAt") != null ? rs.getTimestamp("CreatedAt").toLocalDateTime() : null,
