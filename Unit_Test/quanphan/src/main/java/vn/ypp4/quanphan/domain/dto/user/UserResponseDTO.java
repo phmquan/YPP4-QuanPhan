@@ -1,7 +1,5 @@
-package vn.ypp4.quanphan.dto;
+package vn.ypp4.quanphan.domain.dto.user;
 
-import jdk.jshell.Snippet;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import vn.ypp4.quanphan.domain.User;

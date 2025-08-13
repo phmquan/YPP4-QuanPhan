@@ -3,9 +3,11 @@ package vn.ypp4.quanphan.service.mapper.row;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.stereotype.Component;
 import vn.ypp4.quanphan.domain.Board;
 import vn.ypp4.quanphan.util.constant.BoardStatusEnum;
 
+@Component
 public class BoardRowMapper extends BaseRowMapper<Board> {
 
     @Override

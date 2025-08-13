@@ -1,4 +1,4 @@
-package vn.ypp4.quanphan.dto;
+package vn.ypp4.quanphan.domain.dto.user;
 
 import lombok.Getter;
 import lombok.Setter;

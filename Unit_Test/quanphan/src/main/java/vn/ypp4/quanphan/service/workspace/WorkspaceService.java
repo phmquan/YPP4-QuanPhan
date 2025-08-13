@@ -2,8 +2,8 @@ package vn.ypp4.quanphan.service.workspace;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import vn.ypp4.quanphan.dto.WorkspaceResponseDTO;
-import vn.ypp4.quanphan.repository.interf.WorkspaceRepository;
+import vn.ypp4.quanphan.domain.dto.WorkspaceResponseDTO;
+import vn.ypp4.quanphan.repository.WorkspaceRepository;
 
 import java.util.List;
 import java.util.Objects;

@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public abstract class BaseRowMapper<T> implements RowMapper<T> {
     @Override
     public T mapRow(ResultSet rs, int rowNum) throws SQLException {
