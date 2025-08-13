@@ -1,10 +1,13 @@
 package vn.ypp4.quanphan.service.mapper.row;
 
+import org.springframework.stereotype.Component;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import vn.ypp4.quanphan.domain.UserFavoritedBoard;
 
+@Component
 public class UserStarredBoardRowMapper extends BaseRowMapper<UserFavoritedBoard> {
 
     @Override

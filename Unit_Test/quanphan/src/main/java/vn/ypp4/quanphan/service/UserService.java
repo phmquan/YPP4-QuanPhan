@@ -2,10 +2,8 @@ package vn.ypp4.quanphan.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import vn.ypp4.quanphan.dto.UserResponseDTO;
-import vn.ypp4.quanphan.repository.interf.UserRepository;
-
-import java.util.Objects;
+import vn.ypp4.quanphan.domain.dto.user.UserResponseDTO;
+import vn.ypp4.quanphan.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor

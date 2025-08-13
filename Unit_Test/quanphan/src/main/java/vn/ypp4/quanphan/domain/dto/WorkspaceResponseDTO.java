@@ -1,4 +1,4 @@
-package vn.ypp4.quanphan.dto;
+package vn.ypp4.quanphan.domain.dto;
 
 import lombok.Builder;
 import lombok.Getter;

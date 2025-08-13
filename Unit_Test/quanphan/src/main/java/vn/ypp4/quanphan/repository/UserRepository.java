@@ -1,16 +1,17 @@
-package vn.ypp4.quanphan.repository.impl;
+package vn.ypp4.quanphan.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import vn.ypp4.quanphan.domain.User;
-import vn.ypp4.quanphan.repository.interf.UserRepository;
 import vn.ypp4.quanphan.service.mapper.row.UserRowMapper;
 
+@Repository
 @RequiredArgsConstructor
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepository {
     private final JdbcTemplate jdbcTemplate;
     private final UserRowMapper userRowMapper;
-    @Override
+
     public User findUserByUserId(int userId) {
         String sql="SELECT \n" +
                 "\ts.Id\n" +
@@ -19,7 +20,7 @@ public class UserRepositoryImpl implements UserRepository {
         return jdbcTemplate.queryForObject(sql,userRowMapper,userId);
     }
 
-    @Override
+
     public boolean existsById(int userId) {
         String sql="SELECT \n" +
                 "\ts.Id\n" +
@@ -29,8 +30,8 @@ public class UserRepositoryImpl implements UserRepository {
         return requestedUser != null;
     }
 
-    @Override
+
     public void createUser(User testUser) {
-        String sql="INSERT INTO USERS ()"
+        String sql="INSERT INTO USERS ()";
     }
 }

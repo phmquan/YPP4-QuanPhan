@@ -1,8 +1,6 @@
-package vn.ypp4.quanphan.dto;
+package vn.ypp4.quanphan.domain.dto.board;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import vn.ypp4.quanphan.domain.Board;
 

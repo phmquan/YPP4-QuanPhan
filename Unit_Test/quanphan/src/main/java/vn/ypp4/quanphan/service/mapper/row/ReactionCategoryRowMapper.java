@@ -1,10 +1,13 @@
 package vn.ypp4.quanphan.service.mapper.row;
 
+import org.springframework.stereotype.Component;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import vn.ypp4.quanphan.domain.ReactionCategory;
 
+@Component
 public class ReactionCategoryRowMapper extends BaseRowMapper<ReactionCategory> {
 
     @Override
