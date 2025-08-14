@@ -5,10 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import vn.ypp4.quanphan.controller.WorkspaceController;
-import vn.ypp4.quanphan.domain.dto.WorkspaceResponseDTO;
+import vn.ypp4.quanphan.domain.dto.workspace.WorkspaceResponseDTO;
+import vn.ypp4.quanphan.domain.dto.workspace.WorkspaceUpdateDTO;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,5 +39,16 @@ public class TestWorkspace {
         WorkspaceResponseDTO result = workspaceController.getWorkspaceById(workspaceId);
 
         assertEquals(expected.getWorkspaceName(), result.getWorkspaceName());
+    }
+    @Test
+    void updateWorkspace_Success(){
+        //Arrange
+        int workspaceId = 1;
+        WorkspaceUpdateDTO updateWorkspace = new WorkspaceUpdateDTO(1,"Updated Workspace A", "Updated description for Workspace A", LocalDateTime.now(),1);
+        //Act
+        int result = workspaceController.updateWorkspace(updateWorkspace);
+
+        //Assert
+        assertEquals(1, result);
     }
 }

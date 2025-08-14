@@ -1,15 +1,13 @@
 package vn.ypp4.quanphan.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Lazy;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import vn.ypp4.quanphan.domain.dto.WorkspaceResponseDTO;
+import vn.ypp4.quanphan.domain.dto.workspace.WorkspaceUpdateDTO;
 import vn.ypp4.quanphan.domain.entity.Workspace;
 
 
-import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -69,5 +67,25 @@ public class WorkspaceRepository {
         return jdbcTemplate.queryForObject(sql,
                 new BeanPropertyRowMapper<>(Workspace.class),
                 workspaceId);
+    }
+
+    public boolean existsByWorkspaceId(int workspaceId) {
+        String sql = "SELECT COUNT(*) > 0 FROM Workspace WHERE Id = ?";
+        Boolean exists = jdbcTemplate.queryForObject(sql, Boolean.class, workspaceId);
+        return exists != null && exists;
+    }
+
+    public int updateWorkspace(WorkspaceUpdateDTO updateWorkspace) {
+        String sql = "UPDATE Workspace SET " +
+                "WorkspaceName = ?, " +
+                "WorkspaceDescription = ?, " +
+                "UpdatedAt = NOW(), " +
+                "UpdatedBy = ? " +
+                "WHERE Id = ?";
+        return jdbcTemplate.update(sql,
+                updateWorkspace.getWorkspaceName(),
+                updateWorkspace.getWorkspaceDescription(),
+                updateWorkspace.getUpdatedBy(),
+                updateWorkspace.getId());
     }
 }

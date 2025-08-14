@@ -1,15 +1,11 @@
 package vn.ypp4.quanphan.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import vn.ypp4.quanphan.domain.dto.WorkspaceResponseDTO;
+import org.springframework.web.bind.annotation.*;
+import vn.ypp4.quanphan.domain.dto.workspace.WorkspaceResponseDTO;
+import vn.ypp4.quanphan.domain.dto.workspace.WorkspaceUpdateDTO;
 import vn.ypp4.quanphan.service.workspace.WorkspaceService;
 
-import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -24,5 +20,12 @@ public class WorkspaceController {
     @GetMapping("/{id}")
     public WorkspaceResponseDTO getWorkspaceById(@PathVariable int  workspaceId) {
         return workspaceService.getWorkspaceById(workspaceId);
+    }
+    @PutMapping
+    public int updateWorkspace(WorkspaceUpdateDTO updateWorkspace) {
+        if (updateWorkspace.getId() <= 0) {
+            throw new IllegalArgumentException("Invalid workspace ID");
+        }
+        return workspaceService.updateWorkspace(updateWorkspace);
     }
 }

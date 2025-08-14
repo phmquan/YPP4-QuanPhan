@@ -40,4 +40,14 @@ public class BoardController {
     public List<BoardResponseDTO> getMemberBoardsByUserId(@PathVariable int userId) {
         return boardService.getMemberBoardByUserId(userId);
     }
+
+    @GetMapping("/starred/{userId}/workspace/{workspaceId}")
+    public Iterator<BoardResponseDTO> getStarredBoardsByUserAndWorkspace(int userId, int workspaceId) {
+        return userStarredBoardService.getStarredBoardsByUserIdAndWorkspaceId(userId, workspaceId);
+    }
+
+    @GetMapping("/member/{userId}/workspace/{workspaceId}")
+    public List<BoardResponseDTO> getMemberBoardsByUserIdAndWorkspaceId(int userId, int workspaceId) {
+        return boardService.getMemberBoardByUserIdAndWorkspaceId(userId, workspaceId);
+    }
 }
