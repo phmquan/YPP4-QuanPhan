@@ -8,9 +8,9 @@ import vn.ypp4.quanphan.repository.UserRepository;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public UserResponseDTO getCurrentUserInforByUserId (int userId){
+    public UserResponseDTO getUserByUserId (int userId){
         return new UserResponseDTO(userRepository.findUserByUserId(userId));
     }
 }
