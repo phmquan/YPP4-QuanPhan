@@ -8,6 +8,7 @@ import vn.ypp4.quanphan.domain.dto.board.BoardCreateDTO;
 
 import vn.ypp4.quanphan.domain.entity.Board;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -76,5 +77,27 @@ public class BoardRepository {
         return jdbcTemplate.query(sql,
                 new BeanPropertyRowMapper<>(Board.class)
                 ,userId);
+    }
+
+    public List<Board> getMemberBoardsByUserIdAndWorkspaceId(int userId, int workspaceId) {
+        String sql = "SELECT \n" +
+                "    b.Id AS BoardId,\n" +
+                "    b.BoardName AS BoardName,\n" +
+                "    b.BoardDescription,\n" +
+                "    b.BackgroundUrl,\n" +
+                "    b.CreatedAt,\n" +
+                "    b.CreatedBy,\n" +
+                "    b.WorkspaceId as WorkspaceId,\n" +
+                "    b.BoardStatus,\n" +
+                "    b.UpdatedAt,\n" +
+                "    b.UpdatedBy\n" +
+                "FROM Board b\n" +
+                "JOIN Members mb ON mb.OwnerId = b.Id\n" +
+                "JOIN OwnerType otb ON otb.Id = mb.OwnerTypeId \n" +
+                "    AND otb.OwnerTypeValue = 'board'\n" +
+                "WHERE mb.UserId = ? AND b.WorkspaceId = ?";
+        return jdbcTemplate.query(sql,
+                new BeanPropertyRowMapper<>(Board.class),
+                userId, workspaceId);
     }
 }

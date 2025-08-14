@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import vn.ypp4.quanphan.domain.dto.board.BoardCreateDTO;
 import vn.ypp4.quanphan.domain.dto.board.BoardResponseDTO;
 import vn.ypp4.quanphan.repository.BoardRepository;
+import vn.ypp4.quanphan.repository.UserRepository;
 import vn.ypp4.quanphan.repository.WorkspaceRepository;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Objects;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final WorkspaceRepository workspaceRepository;
+    private final UserRepository userRepository;
     public int createBoard(BoardCreateDTO createBoard) {
         if(workspaceRepository.existById(createBoard.getWorkspaceId())){
             return boardRepository.createBoard(createBoard);
@@ -36,4 +38,15 @@ public class BoardService {
     }
 
 
+    public List<BoardResponseDTO> getMemberBoardByUserIdAndWorkspaceId(int userId, int workspaceId) {
+        if (workspaceRepository.existById(workspaceId)&& userRepository.existsById(userId)) {
+            return boardRepository.getMemberBoardsByUserIdAndWorkspaceId(userId, workspaceId)
+                    .stream()
+                    .filter(Objects::nonNull)
+                    .map(BoardResponseDTO::new)
+                    .toList();
+        } else {
+            throw new NullPointerException("Workspace invalid");
+        }
+    }
 }

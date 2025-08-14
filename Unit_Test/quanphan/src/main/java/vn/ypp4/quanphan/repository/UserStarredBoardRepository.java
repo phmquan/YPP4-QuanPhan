@@ -8,6 +8,7 @@ import vn.ypp4.quanphan.domain.entity.Board;
 import vn.ypp4.quanphan.domain.entity.UserStarredBoard;
 
 
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -42,5 +43,17 @@ public class UserStarredBoardRepository {
     void createUser(UserStarredBoard starred){
         String sql="INSERT INTO UserStarredBoard (UserId, BoardId) VALUES (?, ?)";
         jdbcTemplate.update(sql, starred.getUserId(), starred.getBoardId());
+    }
+
+    public List<Board> getStarredBoardsByUserIdAndWorkspaceId(int userId, int workspaceId) {
+        String sql = "SELECT b.Id, b.BoardName, b.BoardDescription, b.CreatedAt, b.CreatedBy, " +
+                "b.BackgroundUrl, b.WorkspaceId, b.BoardStatus, b.UpdatedAt, b.UpdatedBy " +
+                "FROM UserStarredBoard usb " +
+                "JOIN Board b ON b.Id = usb.BoardId " +
+                "WHERE usb.UserId = ? AND b.WorkspaceId = ? " +
+                "ORDER BY usb.CreatedAt DESC";
+        return jdbcTemplate.query(sql,
+                new BeanPropertyRowMapper<>(Board.class),
+                userId, workspaceId);
     }
 }

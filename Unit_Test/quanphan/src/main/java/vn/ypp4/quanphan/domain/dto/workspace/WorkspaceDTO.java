@@ -1,4 +1,4 @@
-package vn.ypp4.quanphan.domain.dto;
+package vn.ypp4.quanphan.domain.dto.workspace;
 
 import java.util.List;
 

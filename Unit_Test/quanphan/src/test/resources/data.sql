@@ -169,27 +169,27 @@ INSERT INTO SettingValue (SettingKeyId, SettingContent, CreatedAt, CreatedBy, Up
 -- Board settings (OwnerId refers to Board.Id)
 (1, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, 1), -- board_notifications for board 1
 (4, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, 1), -- board_due_date_reminders for board 1
-(9, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, 1), -- board_visibility for board 1 (team visible)
+(9, 14, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, 1), -- board_visibility for board 1 (team visible - option 14)
 (7, 0, CURRENT_TIMESTAMP, 2, CURRENT_TIMESTAMP, 2, 2), -- board_auto_archive for board 2
-(9, 2, CURRENT_TIMESTAMP, 2, CURRENT_TIMESTAMP, 2, 2), -- board_visibility for board 2 (public)
+(9, 15, CURRENT_TIMESTAMP, 2, CURRENT_TIMESTAMP, 2, 2), -- board_visibility for board 2 (public - option 15)
 (1, 0, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP, 3, 3), -- board_notifications for board 3
-(9, 0, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP, 3, 3), -- board_visibility for board 3 (private)
+(9, 13, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP, 3, 3), -- board_visibility for board 3 (private - option 13)
 
 -- Workspace settings (OwnerId refers to Workspace.Id)
 (2, 0, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, 1), -- workspace_public_visibility for workspace 1
-(10, 0, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, 1), -- workspace_visibility for workspace 1 (private)
-(5, 25, CURRENT_TIMESTAMP, 2, CURRENT_TIMESTAMP, 2, 2), -- workspace_member_limit for workspace 2
-(10, 1, CURRENT_TIMESTAMP, 2, CURRENT_TIMESTAMP, 2, 2), -- workspace_visibility for workspace 2 (organization)
-(8, 3, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP, 3, 3), -- workspace_backup_frequency for workspace 3
-(10, 2, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP, 3, 3), -- workspace_visibility for workspace 3 (public)
+(10, 16, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, 1), -- workspace_visibility for workspace 1 (private - option 16)
+(5, 2, CURRENT_TIMESTAMP, 2, CURRENT_TIMESTAMP, 2, 2), -- workspace_member_limit for workspace 2 (25 members - option 2)
+(10, 17, CURRENT_TIMESTAMP, 2, CURRENT_TIMESTAMP, 2, 2), -- workspace_visibility for workspace 2 (organization - option 17)
+(8, 10, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP, 3, 3), -- workspace_backup_frequency for workspace 3 (every 3 days - option 10)
+(10, 18, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP, 3, 3), -- workspace_visibility for workspace 3 (public - option 18)
 
 -- User settings (OwnerId refers to Users.Id)
 (3, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, 1), -- user_email_notifications for user 1
-(6, 1, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, 1), -- user_theme_preference for user 1 (dark theme)
+(6, 7, CURRENT_TIMESTAMP, 1, CURRENT_TIMESTAMP, 1, 1), -- user_theme_preference for user 1 (dark theme - option 7)
 (3, 0, CURRENT_TIMESTAMP, 2, CURRENT_TIMESTAMP, 2, 2), -- user_email_notifications for user 2
-(6, 0, CURRENT_TIMESTAMP, 2, CURRENT_TIMESTAMP, 2, 2), -- user_theme_preference for user 2 (light theme)
+(6, 6, CURRENT_TIMESTAMP, 2, CURRENT_TIMESTAMP, 2, 2), -- user_theme_preference for user 2 (light theme - option 6)
 (3, 1, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP, 3, 3), -- user_email_notifications for user 3
-(6, 0, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP, 3, 3); -- user_theme_preference for user 3 (light theme)
+(6, 6, CURRENT_TIMESTAMP, 3, CURRENT_TIMESTAMP, 3, 3); -- user_theme_preference for user 3 (light theme - option 6)
 
 -- SettingOption data (for non-boolean setting keys)
 INSERT INTO SettingOption (DisplayValue, SettingOptionValue) VALUES

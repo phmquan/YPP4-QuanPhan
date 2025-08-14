@@ -84,4 +84,34 @@ class TestBoard {
         //Assert
         assertEquals(expected.size(),result.size());
     }
+
+    @Test
+    void getStarredBoardsByUserAndWorkspace_Success(){
+        // Arrange
+        int userId = 1;
+        int workspaceId = 1;
+        List<BoardResponseDTO> expected = new ArrayList<>();
+        expected.add(new BoardResponseDTO(1, "Project Alpha", "bg1.jpg"));
+
+        // Act
+        Iterator<BoardResponseDTO> result = boardController.getStarredBoardsByUserAndWorkspace(userId, workspaceId);
+
+        // Assert
+        assertTrue(result.hasNext());
+        assertEquals(expected.getFirst().getBoardName(), result.next().getBoardName());
+    }
+    @Test
+    void getMemberBoardsByUserAndWorkspace_Success() {
+        // Arrange
+        int userId = 1;
+        int workspaceId = 1;
+        List<BoardResponseDTO> expected = new ArrayList<>();
+        expected.add(new BoardResponseDTO(1, "Project Alpha", "bg1.jpg"));
+
+        // Act
+        List<BoardResponseDTO> result = boardController.getMemberBoardsByUserIdAndWorkspaceId(userId, workspaceId);
+
+        // Assert
+        assertEquals(expected.size(), result.size());
+    }
 }
