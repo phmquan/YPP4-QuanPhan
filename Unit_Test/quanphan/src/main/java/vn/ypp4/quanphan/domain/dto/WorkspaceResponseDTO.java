@@ -1,13 +1,13 @@
 package vn.ypp4.quanphan.domain.dto;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import vn.ypp4.quanphan.domain.Workspace;
+import vn.ypp4.quanphan.domain.entity.Workspace;
 
 @Getter
 @Setter
-
+@AllArgsConstructor
 public class WorkspaceResponseDTO {
     public WorkspaceResponseDTO() {
     }

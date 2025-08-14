@@ -18,5 +18,5 @@ public class User {
     private LocalDateTime lastActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private String pictureUrl; // Changed from 'avatar' to match database/RowMapper expectations
+    private String avatar; // Changed from 'avatar' to match database/RowMapper expectations
 }

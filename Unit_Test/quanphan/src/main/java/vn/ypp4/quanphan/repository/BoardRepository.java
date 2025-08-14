@@ -1,39 +1,50 @@
 package vn.ypp4.quanphan.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import vn.ypp4.quanphan.domain.Board;
-import vn.ypp4.quanphan.service.mapper.row.BoardRowMapper;
+import vn.ypp4.quanphan.domain.dto.board.BoardCreateDTO;
 
-import java.util.Optional;
+import vn.ypp4.quanphan.domain.entity.Board;
+
+import java.util.List;
+
 
 @Repository
 @RequiredArgsConstructor
 public class BoardRepository {
-    private JdbcTemplate jdbcTemplate;
-    private final BoardRowMapper boardRowMapper;
+    private final JdbcTemplate jdbcTemplate;
+
     
-    public int createBoard(Board createBoard) {
+    public int createBoard(BoardCreateDTO createBoard) {
         String sql= "INSERT INTO BOARD"
                 + "(BoardName,"
-                + "BoardDescription,"
+                + "WorkspaceId,"
                 + "BackgroundUrl)"
                 + "VALUES "
                 + "(?,?,?)";
-        return jdbcTemplate.update(sql,createBoard.getBoardName(),createBoard.getBoardDescription(),createBoard.getBackgroundUrl());
+        return jdbcTemplate.update(sql,createBoard.getBoardName(),createBoard.getWorkspaceId(),createBoard.getBackgroundUrl());
     }
 
     
     public Board getBoardById(int boardId) {
-        String sql= "SELECT"
-                + "b.Id"
-                + "b.BoardName,"
-                + "b.BackgroundUrl,"
-                + "FROM Board b"
-                + "WHERE"
+        String sql= "SELECT \n"
+                + "b.Id, \n"
+                + "b.BoardName, \n"
+                + "b.BackgroundUrl, \n"
+                + "b.BoardDescription, \n"
+                + "b.CreatedAt, \n"
+                + "b.CreatedBy, \n"
+                + "b.BoardStatus, \n"
+                + "b.UpdatedAt, \n"
+                + "b.UpdatedBy \n"
+                + "FROM Board b\n"
+                + "WHERE \n"
                 + "b.Id=?";
-        return jdbcTemplate.queryForObject(sql,boardRowMapper,boardId);
+        return jdbcTemplate.queryForObject(sql,
+                new BeanPropertyRowMapper<>(Board.class)
+                ,boardId);
     }
 
 
@@ -44,5 +55,26 @@ public class BoardRepository {
 
     public int deleteBoard(Board updateBoard) {
         return 0;
+    }
+    public List<Board> getMemberBoardsByUserId(int userId){
+        String sql="SELECT " +
+                "    b.Id AS BoardId," +
+                "    b.BoardName AS BoardName," +
+                "    b.BoardDescription," +
+                "    b.BackgroundUrl," +
+                "    b.CreatedAt,\n" +
+                "    b.CreatedBy,\n"+
+                "    b.WorkspaceId as WorkspaceId,\n"+
+                "    b.BoardStatus,\n"+
+                "    b.UpdatedAt,\n"+
+                "    b.UpdatedBy,\n"+
+                "FROM Board b " +
+                "    JOIN Members mb ON mb.OwnerId = b.Id\n" +
+                "    JOIN OwnerType otb ON otb.Id = mb.OwnerTypeId \n" +
+                "        AND otb.OwnerTypeValue = 'board'\n" +
+                "WHERE mb.UserId = ?\n";
+        return jdbcTemplate.query(sql,
+                new BeanPropertyRowMapper<>(Board.class)
+                ,userId);
     }
 }

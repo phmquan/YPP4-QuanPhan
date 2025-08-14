@@ -1,13 +1,12 @@
 package vn.ypp4.quanphan.domain.dto.board;
 
 import lombok.*;
-import vn.ypp4.quanphan.domain.Board;
+import vn.ypp4.quanphan.domain.entity.Board;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class BoardDTO {
     private int id;
     private String name;
