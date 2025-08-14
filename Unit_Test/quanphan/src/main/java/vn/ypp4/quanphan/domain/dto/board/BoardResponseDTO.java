@@ -1,12 +1,13 @@
 package vn.ypp4.quanphan.domain.dto.board;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import vn.ypp4.quanphan.domain.Board;
+import vn.ypp4.quanphan.domain.entity.Board;
 
 @Getter
 @Setter
-
+@AllArgsConstructor
 
 public class BoardResponseDTO {
     public BoardResponseDTO() {

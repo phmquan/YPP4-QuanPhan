@@ -1,37 +1,47 @@
 package vn.ypp4.quanphan.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import vn.ypp4.quanphan.domain.User;
-import vn.ypp4.quanphan.service.mapper.row.UserRowMapper;
+import vn.ypp4.quanphan.domain.entity.User;
+
+
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
 public class UserRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final UserRowMapper userRowMapper;
+
+
 
     public User findUserByUserId(int userId) {
-        String sql="SELECT \n" +
-                "\ts.Id\n" +
-                "FROM Users s\n" +
-                "WHERE s.Id=?";
-        return jdbcTemplate.queryForObject(sql,userRowMapper,userId);
-    }
+        String sql = "SELECT " +
+                "Id, Username, FullName, Bio, Email, LastActive, " +
+                "CreatedAt, UpdatedAt, Avatar " +
+                "FROM Users " +
+                "WHERE Id = ?";
 
+        return jdbcTemplate.queryForObject(sql,
+                new BeanPropertyRowMapper<>(User.class)
+                , userId);
+    }
 
     public boolean existsById(int userId) {
-        String sql="SELECT \n" +
-                "\ts.Id\n" +
-                "FROM Users s\n" +
-                "WHERE s.Id=?";
-        User requestedUser= jdbcTemplate.queryForObject(sql,userRowMapper,userId);
-        return requestedUser != null;
+        String sql="SELECT COUNT(*) > 0 " +
+                "FROM Users u " +
+                "WHERE u.id = ?";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, userId);
     }
 
-
-    public void createUser(User testUser) {
-        String sql="INSERT INTO USERS ()";
+    public int updateUserProfile(User updateUser) {
+        String sql= "UPDATE Users \n"+
+                "SET " +
+                "Username = ?," +
+                "Bio = ? \n"+
+                "WHERE Id = ?";
+        return jdbcTemplate.update(sql, updateUser.getUsername(),updateUser.getBio(),updateUser.getId());
     }
 }

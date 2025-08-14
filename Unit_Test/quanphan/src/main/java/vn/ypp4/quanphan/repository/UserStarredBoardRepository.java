@@ -1,11 +1,12 @@
 package vn.ypp4.quanphan.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import vn.ypp4.quanphan.domain.Board;
-import vn.ypp4.quanphan.domain.UserFavoritedBoard;
-import vn.ypp4.quanphan.service.mapper.row.BoardRowMapper;
+import vn.ypp4.quanphan.domain.entity.Board;
+import vn.ypp4.quanphan.domain.entity.UserStarredBoard;
+
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserStarredBoardRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final BoardRowMapper boardRowMapper;
+
     public List<Board> getStarredBoardsByUserId(int userId){
         String sql="select \n" +
                 "  b.Id, \n" +
@@ -33,10 +34,12 @@ public class UserStarredBoardRepository {
                 "  usb.UserId = ? \n" +
                 "order by \n" +
                 "  usb.CreatedAt desc\n";
-        return jdbcTemplate.query(sql,boardRowMapper,userId);
+        return jdbcTemplate.query(sql,
+                new BeanPropertyRowMapper<>(Board.class)
+                ,userId);
     }
 
-    void createUser(UserFavoritedBoard starred){
+    void createUser(UserStarredBoard starred){
         String sql="INSERT INTO UserStarredBoard (UserId, BoardId) VALUES (?, ?)";
         jdbcTemplate.update(sql, starred.getUserId(), starred.getBoardId());
     }
