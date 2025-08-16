@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import vn.ypp4.quanphan.domain.dto.board.BoardCreateDTO;
 import vn.ypp4.quanphan.domain.dto.board.BoardResponseDTO;
 import vn.ypp4.quanphan.service.board.BoardService;
-import vn.ypp4.quanphan.service.board.UserStarredBoardService;
-import vn.ypp4.quanphan.service.board.UserViewHistoryService;
+import vn.ypp4.quanphan.service.board.StarredBoardServiceImpl;
 
-import java.util.Iterator;
+import vn.ypp4.quanphan.service.board.ViewHistoryServiceImpl;
+
 import java.util.List;
 
 
@@ -16,17 +16,17 @@ import java.util.List;
 @RequestMapping("/api/v1/boards")
 @RequiredArgsConstructor
 public class BoardController {
-    private final UserStarredBoardService userStarredBoardService;
-    private final UserViewHistoryService userViewHistoryService;
+    private final StarredBoardServiceImpl starredBoardService;
+    private final ViewHistoryServiceImpl viewHistoryService;
     private final BoardService boardService;
 
     @GetMapping("/starred/{id}")
-    public Iterator<BoardResponseDTO> getStarredBoards(@RequestParam int userId) {
-        return userStarredBoardService.getStarredBoardsByUserId(userId);
+    public List<BoardResponseDTO> getStarredBoards(@RequestParam int userId) {
+        return starredBoardService.getStarredBoardsByUserId(userId);
     }
     @GetMapping("/viewed/{id}")
-    public Iterator<BoardResponseDTO> getHistoryViewedBoards(@RequestParam int userId,@RequestParam int requestNumBoard){
-        return userViewHistoryService.getRecentlyViewedBoardsByUserId(userId,requestNumBoard);
+    public List<BoardResponseDTO> getHistoryViewedBoards(@RequestParam int userId,@RequestParam int requestNumBoard){
+        return viewHistoryService.getRecentlyViewedBoardsByUserId(userId,requestNumBoard);
     }
 
     public int createBoard(BoardCreateDTO createBoard) {
@@ -42,8 +42,8 @@ public class BoardController {
     }
 
     @GetMapping("/starred/{userId}/workspace/{workspaceId}")
-    public Iterator<BoardResponseDTO> getStarredBoardsByUserAndWorkspace(int userId, int workspaceId) {
-        return userStarredBoardService.getStarredBoardsByUserIdAndWorkspaceId(userId, workspaceId);
+    public List<BoardResponseDTO> getStarredBoardsByUserAndWorkspace(int userId, int workspaceId) {
+        return starredBoardService.getStarredBoardsByUserIdAndWorkspaceId(userId, workspaceId);
     }
 
     @GetMapping("/member/{userId}/workspace/{workspaceId}")

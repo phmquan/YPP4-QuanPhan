@@ -9,12 +9,19 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class WorkspaceUpdateDTO {
     private int id;
     private String workspaceName;
     private String workspaceDescription;
     private LocalDateTime updatedAt;
     private int updatedBy;
+
+    public WorkspaceUpdateDTO(int id, String workspaceName, String workspaceDescription, LocalDateTime updatedAt, int updatedBy) {
+        this.id = id;
+        this.workspaceName = workspaceName;
+        this.workspaceDescription = workspaceDescription;
+        this.updatedAt = updatedAt;
+        this.updatedBy = updatedBy;
+    }
 }

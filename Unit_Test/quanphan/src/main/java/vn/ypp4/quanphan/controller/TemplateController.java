@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import vn.ypp4.quanphan.domain.dto.template.TemplateCategoryResponseDTO;
-import vn.ypp4.quanphan.domain.dto.template.TemplateDetailResponseDTO;
+
 import vn.ypp4.quanphan.domain.dto.template.TemplateResponseDTO;
 import vn.ypp4.quanphan.service.template.TemplateService;
 
@@ -27,7 +27,7 @@ public class TemplateController {
         return templateService.getTemplate(numTemplateRequest);
     }
 
-    public TemplateDetailResponseDTO getTemplateDetail(int templateId) {
+    public TemplateResponseDTO getTemplateDetail(int templateId) {
         return templateService.getTemplateDetail(templateId);
     }
 }

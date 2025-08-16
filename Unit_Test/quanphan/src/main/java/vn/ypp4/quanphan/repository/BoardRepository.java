@@ -29,7 +29,7 @@ public class BoardRepository {
     }
 
     
-    public Board getBoardById(int boardId) {
+    public Board findBoardById(int boardId) {
         String sql= "SELECT \n"
                 + "b.Id, \n"
                 + "b.BoardName, \n"
@@ -49,15 +49,7 @@ public class BoardRepository {
     }
 
 
-    public int updateBoard(Board updateBoard) {
-        return 0;
-    }
-
-
-    public int deleteBoard(Board updateBoard) {
-        return 0;
-    }
-    public List<Board> getMemberBoardsByUserId(int userId){
+    public List<Board> findBoardsByUserId(int userId){
         String sql="SELECT " +
                 "    b.Id AS BoardId," +
                 "    b.BoardName AS BoardName," +
@@ -73,13 +65,13 @@ public class BoardRepository {
                 "    JOIN Members mb ON mb.OwnerId = b.Id\n" +
                 "    JOIN OwnerType otb ON otb.Id = mb.OwnerTypeId \n" +
                 "        AND otb.OwnerTypeValue = 'board'\n" +
-                "WHERE mb.UserId = ?\n";
+                "WHERE mb.UserId = ?\n"; //add NoLock and cache if needed
         return jdbcTemplate.query(sql,
                 new BeanPropertyRowMapper<>(Board.class)
                 ,userId);
     }
 
-    public List<Board> getMemberBoardsByUserIdAndWorkspaceId(int userId, int workspaceId) {
+    public List<Board> findBoardsByUserIdAndWorkspaceId(int userId, int workspaceId) {
         String sql = "SELECT \n" +
                 "    b.Id AS BoardId,\n" +
                 "    b.BoardName AS BoardName,\n" +
@@ -95,7 +87,7 @@ public class BoardRepository {
                 "JOIN Members mb ON mb.OwnerId = b.Id\n" +
                 "JOIN OwnerType otb ON otb.Id = mb.OwnerTypeId \n" +
                 "    AND otb.OwnerTypeValue = 'board'\n" +
-                "WHERE mb.UserId = ? AND b.WorkspaceId = ?";
+                "WHERE mb.UserId = ? AND b.WorkspaceId = ?"; //add NoLock and cache if needed
         return jdbcTemplate.query(sql,
                 new BeanPropertyRowMapper<>(Board.class),
                 userId, workspaceId);

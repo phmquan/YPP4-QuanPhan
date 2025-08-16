@@ -1,27 +1,30 @@
 package vn.ypp4.quanphan.domain.dto.user;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Getter;
+
 import lombok.Setter;
 import vn.ypp4.quanphan.domain.entity.User;
 
+
 @Getter
 @Setter
-@AllArgsConstructor
-public class UserResponseDTO {
-    public UserResponseDTO() {
-    }
 
-    public UserResponseDTO(User user){
-        this.userId=user.getId();
-        this.userName=user.getUsername();
-        this.fullName=user.getFullName();
-        this.avatar=user.getAvatar();
-        this.email=user.getEmail();
-    }
-    private int userId;
-    private String userName;
+public class UserResponseDTO extends BaseUserDTO {
     private String fullName;
-    private String avatar;
     private String email;
+    private String avatar;
+
+    public UserResponseDTO(int id, String username, String fullName, String email, String avatar) {
+        super(id,username);
+        this.fullName = fullName;
+        this.email = email;
+        this.avatar = avatar;
+    }
+    public UserResponseDTO(User user){
+        super(user.getId(),user.getUsername());
+        this.fullName = user.getFullName();
+        this.email = user.getEmail();
+        this.avatar = user.getAvatar();
+    }
 }
