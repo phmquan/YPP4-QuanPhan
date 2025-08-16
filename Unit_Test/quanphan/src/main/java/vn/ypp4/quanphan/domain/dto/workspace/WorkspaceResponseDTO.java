@@ -7,19 +7,21 @@ import vn.ypp4.quanphan.domain.entity.Workspace;
 
 @Getter
 @Setter
-@AllArgsConstructor
-public class WorkspaceResponseDTO {
-    public WorkspaceResponseDTO() {
-    }
+
+public class WorkspaceResponseDTO extends BaseWorkspaceDTO {
+
+    private String workspaceDescription;
 
     public WorkspaceResponseDTO(Workspace workspace){
-        this.workspaceId=workspace.getId();
-        this.workspaceName=workspace.getWorkspaceName();
-        this.workspaceDescription=workspace.getWorkspaceDescription();
-        this.workspaceLogo=workspace.getLogoUrl();
+        super(workspace.getId(), workspace.getWorkspaceName(), workspace.getLogoUrl());
+        this.setWorkspaceName(workspace.getWorkspaceName());
+        this.setLogoUrl(workspace.getLogoUrl());
+        this.workspaceDescription = workspace.getWorkspaceDescription();
     }
-    private int workspaceId;
-    private String workspaceName;
-    private String workspaceDescription;
-    private String workspaceLogo;
+
+
+    public WorkspaceResponseDTO(String workspaceName, String logoUrl, int id, String workspaceDescription) {
+        super(id,workspaceName, logoUrl);
+        this.workspaceDescription = workspaceDescription;
+    }
 }

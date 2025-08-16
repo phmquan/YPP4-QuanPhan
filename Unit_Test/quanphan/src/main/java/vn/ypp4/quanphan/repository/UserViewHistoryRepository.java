@@ -14,7 +14,7 @@ import java.util.List;
 public class UserViewHistoryRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public List<Board> findRecentlyViewedBoardByUserId(int userId,int numBoardRequest){
+    public List<Board> findRecentlyViewedBoardsByUserId(int userId,int numBoardRequest){
         String sql = "SELECT b.Id, \n" +
                 "  b.BoardName, \n" +
                 "  b.BoardDescription, \n" +

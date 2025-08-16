@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import vn.ypp4.quanphan.domain.dto.SettingValueResponseDTO;
+import vn.ypp4.quanphan.domain.dto.setting.SettingValueResponseDTO;
 
 
 @Repository
@@ -24,7 +24,7 @@ public class SettingValueRepository {
                 "            AND sk.IsBoolean=FALSE\n" +
                 "        JOIN OwnerType owt ON owt.Id = sk.OwnerTypeId \n" +
                 "            AND owt.OwnerTypeValue = 'workspace'\n" +
-                "    WHERE sk.KeyName = ? AND sv.OwnerId=?\n";
+                "    WHERE sk.KeyName = ? AND sv.OwnerId=?\n"; //add nolock and cache if needed
         return jdbcTemplate.queryForObject(sql,
                 new BeanPropertyRowMapper<>(SettingValueResponseDTO.class),
                 keyName, workspaceId);

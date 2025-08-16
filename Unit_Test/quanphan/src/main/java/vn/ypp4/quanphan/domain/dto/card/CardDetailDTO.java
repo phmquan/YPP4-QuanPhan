@@ -7,18 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class CardDetailDTO {
-    private int cardId;
-    private String cardTitle;
-    private int stageId;
-    private String coverValue;
-    private String colorName;
-    private String attachmentPath;
-    private int position;
-    private String cardDescription;
 
-    // Constructors
-
+public class CardDetailDTO extends BaseCardDTO {
+    // Inherits all fields from BaseCardDTO
 }

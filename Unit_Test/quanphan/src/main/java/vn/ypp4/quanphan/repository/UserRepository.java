@@ -5,6 +5,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import vn.ypp4.quanphan.domain.dto.user.UserResponseDTO;
 import vn.ypp4.quanphan.domain.entity.User;
 
 
@@ -17,10 +18,10 @@ public class UserRepository {
 
 
 
-    public User findUserByUserId(int userId) {
+    public User findById(int userId) {
         String sql = "SELECT " +
-                "Id, Username, FullName, Bio, Email, LastActive, " +
-                "CreatedAt, UpdatedAt, Avatar " +
+                "Id, Username, FullName, Email, Bio, LastActive, CreatedAt, UpdatedAt" +
+                " Avatar " +
                 "FROM Users " +
                 "WHERE Id = ?";
 

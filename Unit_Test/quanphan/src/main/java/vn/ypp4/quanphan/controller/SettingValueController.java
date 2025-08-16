@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import vn.ypp4.quanphan.domain.dto.SettingValueResponseDTO;
+import vn.ypp4.quanphan.domain.dto.setting.SettingValueResponseDTO;
 import vn.ypp4.quanphan.service.setting.SettingValueService;
 
 @RestController

@@ -16,7 +16,7 @@ public class WorkspaceRepository {
     private final JdbcTemplate jdbcTemplate;
 
 
-    public List<Workspace> findAccessibleWorkspacesByUserId(int userId){
+    public List<Workspace> findWorkspacesAccessibleByUserId(int userId){
         String sql = "SELECT w.Id, w.WorkspaceName, w.WorkspaceDescription, w.TypeId, " +
                     "w.CreatedAt, w.CreatedBy, w.UpdatedAt, w.UpdatedBy, w.LogoUrl " +
                     "FROM Workspace w " +
@@ -27,13 +27,13 @@ public class WorkspaceRepository {
                 , userId);
     }
 
-    public boolean existById(int workspaceId) {
+    public boolean existsById(int workspaceId) {
         String sql = "SELECT COUNT(*) > 0 FROM Workspace WHERE Id = ?";
         Boolean exists = jdbcTemplate.queryForObject(sql, Boolean.class, workspaceId);
         return exists != null && exists;
     }
 
-    public List<Workspace> findMemberWorkspacesByUserId(int userId) {
+    public List<Workspace> findWorkspacesByUserId(int userId) {
         String sql="\n" +
                 "SELECT \n" +
                 "    w.Id AS WorkspaceId,\n" +
@@ -51,7 +51,7 @@ public class WorkspaceRepository {
                 ,userId);
     }
 
-    public Workspace findById(int workspaceId) {
+    public Workspace findWorkspaceById(int workspaceId) {
         String sql="SELECT \n" +
                 "    w.Id AS WorkspaceId,\n" +
                 "    w.WorkspaceName,\n" +

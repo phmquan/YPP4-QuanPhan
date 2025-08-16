@@ -5,8 +5,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BoardCreateDTO {
-    private String boardName;
-    private String backgroundUrl;
+public class BoardCreateDTO extends BaseBoardDTO {
     private int workspaceId;
+
+    public BoardCreateDTO(String boardName, String backgroundUrl, int workspaceId) {
+        super(boardName, backgroundUrl);
+        this.workspaceId = workspaceId;
+    }
 }

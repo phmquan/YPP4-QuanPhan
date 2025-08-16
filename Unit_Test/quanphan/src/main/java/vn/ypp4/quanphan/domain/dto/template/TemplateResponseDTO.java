@@ -1,29 +1,25 @@
 package vn.ypp4.quanphan.domain.dto.template;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import vn.ypp4.quanphan.domain.dto.user.UserResponseDTO;
 import vn.ypp4.quanphan.domain.entity.Template;
 
 @Getter
 @Setter
-@AllArgsConstructor
-public class TemplateResponseDTO {
-    private int id;
-    private String title;
-    private String templateDescription ;
-    private int viewed;
+@NoArgsConstructor
+public class TemplateResponseDTO extends BaseTemplateDTO {
     private int copied;
-    private String backgroundUrl;
-    private int createdBy;
-    public TemplateResponseDTO(Template template){
-        this.id= template.getId();
-        this.title=template.getTitle();
-        this.templateDescription=template.getTemplateDescription();
-        this.viewed=template.getViewed();
-        this.copied=template.getCopied();
-        this.backgroundUrl=template.getBackgroundUrl();
-        this.createdBy=template.getCreatedBy();
-    }
+    private int viewed;
+    private String authorName;
+    private String authorAvatar;
 
+    public TemplateResponseDTO(int id, String title, String templateDescription, String backgroundUrl, int copied, int viewed, String authorName, String authorAvatar) {
+        super(id, title, templateDescription, backgroundUrl);
+        this.copied = copied;
+        this.viewed = viewed;
+        this.authorName = authorName;
+        this.authorAvatar = authorAvatar;
+    }
 }

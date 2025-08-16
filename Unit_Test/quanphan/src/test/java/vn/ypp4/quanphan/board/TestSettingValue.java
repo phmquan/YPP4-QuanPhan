@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import vn.ypp4.quanphan.controller.SettingValueController;
-import vn.ypp4.quanphan.domain.dto.SettingValueResponseDTO;
+import vn.ypp4.quanphan.domain.dto.setting.SettingValueResponseDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
