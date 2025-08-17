@@ -21,7 +21,7 @@ public class TemplateRepository {
                 "    tpc.DisplayValue,\n" +
                 "    tpc.IconUrl\n" +
                 "FROM \n" +
-                "    TemplateCategory tpc\n" +
+                "    TemplateCategory tpc \n" +
                 "LIMIT ?";
         return jdbcTemplate.query(sql,
                 new BeanPropertyRowMapper<>(TemplateCategory.class),
@@ -39,8 +39,8 @@ public class TemplateRepository {
                 "    t.TemplateDescription,\n" +
                 "    u.FullName AS AuthorName,\n" +
                 "    u.Avatar AS AuthorAvatar,\n" +
-                "FROM Template t\n" +
-                "    JOIN Users u ON t.CreatedBy = u.Id\n" +
+                "FROM Template t \n" +
+                "    JOIN Users u  ON t.CreatedBy = u.Id\n" +
                 "ORDER BY \n" +
                 "    t.CreatedAt DESC, \n" +
                 "    t.Viewed DESC, \n" +
@@ -62,8 +62,8 @@ public class TemplateRepository {
                 "    t.TemplateDescription,\n" +
                 "    u.FullName AS AuthorName,\n" +
                 "    u.Avatar AS AuthorAvatar,\n" +
-                "FROM Template t\n" +
-                "    JOIN Users u ON t.CreatedBy = u.Id\n" +
+                "FROM Template t \n" +
+                "    JOIN Users u  ON t.CreatedBy = u.Id\n" +
                 "WHERE t.Id = ?";
 
         return jdbcTemplate.queryForObject(sql,
@@ -72,8 +72,8 @@ public class TemplateRepository {
     }
 
     public boolean existsById(int templateId) {
-        String sql = "SELECT COUNT(*) > 0 FROM Template WHERE Id = ?";
-        Boolean exists = jdbcTemplate.queryForObject(sql, Boolean.class, templateId);
-        return exists != null && exists;
+        String sql = "SELECT COUNT(*) FROM Template  WHERE Id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, templateId);
+        return count != null && count > 0;
     }
 }

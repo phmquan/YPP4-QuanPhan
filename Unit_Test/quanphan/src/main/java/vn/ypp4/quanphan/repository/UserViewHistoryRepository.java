@@ -25,10 +25,10 @@ public class UserViewHistoryRepository {
                 "  b.BoardStatus, \n" +
                 "  b.UpdatedAt, \n" +
                 "  b.UpdatedBy \n" +
-                "FROM Board b\n" +
-                "JOIN UserViewHistory uvh ON uvh.OwnerId = b.Id\n" +
-                "JOIN OwnerType owt ON owt.Id = uvh.OwnerTypeId AND owt.OwnerTypeValue = 'board'\n" +
-                "JOIN Users u ON u.Id = uvh.UserId\n" +
+                "FROM Board b \n" +
+                "JOIN UserViewHistory uvh   ON uvh.OwnerId = b.Id\n" +
+                "JOIN OwnerType owt  ON owt.Id = uvh.OwnerTypeId AND owt.OwnerTypeValue = 'board'\n" +
+                "JOIN Users u  ON u.Id = uvh.UserId\n" +
                 "WHERE u.Id = ?\n" +
                 "ORDER BY uvh.AccessedAt DESC\n" +
                 "LIMIT ?";

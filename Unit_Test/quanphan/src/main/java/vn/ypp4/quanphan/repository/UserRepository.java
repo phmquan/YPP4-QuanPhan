@@ -31,10 +31,9 @@ public class UserRepository {
     }
 
     public boolean existsById(int userId) {
-        String sql="SELECT COUNT(*) > 0 " +
-                "FROM Users u " +
-                "WHERE u.id = ?";
-        return jdbcTemplate.queryForObject(sql, Boolean.class, userId);
+        String sql="SELECT COUNT(*) FROM Users u WHERE u.id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, userId);
+        return count != null && count > 0;
     }
 
     public int updateUserProfile(User updateUser) {
