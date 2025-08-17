@@ -1,22 +1,24 @@
 package vn.ypp4.quanphan.service.board;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.ypp4.quanphan.domain.dto.board.BoardCreateDTO;
 import vn.ypp4.quanphan.domain.dto.board.BoardResponseDTO;
 import vn.ypp4.quanphan.repository.BoardRepository;
 import vn.ypp4.quanphan.repository.UserRepository;
 import vn.ypp4.quanphan.repository.WorkspaceRepository;
+import vn.ypp4.quanphan.service.dto.EntityToDtoMapper;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-    private final BoardRepository boardRepository;
-    private final WorkspaceRepository workspaceRepository;
-    private final UserRepository userRepository;
+    @Autowired
+    private BoardRepository boardRepository;
+    @Autowired
+    private WorkspaceRepository workspaceRepository;
+    @Autowired
+    private UserRepository userRepository;
     @Override
     public int createBoard(BoardCreateDTO createBoard) {
         if(workspaceRepository.existsById(createBoard.getWorkspaceId())){
@@ -32,23 +34,14 @@ public class BoardServiceImpl implements BoardService {
     }
     @Override
     public List<BoardResponseDTO> getMemberBoardByUserId(int userId){
-        return boardRepository.findBoardsByUserId(userId)
-                .stream()
-                .filter(Objects::nonNull)
-                .map(BoardResponseDTO::new)
-                .toList();
+        return EntityToDtoMapper.mapToDto(boardRepository.findBoardsByUserId(userId), BoardResponseDTO::new);
     }
     @Override
     public List<BoardResponseDTO> getMemberBoardByUserIdAndWorkspaceId(int userId, int workspaceId) {
         if (workspaceRepository.existsById(workspaceId)&& userRepository.existsById(userId)) {
-            return boardRepository.findBoardsByUserIdAndWorkspaceId(userId, workspaceId)
-                    .stream()
-                    .filter(Objects::nonNull)
-                    .map(BoardResponseDTO::new)
-                    .toList();
+            return EntityToDtoMapper.mapToDto(boardRepository.findBoardsByUserIdAndWorkspaceId(userId, workspaceId), BoardResponseDTO::new);
         } else {
             throw new NullPointerException("Workspace invalid");
         }
     }
 }
-

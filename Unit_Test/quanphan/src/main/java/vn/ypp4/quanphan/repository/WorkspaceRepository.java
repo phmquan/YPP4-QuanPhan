@@ -28,9 +28,9 @@ public class WorkspaceRepository {
     }
 
     public boolean existsById(int workspaceId) {
-        String sql = "SELECT COUNT(*) > 0 FROM Workspace WHERE Id = ?";
-        Boolean exists = jdbcTemplate.queryForObject(sql, Boolean.class, workspaceId);
-        return exists != null && exists;
+        String sql = "SELECT COUNT(*) FROM Workspace WHERE Id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, workspaceId);
+        return count != null && count > 0;
     }
 
     public List<Workspace> findWorkspacesByUserId(int userId) {
@@ -70,9 +70,9 @@ public class WorkspaceRepository {
     }
 
     public boolean existsByWorkspaceId(int workspaceId) {
-        String sql = "SELECT COUNT(*) > 0 FROM Workspace WHERE Id = ?";
-        Boolean exists = jdbcTemplate.queryForObject(sql, Boolean.class, workspaceId);
-        return exists != null && exists;
+        String sql = "SELECT COUNT(*) FROM Workspace WHERE Id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, workspaceId);
+        return count != null && count > 0;
     }
 
     public int updateWorkspace(WorkspaceUpdateDTO updateWorkspace) {

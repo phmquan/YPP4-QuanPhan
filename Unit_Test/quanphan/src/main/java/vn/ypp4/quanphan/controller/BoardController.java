@@ -1,7 +1,9 @@
 package vn.ypp4.quanphan.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import vn.ypp4.quanphan.domain.dto.board.BoardCreateDTO;
 import vn.ypp4.quanphan.domain.dto.board.BoardResponseDTO;
 import vn.ypp4.quanphan.service.board.BoardService;
@@ -14,11 +16,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/boards")
-@RequiredArgsConstructor
+
 public class BoardController {
-    private final StarredBoardServiceImpl starredBoardService;
-    private final ViewHistoryServiceImpl viewHistoryService;
-    private final BoardService boardService;
+    @Autowired
+    private  StarredBoardServiceImpl starredBoardService;
+    @Autowired
+    private  ViewHistoryServiceImpl viewHistoryService;
+    @Autowired
+    private  BoardService boardService;
 
     @GetMapping("/starred/{id}")
     public List<BoardResponseDTO> getStarredBoards(@RequestParam int userId) {
