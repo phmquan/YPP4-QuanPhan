@@ -25,7 +25,6 @@ public class TestTemplate {
         //Arrange
         int numCategoryRequest=3;
 
-
         //Act
         List<TemplateCategoryResponseDTO> result=templateController.getTemplateCategories(numCategoryRequest);
 
