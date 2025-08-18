@@ -3,13 +3,14 @@ package vn.ypp4.quanphan.dto.user;
 
 import lombok.Getter;
 
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import vn.ypp4.quanphan.entity.User;
 
 
 @Getter
 @Setter
-
+@NoArgsConstructor
 public class UserResponseDTO extends BaseUserDTO {
     private String fullName;
     private String email;

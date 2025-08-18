@@ -82,4 +82,5 @@ class TestBoard {
         // Assert
         assertEquals(1, result.size());
     }
+
 }
