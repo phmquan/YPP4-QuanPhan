@@ -1,9 +1,12 @@
 package vn.ypp4.quanphan.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import vn.ypp4.quanphan.domain.entity.Board;
 import vn.ypp4.quanphan.domain.entity.UserStarredBoard;
 
@@ -15,6 +18,8 @@ import java.util.List;
 public class UserStarredBoardRepository {
     private final JdbcTemplate jdbcTemplate;
 
+    @Cacheable(cacheNames = "starredBoards", key="'userId:' + #userId")
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public List<Board> findStarredBoardsByUserId(int userId){
         String sql="select \n" +
                 "  b.Id, \n" +
@@ -43,7 +48,8 @@ public class UserStarredBoardRepository {
         String sql="INSERT INTO UserStarredBoard (UserId, BoardId) VALUES (?, ?)";
         jdbcTemplate.update(sql, starred.getUserId(), starred.getBoardId());
     }
-
+    @Cacheable(cacheNames = "starredBoardsWorkspace", key="'userId:' + #userId,'workspaceID:' + #workspaceId")
+    @Transactional(isolation = Isolation.READ_UNCOMMITTED)
     public List<Board> findStarredBoardsByUserIdAndWorkspaceId(int userId, int workspaceId) {
         String sql = "SELECT b.Id, b.BoardName, b.BoardDescription, b.CreatedAt, b.CreatedBy, " +
                 "b.BackgroundUrl, b.WorkspaceId, b.BoardStatus, b.UpdatedAt, b.UpdatedBy " +
