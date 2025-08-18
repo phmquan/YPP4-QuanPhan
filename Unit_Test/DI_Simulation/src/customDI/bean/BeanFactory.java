@@ -16,6 +16,7 @@ public class BeanFactory {
     private final ThreadLocal<Set<String>> currentlyCreating =
             ThreadLocal.withInitial(HashSet::new);
     private final QualifierResolver qualifierResolver;
+
     public BeanFactory(BeanDefinitionRegistry registry, QualifierResolver qualifierResolver) {
         this.qualifierResolver = qualifierResolver;
         this.registry = registry;

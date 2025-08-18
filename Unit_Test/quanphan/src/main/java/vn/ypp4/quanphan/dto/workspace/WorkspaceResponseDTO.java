@@ -1,12 +1,13 @@
 package vn.ypp4.quanphan.dto.workspace;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import vn.ypp4.quanphan.entity.Workspace;
 
 @Getter
 @Setter
-
+@NoArgsConstructor
 public class WorkspaceResponseDTO extends BaseWorkspaceDTO {
 
     private String workspaceDescription;
