@@ -1,10 +1,13 @@
 package vn.ypp4.quanphan.service.user;
 
-import vn.ypp4.quanphan.domain.dto.user.UserResponseDTO;
-import vn.ypp4.quanphan.domain.dto.user.UserUpdateDTO;
+import org.springframework.stereotype.Service;
+import vn.ypp4.quanphan.dto.user.UserResponseDTO;
+import vn.ypp4.quanphan.dto.user.UserUpdateDTO;
 
+@Service
 public interface UserService {
-    public UserResponseDTO getUserByUserId (int userId);
-    public int updateUserProfile(UserUpdateDTO userUpdate);
 
+    UserResponseDTO getUserByUserId(int userId);
+
+    int updateUserProfile(UserUpdateDTO userUpdate);
 }

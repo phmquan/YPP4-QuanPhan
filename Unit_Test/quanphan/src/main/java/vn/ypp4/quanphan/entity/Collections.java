@@ -1,0 +1,22 @@
+package vn.ypp4.quanphan.entity;
+
+import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class Collections {
+    private int id;
+    private String collectionName;
+    private LocalDateTime createdAt;
+    private int createdBy;
+    private LocalDateTime updatedAt;
+    private int updatedBy;
+    private int workspaceId;
+}

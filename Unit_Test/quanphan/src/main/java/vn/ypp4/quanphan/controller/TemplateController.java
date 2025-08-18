@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import vn.ypp4.quanphan.domain.dto.template.TemplateCategoryResponseDTO;
+import vn.ypp4.quanphan.dto.template.TemplateCategoryResponseDTO;
 
-import vn.ypp4.quanphan.domain.dto.template.TemplateResponseDTO;
+import vn.ypp4.quanphan.dto.template.TemplateResponseDTO;
 import vn.ypp4.quanphan.service.template.TemplateService;
 
 import java.util.List;

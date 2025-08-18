@@ -1,47 +1,47 @@
 package vn.ypp4.quanphan.service.board;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import vn.ypp4.quanphan.domain.dto.board.BoardCreateDTO;
-import vn.ypp4.quanphan.domain.dto.board.BoardResponseDTO;
-import vn.ypp4.quanphan.repository.BoardRepository;
-import vn.ypp4.quanphan.repository.UserRepository;
-import vn.ypp4.quanphan.repository.WorkspaceRepository;
-import vn.ypp4.quanphan.service.dto.EntityToDtoMapper;
+import vn.ypp4.quanphan.dto.board.BoardCreateDTO;
+import vn.ypp4.quanphan.dto.board.BoardResponseDTO;
+import vn.ypp4.quanphan.repository.board.UserBoardRepository;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-    @Autowired
-    private BoardRepository boardRepository;
-    @Autowired
-    private WorkspaceRepository workspaceRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final UserBoardRepository userBoardRepository;
     @Override
-    public int createBoard(BoardCreateDTO createBoard) {
-        if(workspaceRepository.existsById(createBoard.getWorkspaceId())){
-            return boardRepository.createBoard(createBoard);
-        }
-        else{
-            throw new NullPointerException("Workspace invalid");
-        }
+    public List<BoardResponseDTO> getStarredBoardsByUserId(int userId) {
+        return userBoardRepository.findStarredBoardsByUserId(userId);
     }
+
     @Override
-    public BoardResponseDTO getBoardById(int boardId){
-        return new BoardResponseDTO(boardRepository.findBoardById(boardId));
+    public List<BoardResponseDTO> getViewedBoardsByUserId(int userId) {
+        return userBoardRepository.findViewedBoardsByUserId(userId);
     }
+
+
+
     @Override
-    public List<BoardResponseDTO> getMemberBoardByUserId(int userId){
-        return EntityToDtoMapper.mapToDto(boardRepository.findBoardsByUserId(userId), BoardResponseDTO::new);
+    public BoardResponseDTO getBoardById(int boardId) {
+        return userBoardRepository.findById(boardId);
     }
+
     @Override
-    public List<BoardResponseDTO> getMemberBoardByUserIdAndWorkspaceId(int userId, int workspaceId) {
-        if (workspaceRepository.existsById(workspaceId)&& userRepository.existsById(userId)) {
-            return EntityToDtoMapper.mapToDto(boardRepository.findBoardsByUserIdAndWorkspaceId(userId, workspaceId), BoardResponseDTO::new);
-        } else {
-            throw new NullPointerException("Workspace invalid");
-        }
+    public List<BoardResponseDTO> getStarredBoardsByUserIdAndWorkspaceId(int userId, int workspaceId) {
+        return userBoardRepository.findStarredBoardsByUserIdAndWorkspaceId(userId,workspaceId);
+    }
+
+    @Override
+    public List<BoardResponseDTO> getMemberBoardsByUserId(int userId) {
+        return userBoardRepository.findMemberBoardsByUserId(userId);
+    }
+
+    @Override
+    public List<BoardResponseDTO> getMemberBoardsByUserIdAndWorkspaceId(int userId, int workspaceId) {
+        return userBoardRepository.findMemberBoardsByUserIdAndWorkspaceId(userId,workspaceId);
     }
 }

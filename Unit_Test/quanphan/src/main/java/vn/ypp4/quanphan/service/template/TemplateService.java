@@ -1,13 +1,16 @@
 package vn.ypp4.quanphan.service.template;
 
-import vn.ypp4.quanphan.domain.dto.template.TemplateCategoryResponseDTO;
-
-import vn.ypp4.quanphan.domain.dto.template.TemplateResponseDTO;
+import org.springframework.stereotype.Service;
+import vn.ypp4.quanphan.dto.template.TemplateCategoryResponseDTO;
+import vn.ypp4.quanphan.dto.template.TemplateResponseDTO;
 
 import java.util.List;
 
+@Service
 public interface TemplateService {
-    public List<TemplateCategoryResponseDTO> getTemplateCategories(int numCategoryRequested);
-    public List<TemplateResponseDTO> getTemplate(int numTemplateRequest);
-    public TemplateResponseDTO getTemplateDetail(int templateId);
+    List<TemplateCategoryResponseDTO> getTemplateCategories(int numCategoryRequest);
+
+    List<TemplateResponseDTO> getTemplate(int numTemplateRequest);
+
+    TemplateResponseDTO getTemplateDetail(int templateId);
 }

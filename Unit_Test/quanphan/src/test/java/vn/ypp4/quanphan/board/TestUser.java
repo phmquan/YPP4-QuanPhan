@@ -1,21 +1,16 @@
 package vn.ypp4.quanphan.board;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import vn.ypp4.quanphan.controller.UserController;
-import vn.ypp4.quanphan.domain.dto.user.UserResponseDTO;
-import vn.ypp4.quanphan.domain.dto.user.UserUpdateDTO;
-import vn.ypp4.quanphan.repository.UserRepository;
-import vn.ypp4.quanphan.service.user.UserService;
+import vn.ypp4.quanphan.dto.user.UserResponseDTO;
+import vn.ypp4.quanphan.dto.user.UserUpdateDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
