@@ -2,8 +2,8 @@ package vn.ypp4.quanphan.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import vn.ypp4.quanphan.domain.dto.workspace.WorkspaceResponseDTO;
-import vn.ypp4.quanphan.domain.dto.workspace.WorkspaceUpdateDTO;
+import vn.ypp4.quanphan.dto.workspace.WorkspaceResponseDTO;
+import vn.ypp4.quanphan.dto.workspace.WorkspaceUpdateDTO;
 import vn.ypp4.quanphan.service.workspace.WorkspaceService;
 
 import java.util.List;

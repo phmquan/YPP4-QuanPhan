@@ -2,8 +2,8 @@ package vn.ypp4.quanphan.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import vn.ypp4.quanphan.domain.dto.user.UserResponseDTO;
-import vn.ypp4.quanphan.domain.dto.user.UserUpdateDTO;
+import vn.ypp4.quanphan.dto.user.UserResponseDTO;
+import vn.ypp4.quanphan.dto.user.UserUpdateDTO;
 import vn.ypp4.quanphan.service.user.UserService;
 
 @RestController

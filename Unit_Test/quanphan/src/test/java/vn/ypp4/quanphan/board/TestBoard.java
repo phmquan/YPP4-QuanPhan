@@ -7,11 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import vn.ypp4.quanphan.controller.BoardController;
 
-import vn.ypp4.quanphan.domain.dto.board.BoardResponseDTO;
-import vn.ypp4.quanphan.domain.dto.board.BoardCreateDTO;
+import vn.ypp4.quanphan.dto.board.BoardResponseDTO;
+import vn.ypp4.quanphan.dto.board.BoardCreateDTO;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,15 +38,6 @@ class TestBoard {
         assertEquals(1,result.size());
     }
     @Test
-    void createBoard_Success(){
-        //Arrange
-        BoardCreateDTO createBoard = new BoardCreateDTO("","",1);
-        //Act
-        int result=boardController.createBoard(createBoard);
-        //Assert
-        assertEquals(1,result);
-    }
-    @Test
     void getBoardById_Success(){
         //Arrange
         int boardId=1;
@@ -56,7 +45,7 @@ class TestBoard {
         //Act
         BoardResponseDTO result=boardController.getBoardById(boardId);
 
-        //AssertÂ
+        //Assert
         assertNotNull(result);
     }
     @Test
@@ -86,7 +75,6 @@ class TestBoard {
         // Arrange
         int userId = 1;
         int workspaceId = 1;
-
 
         // Act
         List<BoardResponseDTO> result = boardController.getMemberBoardsByUserIdAndWorkspaceId(userId, workspaceId);

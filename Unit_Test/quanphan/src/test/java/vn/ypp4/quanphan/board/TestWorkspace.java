@@ -5,11 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import vn.ypp4.quanphan.controller.WorkspaceController;
-import vn.ypp4.quanphan.domain.dto.workspace.WorkspaceResponseDTO;
-import vn.ypp4.quanphan.domain.dto.workspace.WorkspaceUpdateDTO;
+import vn.ypp4.quanphan.dto.workspace.WorkspaceResponseDTO;
+import vn.ypp4.quanphan.dto.workspace.WorkspaceUpdateDTO;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
