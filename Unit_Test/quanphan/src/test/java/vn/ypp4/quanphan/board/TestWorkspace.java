@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import vn.ypp4.quanphan.controller.WorkspaceController;
 import vn.ypp4.quanphan.dto.workspace.WorkspaceResponseDTO;
+import vn.ypp4.quanphan.dto.workspace.WorkspaceSettingValueResponseDTO;
 import vn.ypp4.quanphan.dto.workspace.WorkspaceUpdateDTO;
 
 import java.time.LocalDateTime;
@@ -47,5 +48,17 @@ public class TestWorkspace {
 
         //Assert
         assertEquals(1, result);
+    }
+    @Test
+    void getSettingValueByKeyNameAndWorkspaceId(){
+        //Arrange
+        String keyName = "visibility";
+        int workspaceId = 1;
+
+        //Act
+        WorkspaceSettingValueResponseDTO result = workspaceController.getSettingValueByKeyNameWorkspaceId(keyName, workspaceId);
+
+        //Assert
+        assertNotNull(result);
     }
 }
