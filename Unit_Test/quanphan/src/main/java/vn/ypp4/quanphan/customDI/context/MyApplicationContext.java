@@ -1,6 +1,8 @@
 package vn.ypp4.quanphan.customDI.context;
 
+import vn.ypp4.quanphan.customDI.core.MyBeanDefinition;
 import vn.ypp4.quanphan.customDI.core.MyBeanFactory;
+import vn.ypp4.quanphan.customDI.metadata.MyAnnotationReader;
 import vn.ypp4.quanphan.customDI.scanner.MyClassPathScanner;
 
 import java.util.Set;
@@ -13,15 +15,15 @@ public class MyApplicationContext {
         MyClassPathScanner scanner = new MyClassPathScanner();
         Set<Class<?>> candidates = scanner.scan(basePackage);
 
-//        // 2. Tạo BeanDefinition và register vào BeanFactory
-//        MyAnnotationReader reader = new MyAnnotationReader();
-//        for (Class<?> clazz : candidates) {
-//            MyBeanDefinition def = reader.read(clazz);
-//            beanFactory.registerBeanDefinition(def);
-//        }
+        // 2. Tạo BeanDefinition và register vào BeanFactory
+        MyAnnotationReader reader = new MyAnnotationReader();
+        for (Class<?> clazz : candidates) {
+            MyBeanDefinition def = reader.createBeanDefinition(clazz);
+            beanFactory.registerBeanDefinition(def);
+        }
 //
-//        // 3. Khởi tạo singleton bean (eager init)
-//        beanFactory.initializeSingletons();
+        // 3. Khởi tạo singleton bean (eager init)
+        beanFactory.initializeSingletons();
     }
 
     // 4. API để lấy bean ra ngoài
