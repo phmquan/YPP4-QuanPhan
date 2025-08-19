@@ -19,7 +19,7 @@ public class TestClassPathScanner {
         Set<Class<?>> result= scanner.scan(packageName);
 
         //Assert
-        assertEquals(1, result.size());
+        assertEquals(2, result.size());
         for(Class<?> c:result){
             System.out.println("Class found: " + c.getName());
         }

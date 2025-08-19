@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface MyController {
-
+@Target({ElementType.TYPE,ElementType.FIELD})
+public @interface MyAutowired {
+    String value() default "";
 }
