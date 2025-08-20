@@ -10,13 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class TestClassPathScanner {
+    MyClassPathScanner scanner = new MyClassPathScanner();
     @Test
-    void getClassPathScanner() {
+    void getScanStereoTypeAnnotation() {
         //Arrange
-        MyClassPathScanner scanner = new MyClassPathScanner();
+
         String packageName = "vn.ypp4.quanphan";
         //Act
-        Set<Class<?>> result= scanner.scan(packageName);
+        Set<Class<?>> result= scanner.scanStereoType(packageName);
 
         //Assert
         assertEquals(2, result.size());
@@ -24,4 +25,5 @@ public class TestClassPathScanner {
             System.out.println("Class found: " + c.getName());
         }
     }
+
 }

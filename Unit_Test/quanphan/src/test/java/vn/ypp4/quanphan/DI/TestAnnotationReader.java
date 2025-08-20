@@ -3,7 +3,8 @@ package vn.ypp4.quanphan.DI;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import vn.ypp4.quanphan.customDI.core.MyBeanDefinition;
-import vn.ypp4.quanphan.customDI.metadata.MyAnnotationReader;
+
+import vn.ypp4.quanphan.customDI.metadata.MyAnnotationResolver;
 import vn.ypp4.quanphan.customDI.test.OrderController;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,11 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TestAnnotationReader {
     @Test
     void getBeanDefinitionName(){
-        MyAnnotationReader reader =new MyAnnotationReader();
+        MyAnnotationResolver reader =new MyAnnotationResolver();
 
         MyBeanDefinition result=reader.createBeanDefinition(OrderController.class);
 
-        assertEquals("orderController", result.getBeanName());
-        assertEquals("hehe", result.getQualifier());
+        assertEquals("orderController", result.beanName());
+        assertEquals("hehe", result.qualifier());
     }
 }

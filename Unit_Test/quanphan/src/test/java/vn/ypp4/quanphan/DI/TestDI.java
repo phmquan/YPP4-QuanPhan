@@ -18,6 +18,5 @@ public class TestDI {
         MyApplicationContext context= new MyApplicationContext("vn.ypp4.quanphan");
         OrderController orderController= context.getBean(OrderController.class);
         assertEquals("hehe", orderController.checkout("hehe"));
-
     }
 }
