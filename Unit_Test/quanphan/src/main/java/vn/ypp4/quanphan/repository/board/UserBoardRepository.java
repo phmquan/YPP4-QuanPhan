@@ -1,12 +1,14 @@
 package vn.ypp4.quanphan.repository.board;
 
 import org.springframework.stereotype.Repository;
+import vn.ypp4.quanphan.customDI.annotation.MyRepository;
 import vn.ypp4.quanphan.dto.board.BoardCreateDTO;
 import vn.ypp4.quanphan.dto.board.BoardResponseDTO;
 
 import java.util.List;
 
 @Repository
+
 public interface UserBoardRepository {
 
     List<BoardResponseDTO> findStarredBoardsByUserId(int userId);

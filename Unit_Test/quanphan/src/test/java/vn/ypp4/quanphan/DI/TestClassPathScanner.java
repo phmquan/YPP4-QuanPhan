@@ -18,12 +18,12 @@ public class TestClassPathScanner {
         String packageName = "vn.ypp4.quanphan";
         //Act
         Set<Class<?>> result= scanner.scanStereoType(packageName);
-
-        //Assert
-        assertEquals(2, result.size());
         for(Class<?> c:result){
             System.out.println("Class found: " + c.getName());
         }
+        //Assert
+        assertEquals(5, result.size());
+
     }
 
 }

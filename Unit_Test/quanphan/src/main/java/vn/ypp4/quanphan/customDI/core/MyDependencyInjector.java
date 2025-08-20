@@ -32,7 +32,6 @@ public class MyDependencyInjector {
 
     private Object resolveDependency(Field field) {
         Class<?> type = field.getType();
-
         // Check for qualifier
         MyQualifier qualifier = field.getAnnotation(MyQualifier.class);
         if (qualifier != null) {

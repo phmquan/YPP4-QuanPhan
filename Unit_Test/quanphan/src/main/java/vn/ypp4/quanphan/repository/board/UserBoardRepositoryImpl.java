@@ -1,21 +1,28 @@
 package vn.ypp4.quanphan.repository.board;
 
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import vn.ypp4.quanphan.customDI.annotation.MyAutowired;
+import vn.ypp4.quanphan.customDI.annotation.MyRepository;
+import vn.ypp4.quanphan.customDI.annotation.MyService;
 import vn.ypp4.quanphan.dto.board.BoardCreateDTO;
 import vn.ypp4.quanphan.dto.board.BoardResponseDTO;
 
 import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class UserBoardRepositoryImpl implements UserBoardRepository {
-    private final JdbcTemplate jdbcTemplate;
+    @Autowired
+    @MyAutowired
+    private  JdbcTemplate jdbcTemplate;
     private static final String BOARD_PROJECTION =
                     """
                         SELECT

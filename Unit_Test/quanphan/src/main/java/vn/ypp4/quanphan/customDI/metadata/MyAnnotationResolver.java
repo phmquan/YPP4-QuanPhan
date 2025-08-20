@@ -14,10 +14,12 @@ public class MyAnnotationResolver {
         String scope = clazz.getAnnotation(MyScope.class) != null ?
                 clazz.getAnnotation(MyScope.class).value() :
                 "singleton";
+        Class<?>[] interfaces = clazz.getInterfaces();
+        String implementedFrom = interfaces.length > 0 ? interfaces[0].getName() : null;
         String qualifier = clazz.getAnnotation(MyQualifier.class)!=null ?
                            clazz.getAnnotation(MyQualifier.class).value() :
                            null;
-        return new MyBeanDefinition(clazz, defaultBeanName(clazz),qualifier, scope);
+        return new MyBeanDefinition(clazz, defaultBeanName(clazz),implementedFrom,qualifier, scope);
     }
 
 }

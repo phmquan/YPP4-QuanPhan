@@ -2,6 +2,7 @@ package vn.ypp4.quanphan.service.board;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import vn.ypp4.quanphan.customDI.annotation.MyService;
 import vn.ypp4.quanphan.dto.board.BoardCreateDTO;
 import vn.ypp4.quanphan.dto.board.BoardResponseDTO;
 import vn.ypp4.quanphan.entity.Board;
