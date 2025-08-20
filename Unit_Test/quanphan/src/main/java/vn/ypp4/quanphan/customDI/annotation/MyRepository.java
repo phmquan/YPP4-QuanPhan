@@ -1,5 +1,7 @@
 package vn.ypp4.quanphan.customDI.annotation;
 
+import org.springframework.stereotype.Component;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
