@@ -4,10 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import vn.ypp4.quanphan.customDI.annotation.MyAutowired;
 import vn.ypp4.quanphan.customDI.annotation.MyController;
-import vn.ypp4.quanphan.customDI.annotation.MyQualifier;
+
 
 @MyController
-@MyQualifier("hehe")
 @Getter
 @Setter
 public class OrderController {

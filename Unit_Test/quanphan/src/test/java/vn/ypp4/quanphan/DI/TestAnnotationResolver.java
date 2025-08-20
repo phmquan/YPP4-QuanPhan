@@ -10,7 +10,7 @@ import vn.ypp4.quanphan.customDI.test.OrderController;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class TestAnnotationReader {
+public class TestAnnotationResolver {
     @Test
     void getBeanDefinitionName(){
         MyAnnotationResolver reader =new MyAnnotationResolver();

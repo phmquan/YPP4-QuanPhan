@@ -3,6 +3,8 @@ package vn.ypp4.quanphan.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import vn.ypp4.quanphan.customDI.annotation.MyAutowired;
+import vn.ypp4.quanphan.customDI.annotation.MyController;
 import vn.ypp4.quanphan.dto.board.BoardCreateDTO;
 import vn.ypp4.quanphan.dto.board.BoardResponseDTO;
 import vn.ypp4.quanphan.service.board.BoardService;

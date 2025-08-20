@@ -18,8 +18,10 @@ public class MyApplicationContext {
 
         MyAnnotationResolver resolver = new MyAnnotationResolver();
         for (Class<?> clazz : stereoTypeClass) {
-            MyBeanDefinition def = resolver.createBeanDefinition(clazz);
-            beanFactory.registerBeanDefinition(def);
+            if (!clazz.isInterface()) {
+                MyBeanDefinition def = resolver.createBeanDefinition(clazz);
+                beanFactory.registerBeanDefinition(def);
+            }
         }
 
         beanFactory.initializeSingletons();

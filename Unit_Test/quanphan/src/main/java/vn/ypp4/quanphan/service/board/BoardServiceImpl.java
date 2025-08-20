@@ -1,8 +1,11 @@
 package vn.ypp4.quanphan.service.board;
 
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vn.ypp4.quanphan.customDI.annotation.MyAutowired;
+import vn.ypp4.quanphan.customDI.annotation.MyService;
 import vn.ypp4.quanphan.dto.board.BoardCreateDTO;
 import vn.ypp4.quanphan.dto.board.BoardResponseDTO;
 import vn.ypp4.quanphan.repository.board.UserBoardRepository;
@@ -10,9 +13,10 @@ import vn.ypp4.quanphan.repository.board.UserBoardRepository;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class BoardServiceImpl implements BoardService {
-    private final UserBoardRepository userBoardRepository;
+    @Autowired
+    private  UserBoardRepository userBoardRepository;
     @Override
     public List<BoardResponseDTO> getStarredBoardsByUserId(int userId) {
         return userBoardRepository.findStarredBoardsByUserId(userId);
