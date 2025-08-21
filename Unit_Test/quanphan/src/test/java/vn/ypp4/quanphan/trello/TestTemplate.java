@@ -1,4 +1,4 @@
-package vn.ypp4.quanphan.board;
+package vn.ypp4.quanphan.trello;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

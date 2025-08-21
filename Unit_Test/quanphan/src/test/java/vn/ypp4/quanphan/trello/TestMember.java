@@ -1,12 +1,8 @@
-package vn.ypp4.quanphan.board;
+package vn.ypp4.quanphan.trello;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 @SpringBootTest
 @ActiveProfiles("test")

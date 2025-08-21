@@ -1,10 +1,11 @@
-package vn.ypp4.quanphan.board;
+package vn.ypp4.quanphan.trello;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import vn.ypp4.quanphan.controller.WorkspaceController;
+import vn.ypp4.quanphan.dto.member.MemberWorkspaceResponseDTO;
 import vn.ypp4.quanphan.dto.workspace.WorkspaceResponseDTO;
 import vn.ypp4.quanphan.dto.workspace.WorkspaceSettingValueResponseDTO;
 import vn.ypp4.quanphan.dto.workspace.WorkspaceUpdateDTO;
@@ -59,6 +60,16 @@ public class TestWorkspace {
         WorkspaceSettingValueResponseDTO result = workspaceController.getSettingValueByKeyNameWorkspaceId(keyName, workspaceId);
 
         //Assert
+        assertNotNull(result);
+    }
+    @Test
+    void getMemberWorkspace(){
+        //Arrange
+        int workspaceId=1;
+
+        //Act
+        MemberWorkspaceResponseDTO result = workspaceController.getMembersByWorkspace(workspaceId);
+
         assertNotNull(result);
     }
 }
