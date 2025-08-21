@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import vn.ypp4.quanphan.dto.setting.SettingValueResponseDTO;
 import vn.ypp4.quanphan.dto.workspace.WorkspaceSettingValueResponseDTO;
 
 @Repository

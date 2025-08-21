@@ -8,14 +8,17 @@ import vn.ypp4.quanphan.customDI.annotation.MyAutowired;
 import vn.ypp4.quanphan.customDI.context.MyApplicationContext;
 import vn.ypp4.quanphan.customDI.core.MyBeanDefinition;
 import vn.ypp4.quanphan.customDI.core.MyBeanFactory;
+import vn.ypp4.quanphan.customDI.metadata.MyAnnotationResolver;
 import vn.ypp4.quanphan.customDI.test.OrderController;
 import vn.ypp4.quanphan.customDI.test.OrderService;
+import vn.ypp4.quanphan.customDI.test.OrderServiceImpl;
 import vn.ypp4.quanphan.repository.board.UserBoardRepository;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class TestBeanFactory {
+    MyAnnotationResolver myAnnotationResolver = new MyAnnotationResolver();
     MyBeanFactory myBeanFactory = new MyBeanFactory();
     @Test
     void testRegisterBeanDefinition(){
@@ -29,6 +32,9 @@ public class TestBeanFactory {
     }
     @Test
     void testCreateOrGetBean(){
+        MyBeanDefinition serviceBean = myAnnotationResolver.createBeanDefinition(OrderServiceImpl.class);
+        Object service= myBeanFactory.createOrGetBean(serviceBean);
+        myBeanFactory.registerBeanDefinition(serviceBean);
        //Arrange
         MyBeanDefinition bean=new MyBeanDefinition(OrderController.class,"orderController","singleton");
         //Act
@@ -40,7 +46,7 @@ public class TestBeanFactory {
     void testInitializeSingleton(){
         // Register dependency
         myBeanFactory.registerBeanDefinition(
-                new MyBeanDefinition(OrderService.class, "orderService", "singleton")
+                new MyBeanDefinition(OrderServiceImpl.class, "orderServiceImpl","OrderService",null, "singleton")
         );
 
         // Register controller

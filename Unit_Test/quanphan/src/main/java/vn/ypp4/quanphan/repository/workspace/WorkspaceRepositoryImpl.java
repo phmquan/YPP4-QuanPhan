@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import vn.ypp4.quanphan.dto.member.MemberWorkspaceResponseDTO;
 import vn.ypp4.quanphan.dto.workspace.WorkspaceResponseDTO;
 import vn.ypp4.quanphan.dto.workspace.WorkspaceUpdateDTO;
 
@@ -63,4 +64,6 @@ public class WorkspaceRepositoryImpl implements WorkspaceRepository {
                 "  AND owt.OwnerTypeValue = 'workspace'";
         return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(WorkspaceResponseDTO.class),userId);
     }
+
+
 }

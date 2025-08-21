@@ -1,5 +1,6 @@
 package vn.ypp4.quanphan.repository.workspace;
 
+import vn.ypp4.quanphan.dto.member.MemberWorkspaceResponseDTO;
 import vn.ypp4.quanphan.dto.workspace.WorkspaceResponseDTO;
 import vn.ypp4.quanphan.dto.workspace.WorkspaceUpdateDTO;
 
@@ -13,4 +14,6 @@ public interface WorkspaceRepository {
     WorkspaceResponseDTO findById(int workspaceId);
 
     List<WorkspaceResponseDTO> findMemberWorkspacesByUserId(int userId);
+
+
 }

@@ -1,4 +1,4 @@
-package vn.ypp4.quanphan.board;
+package vn.ypp4.quanphan.trello;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.test.context.ActiveProfiles;
 import vn.ypp4.quanphan.controller.BoardController;
 
 import vn.ypp4.quanphan.dto.board.BoardResponseDTO;
-import vn.ypp4.quanphan.dto.board.BoardCreateDTO;
 
 import java.util.List;
 

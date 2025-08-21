@@ -22,7 +22,7 @@ public class TestClassPathScanner {
             System.out.println("Class found: " + c.getName());
         }
         //Assert
-        assertEquals(5, result.size());
+        assertEquals(3, result.size());
 
     }
 

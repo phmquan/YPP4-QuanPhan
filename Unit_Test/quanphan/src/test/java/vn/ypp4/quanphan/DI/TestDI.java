@@ -16,9 +16,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@MyComponent
-@SpringBootTest
 
+@SpringBootTest
 public class TestDI {
     final MyApplicationContext context= new MyApplicationContext("vn.ypp4.quanphan.customDI");
     @Test
