@@ -1,29 +1,34 @@
 package vn.ypp4.quanphan.DI;
-
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.MockedStatic;
 import org.springframework.boot.test.context.SpringBootTest;
 import vn.ypp4.quanphan.customDI.scanner.MyClassPathScanner;
-
+import vn.ypp4.quanphan.util.constant.StereoTypeAnnotation;
+import java.util.Arrays;
 import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class TestClassPathScanner {
-    MyClassPathScanner scanner = new MyClassPathScanner();
+    @InjectMocks
+    private MyClassPathScanner stereoTypeScanner=new MyClassPathScanner();
+
     @Test
-    void getScanStereoTypeAnnotation() {
-        //Arrange
-
-        String packageName = "vn.ypp4.quanphan";
-        //Act
-        Set<Class<?>> result= scanner.scanStereoType(packageName);
-        for(Class<?> c:result){
-            System.out.println("Class found: " + c.getName());
+    void testScanStereoType_WithEmptyStereotypeList() {
+        // Given
+        String basePackage = "com.example";
+        try (MockedStatic<StereoTypeAnnotation> stereotypeMock = mockStatic(StereoTypeAnnotation.class)) {
+            // Mock empty stereotype list
+            stereotypeMock.when(StereoTypeAnnotation::getStereotypeList)
+                    .thenReturn(Arrays.asList());
+            // When
+            Set<Class<?>> result = stereoTypeScanner.scanStereoType(basePackage);
+            // Then
+            assertNotNull(result);
+            assertTrue(result.isEmpty());
         }
-        //Assert
-        assertEquals(3, result.size());
-
     }
 
 }

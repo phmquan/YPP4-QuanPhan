@@ -6,7 +6,6 @@ import vn.ypp4.quanphan.customDI.annotation.MyQualifier;
 import java.lang.reflect.Field;
 
 public class MyDependencyInjector {
-
     private final MyBeanFactory beanFactory;
 
     public MyDependencyInjector(MyBeanFactory beanFactory) {
@@ -15,7 +14,6 @@ public class MyDependencyInjector {
 
     public void injectDependencies(Object bean) {
         Class<?> clazz = bean.getClass();
-
         for (Field field : clazz.getDeclaredFields()) {
             if (field.isAnnotationPresent(MyAutowired.class)) {
                 Object dependency = resolveDependency(field);

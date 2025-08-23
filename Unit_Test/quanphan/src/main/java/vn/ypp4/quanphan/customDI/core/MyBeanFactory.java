@@ -1,5 +1,4 @@
 package vn.ypp4.quanphan.customDI.core;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,40 +11,36 @@ public class MyBeanFactory {
         beanDefinitions.put(def.beanName(),def);
     }
 
-
-
     public <T> T getBean(Class<T> type) {
-
         if (type.isInterface()) {
-
             // Tìm implementation từ beanDefinitions
-            for (MyBeanDefinition candidate : beanDefinitions.values()) {
-                System.out.println("Checking candidate: " + candidate.beanClass().getSimpleName());
-                if (type.isAssignableFrom(candidate.beanClass()) && !candidate.beanClass().isInterface()) {
-                    return createOrGetBean(candidate);
-                }
-            }
-            throw new RuntimeException("No implementation found for interface: " + type.getName());
+            return (T) beanDefinitions.values().stream()
+                    .filter(candidate ->
+                            type.isAssignableFrom(candidate.beanClass()) &&
+                            !candidate.beanClass().isInterface())
+                    .findFirst()
+                    .map(this::createOrGetBean)
+                    .orElseThrow(() -> new RuntimeException(
+                            "No implementation found for interface: " + type.getName()));
         }
         return getBean(type,null);
     }
 
     public <T> T getBean(Class<T> type, String qualifier) {
-        System.out.println("getBean called with type: " + type.getSimpleName() + ", qualifier: " + qualifier);
+        return (T) beanDefinitions.values().stream()
+                .filter(def -> {
+                    boolean typeMatches = type.equals(def.beanClass()) || type.isAssignableFrom(def.beanClass());
+                    return typeMatches && !def.beanClass().isInterface();
+                })
+                .filter(def -> qualifier == null || Objects.equals(def.qualifier(), qualifier))
+                .peek(def -> System.out.println("Found bean: " + def.beanName()))
+                .findFirst()
+                .map(this::createOrGetBean)
+                .orElseThrow(() -> new RuntimeException(
+                        "Bean not found for type: " + type.getSimpleName() +
+                                (qualifier != null ? " with qualifier: " + qualifier : "")
+                ));
 
-        for(MyBeanDefinition def : beanDefinitions.values()){
-            // Kiểm tra exact match hoặc assignable
-            boolean typeMatches = type.equals(def.beanClass()) || type.isAssignableFrom(def.beanClass());
-
-            if(typeMatches && !def.beanClass().isInterface()){
-                if(qualifier == null || Objects.equals(def.qualifier(), qualifier)){
-                    System.out.println("Found bean: " + def.beanName());
-                    return createOrGetBean(def);
-                }
-            }
-        }
-        throw new RuntimeException("Bean not found for type: " + type.getSimpleName() +
-                (qualifier != null ? " with qualifier: " + qualifier : ""));
     }
 
     public <T> T createOrGetBean(MyBeanDefinition def) {
@@ -59,6 +54,10 @@ public class MyBeanFactory {
         }
     }
 
+    /***
+     *
+     *
+     */
     public Object createBean(MyBeanDefinition def) {
         try{
             if(def.beanClass().isInterface()){
@@ -73,12 +72,12 @@ public class MyBeanFactory {
         }
     }
 
-    // Eager init
+    /***
+     *
+     */
     public void initializeSingletons() {
-        for(MyBeanDefinition def : beanDefinitions.values()){
-            if("singleton".equals(def.scope())){
-                createOrGetBean(def);
-            }
-        }
+        beanDefinitions.values().stream()
+                .filter(def -> "singleton".equals(def.scope()))
+                .forEach(this::createOrGetBean);
     }
 }

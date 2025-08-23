@@ -9,10 +9,8 @@ import vn.ypp4.quanphan.dto.member.MemberWorkspaceResponseDTO;
 import vn.ypp4.quanphan.dto.workspace.WorkspaceResponseDTO;
 import vn.ypp4.quanphan.dto.workspace.WorkspaceSettingValueResponseDTO;
 import vn.ypp4.quanphan.dto.workspace.WorkspaceUpdateDTO;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -24,19 +22,13 @@ public class TestWorkspace {
     @Test
     void getWorkspaceWhereUserIsMember(){
         int userId=1;
-
-
         List<WorkspaceResponseDTO> result=workspaceController.getWorkspaceUserIsMember(userId);
-
         assertEquals(3,result.size());
     }
     @Test
     void getWorkspaceById() {
         int workspaceId = 1;
-
-
         WorkspaceResponseDTO result = workspaceController.getWorkspaceById(workspaceId);
-
         assertNotNull(result);
     }
     @Test
@@ -46,7 +38,6 @@ public class TestWorkspace {
         WorkspaceUpdateDTO updateWorkspace = new WorkspaceUpdateDTO(1,"Updated Workspace A", "Updated description for Workspace A", LocalDateTime.now(),1);
         //Act
         int result = workspaceController.updateWorkspace(updateWorkspace);
-
         //Assert
         assertEquals(1, result);
     }
@@ -55,10 +46,8 @@ public class TestWorkspace {
         //Arrange
         String keyName = "visibility";
         int workspaceId = 1;
-
         //Act
         WorkspaceSettingValueResponseDTO result = workspaceController.getSettingValueByKeyNameWorkspaceId(keyName, workspaceId);
-
         //Assert
         assertNotNull(result);
     }
@@ -66,10 +55,9 @@ public class TestWorkspace {
     void getMemberWorkspace(){
         //Arrange
         int workspaceId=1;
-
         //Act
         MemberWorkspaceResponseDTO result = workspaceController.getMembersByWorkspace(workspaceId);
-
+        //Assert
         assertNotNull(result);
     }
 }
