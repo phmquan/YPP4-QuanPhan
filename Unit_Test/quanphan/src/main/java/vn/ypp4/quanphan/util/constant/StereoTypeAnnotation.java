@@ -17,5 +17,4 @@ public class StereoTypeAnnotation {
             MyRepository.class,
             MyComponent.class
     );
-
 }

@@ -1,4 +1,4 @@
-package vn.ypp4.quanphan.customDI.context;
+package vn.ypp4.quanphan.customDI.container;
 
 import vn.ypp4.quanphan.customDI.core.MyBeanDefinition;
 import vn.ypp4.quanphan.customDI.core.MyBeanFactory;
@@ -12,18 +12,14 @@ public class MyApplicationContext {
     private final MyBeanFactory beanFactory = new MyBeanFactory();
 
     public MyApplicationContext(String basePackage) {
-
         MyClassPathScanner scanner = new MyClassPathScanner();
-        Set<Class<?>> stereoTypeClass = scanner.scanStereoType(basePackage);
-
+        Set<Class<?>> stereoTypeClassSet = scanner.scanStereoType(basePackage);
         MyAnnotationResolver resolver = new MyAnnotationResolver();
-        for (Class<?> clazz : stereoTypeClass) {
-            if (!clazz.isInterface()) {
-                MyBeanDefinition def = resolver.createBeanDefinition(clazz);
-                beanFactory.registerBeanDefinition(def);
-            }
-        }
 
+        stereoTypeClassSet.stream()
+                .filter(clazz -> !clazz.isInterface())
+                .map(resolver::createBeanDefinition)
+                .forEach(beanFactory::registerBeanDefinition);
         beanFactory.initializeSingletons();
     }
 
@@ -32,7 +28,4 @@ public class MyApplicationContext {
         return beanFactory.getBean(type);
     }
 
-    public <T> T getBean(Class<T> type, String qualifier) {
-        return beanFactory.getBean(type, qualifier);
-    }
 }

@@ -3,14 +3,11 @@ package vn.ypp4.quanphan.DI;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import vn.ypp4.quanphan.customDI.annotation.MyAutowired;
 
-import vn.ypp4.quanphan.customDI.context.MyApplicationContext;
 import vn.ypp4.quanphan.customDI.core.MyBeanDefinition;
 import vn.ypp4.quanphan.customDI.core.MyBeanFactory;
 import vn.ypp4.quanphan.customDI.metadata.MyAnnotationResolver;
 import vn.ypp4.quanphan.customDI.test.OrderController;
-import vn.ypp4.quanphan.customDI.test.OrderService;
 import vn.ypp4.quanphan.customDI.test.OrderServiceImpl;
 import vn.ypp4.quanphan.repository.board.UserBoardRepository;
 

@@ -18,6 +18,6 @@ public class TestAnnotationResolver {
         MyBeanDefinition result=reader.createBeanDefinition(OrderController.class);
 
         assertEquals("orderController", result.beanName());
-        assertEquals("hehe", result.qualifier());
+
     }
 }
