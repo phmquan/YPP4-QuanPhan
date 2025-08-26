@@ -1,6 +1,7 @@
 package vn.ypp4.quanphan.api.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.ypp4.quanphan.api.dto.user.UserResponseDTO;
 import vn.ypp4.quanphan.api.dto.user.UserUpdateDTO;
@@ -11,13 +12,14 @@ import vn.ypp4.quanphan.api.service.user.UserService;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    @GetMapping("/{id}")
-    public UserResponseDTO getUserByUserId(@PathVariable int userId){
+
+    @GetMapping
+    public ResponseEntity<UserResponseDTO> getUserByUserId(@RequestParam int userId) {
         return userService.getUserByUserId(userId);
     }
 
-    @PutMapping("/{id}")
-    public int updateUserProfile(UserUpdateDTO userUpdate) {
+    @PutMapping
+    public ResponseEntity<Integer> updateUserProfile(@RequestBody UserUpdateDTO userUpdate) {
         return userService.updateUserProfile(userUpdate);
     }
 }
