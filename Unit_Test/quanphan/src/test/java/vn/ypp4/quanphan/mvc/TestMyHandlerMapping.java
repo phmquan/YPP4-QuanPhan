@@ -1,19 +1,18 @@
 package vn.ypp4.quanphan.mvc;
 
 import org.junit.jupiter.api.Test;
-import vn.ypp4.quanphan.customDI.test.OrderController;
 import vn.ypp4.quanphan.customMVC.MyHandlerMapping;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import vn.ypp4.quanphan.customMVC.MyHandlerMethod;
+import vn.ypp4.quanphan.customMVC.test.UserController;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 public class TestMyHandlerMapping {
     @Test
-    void testFindHandlerByUrl() {
-        MyHandlerMapping mapping = new MyHandlerMapping();
-        mapping.register("/users", new OrderController());
+    void testFindHandlerByUrl() throws Exception {
+        MyHandlerMapping mapping = new MyHandlerMapping("vn.ypp4.quanphan");
 
-        Object handler = mapping.getHandler("/users");
+        MyHandlerMethod handler = mapping.getHandler("/user");
 
-        assertTrue(handler instanceof OrderController);
+        assertInstanceOf(UserController.class, handler.getController());
     }
 }
