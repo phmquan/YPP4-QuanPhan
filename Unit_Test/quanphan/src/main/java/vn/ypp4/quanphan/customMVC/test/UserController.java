@@ -5,6 +5,7 @@ import vn.ypp4.quanphan.customDI.annotation.MyController;
 import vn.ypp4.quanphan.customDI.annotation.MyPathVariable;
 import vn.ypp4.quanphan.customDI.annotation.MyRequestMapping;
 import vn.ypp4.quanphan.customDI.annotation.MyRequestParam;
+import vn.ypp4.quanphan.customMVC.constant.HttpMethod;
 
 @MyController
 @MyRequestMapping("/user")
@@ -18,12 +19,12 @@ public class UserController {
         return "Hello from UserController";
     }
 
-    @MyRequestMapping("/detail")
+    @MyRequestMapping(value= "/detail", method= HttpMethod.POST)
     public String detail(@MyRequestParam("id") int id) {
         return "User detail for id=" + id;
     }
 
-    @MyRequestMapping("/path")
+    @MyRequestMapping("/path/{userId}")
     public String pathExample(@MyPathVariable("userId") int userId) {
         return "User with path variable id=" + userId;
     }

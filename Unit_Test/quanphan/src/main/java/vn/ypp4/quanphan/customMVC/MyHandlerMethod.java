@@ -13,6 +13,5 @@ public class MyHandlerMethod {
         this.controller = controller;
         this.method = method;
     }
-
 }
 

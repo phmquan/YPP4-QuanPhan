@@ -1,5 +1,4 @@
 package vn.ypp4.quanphan.mvc.handlerAdapter.resolver;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import vn.ypp4.quanphan.customDI.annotation.MyRequestParam;
@@ -30,7 +29,9 @@ public class TestRequestParamResolver {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setParameter("name", "Quan");
         RequestParamResolver resolver = new RequestParamResolver();
+
         Object result = resolver.resolve(param, request, Map.of());
+
         assertEquals("Quan", result);
     }
 }

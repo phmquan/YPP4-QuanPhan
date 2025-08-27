@@ -1,12 +1,10 @@
 package vn.ypp4.quanphan.mvc;
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import vn.ypp4.quanphan.customDI.annotation.MyPathVariable;
 import vn.ypp4.quanphan.customDI.annotation.MyRequestParam;
 import vn.ypp4.quanphan.customMVC.handlerAdapter.MyHandlerAdapter;
-
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -32,7 +30,7 @@ public class TestHandlerAdapter {
 
         Map<String, String> pathVars = Map.of("id", "42");
 
-        MyHandlerAdapter adapter = new MyHandlerAdapter(); // đã chứa 3 resolver
+        MyHandlerAdapter adapter = new MyHandlerAdapter();
         Object result = adapter.handle(controller, method, request, pathVars);
 
         assertEquals("id=42, active=true, ua=JUnit", result);
