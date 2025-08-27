@@ -1,44 +1,49 @@
 package vn.ypp4.quanphan.customMVC;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.method.HandlerMethod;
+import vn.ypp4.quanphan.customDI.container.MyApplicationContext;
 import vn.ypp4.quanphan.customDI.scanner.MyClassPathScanner;
 import vn.ypp4.quanphan.customMVC.handlerAdapter.MyHandlerAdapter;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Collections;
 
 public class MyDispatcherServlet  {
     private  MyHandlerMapping handlerMapping;
     private  MyHandlerAdapter handlerAdapter;
-    private final MyClassPathScanner scanner = new MyClassPathScanner();
 
     public void init() {
         try {
-            handlerMapping = new MyHandlerMapping("vn.ypp4.quanphan");
+            MyApplicationContext myApplicationContext = new MyApplicationContext("vn.ypp4.quanphan");
+            handlerMapping = new MyHandlerMapping("vn.ypp4.quanphan", myApplicationContext);
             handlerAdapter = new MyHandlerAdapter();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    public void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String uri = req.getRequestURI();
+        String httpMethod = req.getMethod();
 
-    public void service(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        MyHandlerMethod handlerMethod = handlerMapping.getHandler(uri, httpMethod);
+        if (handlerMethod == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "No handler found for " + uri);
+            return;
+        }
+
         try {
-            String uri = req.getRequestURI();
-            MyHandlerMethod handlerMethod = handlerMapping.getHandler(uri);
-
-            if (handlerMethod == null) {
-                resp.sendError(HttpServletResponse.SC_NOT_FOUND, "No handler for " + uri);
-                return;
-            }
-
-            Object result = handlerAdapter.handle(handlerMethod.getController(),handlerMethod.getMethod(), req, new HashMap<>());
-
-            if (result != null) {
-                resp.getWriter().write(result.toString());
-            }
+            Object result = handlerAdapter.handle(
+                    handlerMethod.getController(),
+                    handlerMethod.getMethod(),
+                    req,
+                    Collections.emptyMap()
+            );
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write(result != null ? result.toString() : "");
         } catch (Exception e) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().write("Error: " + e.getMessage());
         }
     }
 }

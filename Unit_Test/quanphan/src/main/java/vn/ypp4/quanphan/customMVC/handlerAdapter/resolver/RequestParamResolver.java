@@ -16,7 +16,7 @@ public class RequestParamResolver implements ArgumentResolver{
         MyRequestParam ann = parameter.getAnnotation(MyRequestParam.class);
         String name = ann.value();
         if (name == null || name.isEmpty()) {
-            name = parameter.getName(); // requires javac -parameters
+            name = parameter.getName();
         }
         String value = request.getParameter(name);
         return convert(value, parameter.getType());

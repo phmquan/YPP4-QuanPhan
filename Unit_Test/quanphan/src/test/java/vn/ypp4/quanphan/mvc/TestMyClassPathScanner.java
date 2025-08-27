@@ -1,5 +1,4 @@
 package vn.ypp4.quanphan.mvc;
-
 import org.junit.jupiter.api.Test;
 import vn.ypp4.quanphan.customDI.annotation.MyController;
 import vn.ypp4.quanphan.customDI.scanner.MyClassPathScanner;

@@ -17,8 +17,10 @@ public class MyHandlerAdapter {
             new ServletRequestResolver()
     );
 
-    public Object handle(Object controller, Method method,
-                         HttpServletRequest request, Map<String, String> pathVars) throws Exception {
+    public Object handle(Object controller,
+                         Method method,
+                         HttpServletRequest request,
+                         Map<String, String> pathVars) throws Exception {
         Object[] args = Arrays.stream(method.getParameters())
                 .map(param -> resolvers.stream()
                         .filter(r -> r.supports(param))
