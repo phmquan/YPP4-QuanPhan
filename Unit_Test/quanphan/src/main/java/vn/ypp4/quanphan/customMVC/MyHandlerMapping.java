@@ -1,7 +1,6 @@
 package vn.ypp4.quanphan.customMVC;
 import vn.ypp4.quanphan.customDI.annotation.MyRequestMapping;
 import vn.ypp4.quanphan.customDI.container.MyApplicationContext;
-import vn.ypp4.quanphan.customDI.core.MyBeanFactory;
 import vn.ypp4.quanphan.customDI.scanner.MyClassPathScanner;
 import java.lang.reflect.Method;
 import java.util.HashMap;

@@ -3,10 +3,7 @@ package vn.ypp4.quanphan.customDI.scanner;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import vn.ypp4.quanphan.customDI.annotation.MyController;
-import vn.ypp4.quanphan.customDI.annotation.MyRequestMapping;
-import vn.ypp4.quanphan.customDI.annotation.MyRequestParam;
-import vn.ypp4.quanphan.util.constant.DIAnnotation;
-import vn.ypp4.quanphan.util.constant.StereoTypeAnnotation;
+import vn.ypp4.quanphan.api.util.constant.StereoTypeAnnotation;
 
 
 import java.lang.annotation.Annotation;

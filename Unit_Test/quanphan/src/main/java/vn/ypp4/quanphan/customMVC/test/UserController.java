@@ -1,10 +1,11 @@
 package vn.ypp4.quanphan.customMVC.test;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import vn.ypp4.quanphan.customDI.annotation.MyController;
-import vn.ypp4.quanphan.customDI.annotation.MyPathVariable;
 import vn.ypp4.quanphan.customDI.annotation.MyRequestMapping;
 import vn.ypp4.quanphan.customDI.annotation.MyRequestParam;
+import vn.ypp4.quanphan.customMVC.view.ModelAndView;
 import vn.ypp4.quanphan.customMVC.constant.HttpMethod;
 
 @MyController
@@ -24,13 +25,18 @@ public class UserController {
         return "User detail for id=" + id;
     }
 
-    @MyRequestMapping("/path/{userId}")
-    public String pathExample(@MyPathVariable("userId") int userId) {
-        return "User with path variable id=" + userId;
-    }
 
     @MyRequestMapping("/request")
     public String requestInfo(HttpServletRequest request) {
         return "Method=" + request.getMethod() + ", URI=" + request.getRequestURI();
     }
+
+    @MyRequestMapping("/testMVC")
+    public ModelAndView index(HttpServletRequest request, HttpServletResponse response) {
+        ModelAndView mv = new ModelAndView("index");
+        mv.addObject("message", "Hello from HomeController!");
+        mv.addObject("time", new java.util.Date());
+        return mv;
+    }
+
 }

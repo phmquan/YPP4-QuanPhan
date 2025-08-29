@@ -1,6 +1,6 @@
 package vn.ypp4.quanphan.customMVC.handlerAdapter;
 import jakarta.servlet.http.HttpServletRequest;
-import vn.ypp4.quanphan.customMVC.MyHandlerMethod;
+import vn.ypp4.quanphan.customMVC.view.ModelAndView;
 import vn.ypp4.quanphan.customMVC.handlerAdapter.resolver.ArgumentResolver;
 import vn.ypp4.quanphan.customMVC.handlerAdapter.resolver.PathVariableResolver;
 import vn.ypp4.quanphan.customMVC.handlerAdapter.resolver.RequestParamResolver;
@@ -17,10 +17,10 @@ public class MyHandlerAdapter {
             new ServletRequestResolver()
     );
 
-    public Object handle(Object controller,
-                         Method method,
-                         HttpServletRequest request,
-                         Map<String, String> pathVars) throws Exception {
+    public ModelAndView handle(Object controller,
+                               Method method,
+                               HttpServletRequest request,
+                               Map<String, String> pathVars) throws Exception {
         Object[] args = Arrays.stream(method.getParameters())
                 .map(param -> resolvers.stream()
                         .filter(r -> r.supports(param))
@@ -28,6 +28,17 @@ public class MyHandlerAdapter {
                         .map(r -> r.resolve(param, request, pathVars))
                         .orElse(null))
                 .toArray();
-        return method.invoke(controller, args);
+
+        Object returnValue= method.invoke(controller, args);
+
+        if (returnValue instanceof ModelAndView) {
+            return (ModelAndView) returnValue;
+        } else if (returnValue instanceof String) {
+            return new ModelAndView((String) returnValue);
+        } else {
+            ModelAndView mv = new ModelAndView("jsonView");
+            mv.addObject("data", returnValue);
+            return mv;
+        }
     }
 }
