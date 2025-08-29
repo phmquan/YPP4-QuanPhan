@@ -1,0 +1,46 @@
+package vn.ypp4.quanphan.api.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import vn.ypp4.quanphan.api.dto.member.MemberWorkspaceResponseDTO;
+import vn.ypp4.quanphan.api.dto.workspace.WorkspaceResponseDTO;
+import vn.ypp4.quanphan.api.dto.workspace.WorkspaceSettingValueResponseDTO;
+import vn.ypp4.quanphan.api.dto.workspace.WorkspaceUpdateDTO;
+import vn.ypp4.quanphan.api.service.workspace.WorkspaceMemberService;
+import vn.ypp4.quanphan.api.service.workspace.WorkspaceService;
+import vn.ypp4.quanphan.api.service.workspace.WorkspaceSettingService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1/workspaces")
+@RequiredArgsConstructor
+public class WorkspaceController {
+    private final WorkspaceService workspaceService;
+    private final WorkspaceSettingService workspaceSettingService;
+    private final WorkspaceMemberService workspaceMemberService;
+    @GetMapping("/member/{id}")
+    public List<WorkspaceResponseDTO> getWorkspaceUserIsMember(@PathVariable int userId){
+        return workspaceService.getMemberWorkspacesByUserId(userId);
+    }
+    @GetMapping("/{id}")
+    public WorkspaceResponseDTO getWorkspaceById(@PathVariable int  workspaceId) {
+        return workspaceService.getWorkspaceById(workspaceId);
+    }
+    @PutMapping
+    public int updateWorkspace(WorkspaceUpdateDTO updateWorkspace) {
+        if (updateWorkspace.getId() <= 0) {
+            throw new IllegalArgumentException("Invalid workspace ID");
+        }
+        return workspaceService.updateWorkspace(updateWorkspace);
+    }
+
+    @GetMapping("/workspaces/{keyName}//{ownerId}")
+    public WorkspaceSettingValueResponseDTO getSettingValueByKeyNameWorkspaceId(@PathVariable String keyName, @PathVariable int workspaceId) {
+        return workspaceSettingService.getSettingValueByKeyNameAndWorkspaceId(keyName,workspaceId);
+    }
+    @GetMapping("/members/{workspaceId}")
+    public MemberWorkspaceResponseDTO getMembersByWorkspace(int workspaceId) {
+        return workspaceMemberService.getWorkspaceMembersByUserId(workspaceId);
+    }
+}

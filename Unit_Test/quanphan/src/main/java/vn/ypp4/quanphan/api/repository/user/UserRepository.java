@@ -1,0 +1,12 @@
+package vn.ypp4.quanphan.api.repository.user;
+
+import vn.ypp4.quanphan.api.dto.user.UserResponseDTO;
+import vn.ypp4.quanphan.api.dto.user.UserUpdateDTO;
+
+public interface UserRepository {
+    UserResponseDTO findById(int userId);
+
+    boolean existsById(int id);
+
+    int update(UserUpdateDTO userUpdate);
+}
