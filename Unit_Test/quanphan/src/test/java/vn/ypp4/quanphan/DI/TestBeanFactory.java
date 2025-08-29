@@ -9,7 +9,7 @@ import vn.ypp4.quanphan.customDI.core.MyBeanFactory;
 import vn.ypp4.quanphan.customDI.metadata.MyAnnotationResolver;
 import vn.ypp4.quanphan.customDI.test.OrderController;
 import vn.ypp4.quanphan.customDI.test.OrderServiceImpl;
-import vn.ypp4.quanphan.repository.board.UserBoardRepository;
+import vn.ypp4.quanphan.api.repository.board.UserBoardRepository;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

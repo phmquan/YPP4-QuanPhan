@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import vn.ypp4.quanphan.controller.UserController;
-import vn.ypp4.quanphan.dto.user.UserResponseDTO;
-import vn.ypp4.quanphan.dto.user.UserUpdateDTO;
+import vn.ypp4.quanphan.api.controller.UserController;
+import vn.ypp4.quanphan.api.dto.user.UserResponseDTO;
+import vn.ypp4.quanphan.api.dto.user.UserUpdateDTO;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest

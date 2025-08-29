@@ -3,20 +3,24 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import vn.ypp4.quanphan.customDI.container.MyApplicationContext;
-import vn.ypp4.quanphan.customDI.scanner.MyClassPathScanner;
 import vn.ypp4.quanphan.customMVC.handlerAdapter.MyHandlerAdapter;
+import vn.ypp4.quanphan.customMVC.view.ModelAndView;
+import vn.ypp4.quanphan.customMVC.view.MyViewResolver;
+
 import java.io.IOException;
 import java.util.Collections;
 
 public class MyDispatcherServlet  {
     private  MyHandlerMapping handlerMapping;
     private  MyHandlerAdapter handlerAdapter;
+    private MyViewResolver viewResolver;
 
-    public void init() {
+    public void init(String suffix,String prefix,String basePackage) {
         try {
-            MyApplicationContext myApplicationContext = new MyApplicationContext("vn.ypp4.quanphan");
-            handlerMapping = new MyHandlerMapping("vn.ypp4.quanphan", myApplicationContext);
+            MyApplicationContext myApplicationContext = new MyApplicationContext(basePackage);
+            handlerMapping = new MyHandlerMapping(basePackage, myApplicationContext);
             handlerAdapter = new MyHandlerAdapter();
+            viewResolver = new MyViewResolver(prefix, suffix);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -39,8 +43,12 @@ public class MyDispatcherServlet  {
                     req,
                     Collections.emptyMap()
             );
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().write(result != null ? result.toString() : "");
+
+            if (result instanceof ModelAndView mv) {
+                viewResolver.render(mv, req, resp);
+            } else {
+                resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            }
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("Error: " + e.getMessage());

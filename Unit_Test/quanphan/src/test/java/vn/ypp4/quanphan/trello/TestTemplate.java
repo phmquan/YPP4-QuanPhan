@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import vn.ypp4.quanphan.controller.TemplateController;
-import vn.ypp4.quanphan.dto.template.TemplateCategoryResponseDTO;
-import vn.ypp4.quanphan.dto.template.TemplateResponseDTO;
+import vn.ypp4.quanphan.api.controller.TemplateController;
+import vn.ypp4.quanphan.api.dto.template.TemplateCategoryResponseDTO;
+import vn.ypp4.quanphan.api.dto.template.TemplateResponseDTO;
 
 
 import java.util.List;

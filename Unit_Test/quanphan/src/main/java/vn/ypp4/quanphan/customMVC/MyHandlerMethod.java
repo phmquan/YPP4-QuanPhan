@@ -1,7 +1,5 @@
 package vn.ypp4.quanphan.customMVC;
-
 import lombok.Getter;
-
 import java.lang.reflect.Method;
 
 @Getter

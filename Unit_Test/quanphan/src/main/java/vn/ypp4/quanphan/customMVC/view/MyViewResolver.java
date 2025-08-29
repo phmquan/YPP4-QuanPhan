@@ -1,7 +1,6 @@
-package vn.ypp4.quanphan.customMVC;
+package vn.ypp4.quanphan.customMVC.view;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import vn.ypp4.quanphan.customMVC.view.ModelAndView;
 
 public class MyViewResolver {
     private final String prefix;

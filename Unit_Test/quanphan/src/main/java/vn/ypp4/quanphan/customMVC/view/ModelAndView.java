@@ -1,4 +1,4 @@
-package vn.ypp4.quanphan.customMVC;
+package vn.ypp4.quanphan.customMVC.view;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.HashMap;
