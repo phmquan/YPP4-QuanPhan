@@ -1,10 +1,10 @@
-package vn.ypp4.quanphan.customMVC.handlerAdapter;
+package vn.ypp4.quanphan.mvc.handlerAdapter;
 import jakarta.servlet.http.HttpServletRequest;
-import vn.ypp4.quanphan.customMVC.view.ModelAndView;
-import vn.ypp4.quanphan.customMVC.handlerAdapter.resolver.ArgumentResolver;
-import vn.ypp4.quanphan.customMVC.handlerAdapter.resolver.PathVariableResolver;
-import vn.ypp4.quanphan.customMVC.handlerAdapter.resolver.RequestParamResolver;
-import vn.ypp4.quanphan.customMVC.handlerAdapter.resolver.ServletRequestResolver;
+import vn.ypp4.quanphan.mvc.view.ModelAndView;
+import vn.ypp4.quanphan.mvc.handlerAdapter.resolver.ArgumentResolver;
+import vn.ypp4.quanphan.mvc.handlerAdapter.resolver.PathVariableResolver;
+import vn.ypp4.quanphan.mvc.handlerAdapter.resolver.RequestParamResolver;
+import vn.ypp4.quanphan.mvc.handlerAdapter.resolver.ServletRequestResolver;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;

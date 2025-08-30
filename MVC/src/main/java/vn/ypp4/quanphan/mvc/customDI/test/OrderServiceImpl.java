@@ -1,6 +1,6 @@
-package vn.ypp4.quanphan.customMVC.customDI.test;
+package vn.ypp4.quanphan.mvc.customDI.test;
 
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyService;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyService;
 
 @MyService
 public class OrderServiceImpl implements OrderService {

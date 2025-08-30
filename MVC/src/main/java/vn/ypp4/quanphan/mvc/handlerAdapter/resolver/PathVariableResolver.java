@@ -1,8 +1,8 @@
-package vn.ypp4.quanphan.customMVC.handlerAdapter.resolver;
+package vn.ypp4.quanphan.mvc.handlerAdapter.resolver;
 
 
 import jakarta.servlet.http.HttpServletRequest;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyPathVariable;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyPathVariable;
 
 import java.lang.reflect.Parameter;
 import java.util.Map;

@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import vn.ypp4.quanphan.customMVC.view.ModelAndView;
-import vn.ypp4.quanphan.customMVC.view.MyViewResolver;
+import vn.ypp4.quanphan.mvc.view.ModelAndView;
+import vn.ypp4.quanphan.mvc.view.MyViewResolver;
 
 import static org.mockito.Mockito.*;
 

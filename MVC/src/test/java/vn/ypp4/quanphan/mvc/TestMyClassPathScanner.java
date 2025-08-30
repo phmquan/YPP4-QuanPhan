@@ -1,7 +1,7 @@
 package vn.ypp4.quanphan.mvc;
 import org.junit.jupiter.api.Test;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyController;
-import vn.ypp4.quanphan.customMVC.customDI.scanner.MyClassPathScanner;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyController;
+import vn.ypp4.quanphan.mvc.customDI.scanner.MyClassPathScanner;
 import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

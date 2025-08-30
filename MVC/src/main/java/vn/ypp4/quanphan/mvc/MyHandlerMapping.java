@@ -1,7 +1,7 @@
-package vn.ypp4.quanphan.customMVC;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyRequestMapping;
-import vn.ypp4.quanphan.customMVC.customDI.container.MyApplicationContext;
-import vn.ypp4.quanphan.customMVC.customDI.scanner.MyClassPathScanner;
+package vn.ypp4.quanphan.mvc;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyRequestMapping;
+import vn.ypp4.quanphan.mvc.customDI.container.MyApplicationContext;
+import vn.ypp4.quanphan.mvc.customDI.scanner.MyClassPathScanner;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;

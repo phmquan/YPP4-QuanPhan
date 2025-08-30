@@ -1,4 +1,4 @@
-package vn.ypp4.quanphan.customMVC;
+package vn.ypp4.quanphan.mvc;
 import lombok.Getter;
 import java.lang.reflect.Method;
 

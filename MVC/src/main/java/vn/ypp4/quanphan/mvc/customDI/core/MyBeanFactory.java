@@ -1,4 +1,4 @@
-package vn.ypp4.quanphan.customMVC.customDI.core;
+package vn.ypp4.quanphan.mvc.customDI.core;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 

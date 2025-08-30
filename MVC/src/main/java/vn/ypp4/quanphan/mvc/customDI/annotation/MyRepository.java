@@ -1,4 +1,4 @@
-package vn.ypp4.quanphan.customMVC.customDI.annotation;
+package vn.ypp4.quanphan.mvc.customDI.annotation;
 
 import org.springframework.stereotype.Component;
 

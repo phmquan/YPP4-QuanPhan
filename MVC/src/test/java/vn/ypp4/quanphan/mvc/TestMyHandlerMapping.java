@@ -1,9 +1,9 @@
 package vn.ypp4.quanphan.mvc;
 import org.junit.jupiter.api.Test;
-import vn.ypp4.quanphan.customMVC.customDI.container.MyApplicationContext;
-import vn.ypp4.quanphan.customMVC.MyHandlerMapping;
-import vn.ypp4.quanphan.customMVC.MyHandlerMethod;
-import vn.ypp4.quanphan.customMVC.test.UserController;
+import vn.ypp4.quanphan.mvc.customDI.container.MyApplicationContext;
+import vn.ypp4.quanphan.mvc.MyHandlerMapping;
+import vn.ypp4.quanphan.mvc.MyHandlerMethod;
+import vn.ypp4.quanphan.mvc.test.UserController;
 
 import static org.junit.jupiter.api.Assertions.*;
 

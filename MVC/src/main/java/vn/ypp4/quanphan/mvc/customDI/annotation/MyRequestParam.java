@@ -1,4 +1,4 @@
-package vn.ypp4.quanphan.customMVC.customDI.annotation;
+package vn.ypp4.quanphan.mvc.customDI.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

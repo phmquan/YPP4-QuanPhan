@@ -1,6 +1,6 @@
-package vn.ypp4.quanphan.customMVC.handlerAdapter.resolver;
+package vn.ypp4.quanphan.mvc.handlerAdapter.resolver;
 import jakarta.servlet.http.HttpServletRequest;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyRequestParam;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyRequestParam;
 import java.lang.reflect.Parameter;
 import java.util.Map;
 import static org.apache.tomcat.util.IntrospectionUtils.convert;

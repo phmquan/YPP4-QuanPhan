@@ -1,7 +1,7 @@
-package vn.ypp4.quanphan.customMVC.test.withDI;
+package vn.ypp4.quanphan.mvc.test.withDI;
 
 import org.springframework.stereotype.Service;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyService;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyService;
 
 @MyService
 @Service
