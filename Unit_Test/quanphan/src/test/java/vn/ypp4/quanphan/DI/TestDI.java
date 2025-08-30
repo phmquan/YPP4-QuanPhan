@@ -2,8 +2,8 @@ package vn.ypp4.quanphan.DI;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import vn.ypp4.quanphan.customDI.container.MyApplicationContext;
-import vn.ypp4.quanphan.customDI.test.OrderController;
+import vn.ypp4.quanphan.customMVC.customDI.container.MyApplicationContext;
+import vn.ypp4.quanphan.customMVC.customDI.test.OrderController;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 public class TestDI {

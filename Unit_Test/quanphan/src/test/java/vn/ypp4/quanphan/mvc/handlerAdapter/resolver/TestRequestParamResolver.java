@@ -1,7 +1,7 @@
 package vn.ypp4.quanphan.mvc.handlerAdapter.resolver;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
-import vn.ypp4.quanphan.customDI.annotation.MyRequestParam;
+import vn.ypp4.quanphan.customMVC.customDI.annotation.MyRequestParam;
 import vn.ypp4.quanphan.customMVC.handlerAdapter.resolver.RequestParamResolver;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
