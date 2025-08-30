@@ -1,4 +1,4 @@
-package vn.ypp4.quanphan.customMVC.view;
+package vn.ypp4.quanphan.mvc.view;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

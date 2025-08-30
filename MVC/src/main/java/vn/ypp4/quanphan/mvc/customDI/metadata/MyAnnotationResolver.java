@@ -1,8 +1,8 @@
-package vn.ypp4.quanphan.customMVC.customDI.metadata;
-import vn.ypp4.quanphan.customDI.annotation.*;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyQualifier;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyScope;
-import vn.ypp4.quanphan.customMVC.customDI.core.MyBeanDefinition;
+package vn.ypp4.quanphan.mvc.customDI.metadata;
+import vn.ypp4.quanphan.mvc.customDI.annotation.*;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyQualifier;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyScope;
+import vn.ypp4.quanphan.mvc.customDI.core.MyBeanDefinition;
 
 
 public class MyAnnotationResolver {

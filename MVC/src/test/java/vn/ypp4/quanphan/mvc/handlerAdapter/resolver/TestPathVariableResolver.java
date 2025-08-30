@@ -1,8 +1,8 @@
 package vn.ypp4.quanphan.mvc.handlerAdapter.resolver;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyPathVariable;
-import vn.ypp4.quanphan.customMVC.handlerAdapter.resolver.PathVariableResolver;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyPathVariable;
+import vn.ypp4.quanphan.mvc.handlerAdapter.resolver.PathVariableResolver;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Map;

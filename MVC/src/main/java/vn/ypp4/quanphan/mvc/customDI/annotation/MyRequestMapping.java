@@ -1,6 +1,6 @@
-package vn.ypp4.quanphan.customMVC.customDI.annotation;
+package vn.ypp4.quanphan.mvc.customDI.annotation;
 
-import vn.ypp4.quanphan.customMVC.constant.HttpMethod;
+import vn.ypp4.quanphan.mvc.constant.HttpMethod;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

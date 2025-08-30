@@ -1,7 +1,7 @@
-package vn.ypp4.quanphan.customMVC.customDI.core;
+package vn.ypp4.quanphan.mvc.customDI.core;
 
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyAutowired;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyQualifier;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyAutowired;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyQualifier;
 
 import java.lang.reflect.Field;
 

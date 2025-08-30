@@ -1,11 +1,11 @@
-package vn.ypp4.quanphan.customMVC;
+package vn.ypp4.quanphan.mvc;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import vn.ypp4.quanphan.customMVC.customDI.container.MyApplicationContext;
-import vn.ypp4.quanphan.customMVC.handlerAdapter.MyHandlerAdapter;
-import vn.ypp4.quanphan.customMVC.view.ModelAndView;
-import vn.ypp4.quanphan.customMVC.view.MyViewResolver;
+import vn.ypp4.quanphan.mvc.customDI.container.MyApplicationContext;
+import vn.ypp4.quanphan.mvc.handlerAdapter.MyHandlerAdapter;
+import vn.ypp4.quanphan.mvc.view.ModelAndView;
+import vn.ypp4.quanphan.mvc.view.MyViewResolver;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -18,7 +18,7 @@ public class MyDispatcherServlet  {
     public void init(String suffix,String prefix,String basePackage) {
         try {
             MyApplicationContext myApplicationContext = new MyApplicationContext(basePackage);
-            handlerMapping = new MyHandlerMapping(basePackage, myApplicationContext);
+            handlerMapping = new vn.ypp4.quanphan.mvc.MyHandlerMapping(basePackage, myApplicationContext);
             handlerAdapter = new MyHandlerAdapter();
             viewResolver = new MyViewResolver(prefix, suffix);
         } catch (Exception e) {

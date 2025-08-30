@@ -22,6 +22,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // Reflections library for classpath scanning
+    implementation 'org.reflections:reflections:0.10.2'
+    // Jakarta Servlet API for servlet interfaces
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    // Lombok for getter/setter annotations
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
 }
 
 tasks.named('test') {

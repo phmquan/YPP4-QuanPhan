@@ -2,7 +2,7 @@ package vn.ypp4.quanphan.mvc.handlerAdapter.resolver;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
-import vn.ypp4.quanphan.customMVC.handlerAdapter.resolver.ServletRequestResolver;
+import vn.ypp4.quanphan.mvc.handlerAdapter.resolver.ServletRequestResolver;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Map;

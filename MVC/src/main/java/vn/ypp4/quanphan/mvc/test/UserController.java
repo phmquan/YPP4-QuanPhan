@@ -1,12 +1,12 @@
-package vn.ypp4.quanphan.customMVC.test;
+package vn.ypp4.quanphan.mvc.test;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyController;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyRequestMapping;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyRequestParam;
-import vn.ypp4.quanphan.customMVC.view.ModelAndView;
-import vn.ypp4.quanphan.customMVC.constant.HttpMethod;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyController;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyRequestMapping;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyRequestParam;
+import vn.ypp4.quanphan.mvc.view.ModelAndView;
+import vn.ypp4.quanphan.mvc.constant.HttpMethod;
 
 @MyController
 @MyRequestMapping("/user")

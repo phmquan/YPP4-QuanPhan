@@ -1,10 +1,10 @@
-package vn.ypp4.quanphan.api.util.constant;
+package vn.ypp4.quanphan.mvc;
 
 import lombok.Getter;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyComponent;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyController;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyRepository;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyService;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyComponent;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyController;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyRepository;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyService;
 
 import java.lang.annotation.Annotation;
 import java.util.List;

@@ -1,9 +1,8 @@
-package vn.ypp4.quanphan.customMVC.customDI.container;
+package vn.ypp4.quanphan.mvc.customDI.container;
 
-import vn.ypp4.quanphan.customMVC.customDI.core.MyBeanFactory;
-
-import vn.ypp4.quanphan.customMVC.customDI.metadata.MyAnnotationResolver;
-import vn.ypp4.quanphan.customMVC.customDI.scanner.MyClassPathScanner;
+import vn.ypp4.quanphan.mvc.customDI.core.MyBeanFactory;
+import vn.ypp4.quanphan.mvc.customDI.metadata.MyAnnotationResolver;
+import vn.ypp4.quanphan.mvc.customDI.scanner.MyClassPathScanner;
 
 import java.util.Set;
 

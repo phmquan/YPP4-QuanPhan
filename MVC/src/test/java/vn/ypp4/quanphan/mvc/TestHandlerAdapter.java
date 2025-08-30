@@ -2,9 +2,9 @@ package vn.ypp4.quanphan.mvc;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyPathVariable;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyRequestParam;
-import vn.ypp4.quanphan.customMVC.handlerAdapter.MyHandlerAdapter;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyPathVariable;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyRequestParam;
+import vn.ypp4.quanphan.mvc.handlerAdapter.MyHandlerAdapter;
 import java.lang.reflect.Method;
 import java.util.Map;
 

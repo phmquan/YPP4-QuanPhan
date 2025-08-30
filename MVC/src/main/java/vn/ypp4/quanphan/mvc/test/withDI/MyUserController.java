@@ -1,11 +1,11 @@
-package vn.ypp4.quanphan.customMVC.test.withDI;
+package vn.ypp4.quanphan.mvc.test.withDI;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyAutowired;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyController;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyRequestMapping;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyRequestParam;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyAutowired;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyController;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyRequestMapping;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyRequestParam;
 
 @MyController
 @Controller

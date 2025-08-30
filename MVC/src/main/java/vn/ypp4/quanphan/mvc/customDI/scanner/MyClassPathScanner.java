@@ -1,9 +1,9 @@
-package vn.ypp4.quanphan.customMVC.customDI.scanner;
+package vn.ypp4.quanphan.mvc.customDI.scanner;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
-import vn.ypp4.quanphan.customMVC.customDI.annotation.MyController;
-import vn.ypp4.quanphan.api.util.constant.StereoTypeAnnotation;
+import vn.ypp4.quanphan.mvc.customDI.annotation.MyController;
+import vn.ypp4.quanphan.mvc.StereoTypeAnnotation;
 
 
 import java.lang.annotation.Annotation;
