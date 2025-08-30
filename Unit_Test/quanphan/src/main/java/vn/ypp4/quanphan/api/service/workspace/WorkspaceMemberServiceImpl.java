@@ -1,6 +1,8 @@
 package vn.ypp4.quanphan.api.service.workspace;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import vn.ypp4.quanphan.api.dto.member.MemberWorkspaceResponseDTO;
 import vn.ypp4.quanphan.api.repository.workspace.MemberWorkspaceRepository;
@@ -11,12 +13,22 @@ import vn.ypp4.quanphan.api.repository.workspace.WorkspaceRepository;
 public class WorkspaceMemberServiceImpl implements WorkspaceMemberService {
     private final WorkspaceRepository workspaceRepository;
     private final MemberWorkspaceRepository memberWorkspaceRepository;
+
     @Override
-    public MemberWorkspaceResponseDTO getWorkspaceMembersByUserId(int workspaceId) {
-        if(workspaceRepository.existsById(workspaceId)) {
-            return memberWorkspaceRepository.getWorkspaceMembersByUserId(workspaceId);
-        } else {
-            throw new RuntimeException("Workspace not found");
+    public ResponseEntity<MemberWorkspaceResponseDTO> getWorkspaceMembersByUserId(int workspaceId) {
+        try {
+            if (workspaceRepository.existsById(workspaceId)) {
+                MemberWorkspaceResponseDTO members = memberWorkspaceRepository.getWorkspaceMembersByUserId(workspaceId);
+                if (members != null) {
+                    return ResponseEntity.ok(members);
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

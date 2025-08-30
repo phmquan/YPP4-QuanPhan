@@ -1,6 +1,7 @@
 package vn.ypp4.quanphan.api.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.ypp4.quanphan.api.dto.member.MemberWorkspaceResponseDTO;
 import vn.ypp4.quanphan.api.dto.workspace.WorkspaceResponseDTO;
@@ -19,28 +20,33 @@ public class WorkspaceController {
     private final WorkspaceService workspaceService;
     private final WorkspaceSettingService workspaceSettingService;
     private final WorkspaceMemberService workspaceMemberService;
-    @GetMapping("/member/{id}")
-    public List<WorkspaceResponseDTO> getWorkspaceUserIsMember(@PathVariable int userId){
+
+    @GetMapping("/member")
+    public ResponseEntity<List<WorkspaceResponseDTO>> getWorkspaceUserIsMember(@RequestParam int userId) {
         return workspaceService.getMemberWorkspacesByUserId(userId);
     }
-    @GetMapping("/{id}")
-    public WorkspaceResponseDTO getWorkspaceById(@PathVariable int  workspaceId) {
+
+    @GetMapping
+    public ResponseEntity<WorkspaceResponseDTO> getWorkspaceById(@RequestParam int workspaceId) {
         return workspaceService.getWorkspaceById(workspaceId);
     }
+
     @PutMapping
-    public int updateWorkspace(WorkspaceUpdateDTO updateWorkspace) {
+    public ResponseEntity<Integer> updateWorkspace(@RequestBody WorkspaceUpdateDTO updateWorkspace) {
         if (updateWorkspace.getId() <= 0) {
-            throw new IllegalArgumentException("Invalid workspace ID");
+            return ResponseEntity.badRequest().build();
         }
         return workspaceService.updateWorkspace(updateWorkspace);
     }
 
-    @GetMapping("/workspaces/{keyName}//{ownerId}")
-    public WorkspaceSettingValueResponseDTO getSettingValueByKeyNameWorkspaceId(@PathVariable String keyName, @PathVariable int workspaceId) {
-        return workspaceSettingService.getSettingValueByKeyNameAndWorkspaceId(keyName,workspaceId);
+    @GetMapping("/workspaces")
+    public ResponseEntity<WorkspaceSettingValueResponseDTO> getSettingValueByKeyNameWorkspaceId(
+            @RequestParam String keyName, @RequestParam int workspaceId) {
+        return workspaceSettingService.getSettingValueByKeyNameAndWorkspaceId(keyName, workspaceId);
     }
-    @GetMapping("/members/{workspaceId}")
-    public MemberWorkspaceResponseDTO getMembersByWorkspace(int workspaceId) {
+
+    @GetMapping("/members")
+    public ResponseEntity<MemberWorkspaceResponseDTO> getMembersByWorkspace(@RequestParam int workspaceId) {
         return workspaceMemberService.getWorkspaceMembersByUserId(workspaceId);
     }
 }

@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockedStatic;
 import org.springframework.boot.test.context.SpringBootTest;
-import vn.ypp4.quanphan.customDI.scanner.MyClassPathScanner;
+import vn.ypp4.quanphan.customMVC.customDI.scanner.MyClassPathScanner;
 import vn.ypp4.quanphan.api.util.constant.StereoTypeAnnotation;
 import java.util.Arrays;
 import java.util.Set;

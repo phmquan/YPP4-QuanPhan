@@ -1,7 +1,7 @@
 package vn.ypp4.quanphan.api.util.constant;
 
 import lombok.Getter;
-import vn.ypp4.quanphan.customDI.annotation.*;
+import vn.ypp4.quanphan.customMVC.customDI.annotation.MyAutowired;
 
 import java.lang.annotation.Annotation;
 import java.util.List;

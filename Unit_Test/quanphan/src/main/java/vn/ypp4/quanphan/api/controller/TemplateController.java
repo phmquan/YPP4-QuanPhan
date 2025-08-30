@@ -1,10 +1,8 @@
 package vn.ypp4.quanphan.api.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import vn.ypp4.quanphan.api.dto.template.TemplateCategoryResponseDTO;
 
 import vn.ypp4.quanphan.api.dto.template.TemplateResponseDTO;
@@ -19,15 +17,18 @@ public class TemplateController {
     private final TemplateService templateService;
 
     @GetMapping("/categories")
-    public List<TemplateCategoryResponseDTO> getTemplateCategories(@RequestParam int numCategoryRequest){
+    public ResponseEntity<List<TemplateCategoryResponseDTO>> getTemplateCategories(
+            @RequestParam int numCategoryRequest) {
         return templateService.getTemplateCategories(numCategoryRequest);
     }
 
-    public List<TemplateResponseDTO> getTemplate(int numTemplateRequest) {
+    @GetMapping
+    public ResponseEntity<List<TemplateResponseDTO>> getTemplate(@RequestParam int numTemplateRequest) {
         return templateService.getTemplate(numTemplateRequest);
     }
 
-    public TemplateResponseDTO getTemplateDetail(int templateId) {
+    @GetMapping("/detail")
+    public ResponseEntity<TemplateResponseDTO> getTemplateDetail(@RequestParam int templateId) {
         return templateService.getTemplateDetail(templateId);
     }
 }

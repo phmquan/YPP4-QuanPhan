@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import vn.ypp4.quanphan.customDI.annotation.MyAutowired;
+import vn.ypp4.quanphan.customMVC.customDI.annotation.MyAutowired;
 import vn.ypp4.quanphan.api.dto.board.BoardResponseDTO;
 
 import java.util.List;
