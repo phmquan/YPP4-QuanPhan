@@ -1,4 +1,5 @@
 package vn.ypp4.quanphan.mvc.handlerAdapter;
+
 import jakarta.servlet.http.HttpServletRequest;
 import vn.ypp4.quanphan.mvc.view.ModelAndView;
 import vn.ypp4.quanphan.mvc.handlerAdapter.resolver.ArgumentResolver;
@@ -14,13 +15,12 @@ public class MyHandlerAdapter {
     private final List<ArgumentResolver> resolvers = List.of(
             new RequestParamResolver(),
             new PathVariableResolver(),
-            new ServletRequestResolver()
-    );
+            new ServletRequestResolver());
 
     public ModelAndView handle(Object controller,
-                               Method method,
-                               HttpServletRequest request,
-                               Map<String, String> pathVars) throws Exception {
+            Method method,
+            HttpServletRequest request,
+            Map<String, String> pathVars) throws Exception {
         Object[] args = Arrays.stream(method.getParameters())
                 .map(param -> resolvers.stream()
                         .filter(r -> r.supports(param))
@@ -29,7 +29,7 @@ public class MyHandlerAdapter {
                         .orElse(null))
                 .toArray();
 
-        Object returnValue= method.invoke(controller, args);
+        Object returnValue = method.invoke(controller, args);
 
         if (returnValue instanceof ModelAndView) {
             return (ModelAndView) returnValue;

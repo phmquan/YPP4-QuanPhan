@@ -1,4 +1,5 @@
 package vn.ypp4.quanphan.mvc.handlerAdapter.resolver;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import vn.ypp4.quanphan.mvc.customDI.annotation.MyPathVariable;
@@ -11,7 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestPathVariableResolver {
     static class TestController {
-        public void test(@MyPathVariable("id") int id) {}
+        public void test(@MyPathVariable("id") int id) {
+        }
     }
 
     @Test

@@ -1,4 +1,5 @@
 package vn.ypp4.quanphan.mvc.view;
+
 import lombok.Getter;
 import lombok.Setter;
 import java.util.HashMap;
@@ -18,4 +19,3 @@ public class ModelAndView {
         model.put(key, value);
     }
 }
-

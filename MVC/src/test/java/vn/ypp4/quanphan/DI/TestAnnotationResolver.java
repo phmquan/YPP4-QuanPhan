@@ -11,10 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 public class TestAnnotationResolver {
     @Test
-    void getBeanDefinitionName(){
-        MyAnnotationResolver reader =new MyAnnotationResolver();
+    void getBeanDefinitionName() {
+        MyAnnotationResolver reader = new MyAnnotationResolver();
 
-        MyBeanDefinition result=reader.createBeanDefinition(OrderController.class);
+        MyBeanDefinition result = reader.createBeanDefinition(OrderController.class);
 
         assertEquals("orderController", result.beanName());
 

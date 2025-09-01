@@ -1,4 +1,5 @@
 package vn.ypp4.quanphan.mvc.customDI.core;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -8,22 +9,21 @@ public class MyBeanFactory {
     private final MyDependencyInjector injector = new MyDependencyInjector(this);
 
     public void registerBeanDefinition(MyBeanDefinition def) {
-        beanDefinitions.put(def.beanName(),def);
+        beanDefinitions.put(def.beanName(), def);
     }
 
     public <T> T getBean(Class<T> type) {
         if (type.isInterface()) {
-            // Tìm implementation từ beanDefinitions
+
             return (T) beanDefinitions.values().stream()
-                    .filter(candidate ->
-                            type.isAssignableFrom(candidate.beanClass()) &&
+                    .filter(candidate -> type.isAssignableFrom(candidate.beanClass()) &&
                             !candidate.beanClass().isInterface())
                     .findFirst()
                     .map(this::createOrGetBean)
                     .orElseThrow(() -> new RuntimeException(
                             "No implementation found for interface: " + type.getName()));
         }
-        return getBean(type,null);
+        return getBean(type, null);
     }
 
     public <T> T getBean(Class<T> type, String qualifier) {
@@ -38,18 +38,16 @@ public class MyBeanFactory {
                 .map(this::createOrGetBean)
                 .orElseThrow(() -> new RuntimeException(
                         "Bean not found for type: " + type.getSimpleName() +
-                                (qualifier != null ? " with qualifier: " + qualifier : "")
-                ));
+                                (qualifier != null ? " with qualifier: " + qualifier : "")));
 
     }
 
     public <T> T createOrGetBean(MyBeanDefinition def) {
         String beanName = def.beanName();
-        if("singleton".equals(def.scope())){
+        if ("singleton".equals(def.scope())) {
 
-            return (T) singletonBeans.computeIfAbsent(beanName,n-> createBean(def));
-        }
-        else{
+            return (T) singletonBeans.computeIfAbsent(beanName, n -> createBean(def));
+        } else {
             return (T) createBean(def);
         }
     }
@@ -59,16 +57,15 @@ public class MyBeanFactory {
      *
      */
     public Object createBean(MyBeanDefinition def) {
-        try{
-            if(def.beanClass().isInterface()){
+        try {
+            if (def.beanClass().isInterface()) {
                 return getBean(def.beanClass());
             }
-            Object instance= def.beanClass().getDeclaredConstructor().newInstance();
+            Object instance = def.beanClass().getDeclaredConstructor().newInstance();
             injector.injectDependencies(instance);
             return instance;
-        }
-        catch (Exception e){
-            throw new RuntimeException("Failed to create bean "+def.beanName(),e);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create bean " + def.beanName(), e);
         }
     }
 

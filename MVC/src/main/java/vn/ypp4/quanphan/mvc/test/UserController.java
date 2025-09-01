@@ -12,19 +12,19 @@ import vn.ypp4.quanphan.mvc.constant.HttpMethod;
 @MyRequestMapping("/user")
 public class UserController {
     @MyRequestMapping
-    public String defaultReturn(){
+    public String defaultReturn() {
         return "default user";
     }
+
     @MyRequestMapping("/hello")
     public String hello() {
         return "Hello from UserController";
     }
 
-    @MyRequestMapping(value= "/detail", method= HttpMethod.POST)
+    @MyRequestMapping(value = "/detail", method = HttpMethod.POST)
     public String detail(@MyRequestParam("id") int id) {
         return "User detail for id=" + id;
     }
-
 
     @MyRequestMapping("/request")
     public String requestInfo(HttpServletRequest request) {

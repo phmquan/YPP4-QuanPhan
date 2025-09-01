@@ -15,7 +15,7 @@ public class OrderController {
     private OrderService orderService;
     private String message;
 
-    public String checkout(String message){
+    public String checkout(String message) {
         return orderService.checkout(message);
     }
 }

@@ -15,6 +15,5 @@ public class StereoTypeAnnotation {
             MyController.class,
             MyService.class,
             MyRepository.class,
-            MyComponent.class
-    );
+            MyComponent.class);
 }

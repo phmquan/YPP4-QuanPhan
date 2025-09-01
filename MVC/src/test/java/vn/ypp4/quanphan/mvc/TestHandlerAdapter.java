@@ -1,4 +1,5 @@
 package vn.ypp4.quanphan.mvc;
+
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -14,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class TestHandlerAdapter {
     public static class TestController {
         public String test(@MyPathVariable("id") int id,
-                           @MyRequestParam("active") boolean active,
-                           HttpServletRequest req) {
+                @MyRequestParam("active") boolean active,
+                HttpServletRequest req) {
             return "id=" + id + ", active=" + active + ", ua=" + req.getHeader("User-Agent");
         }
     }

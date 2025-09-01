@@ -3,7 +3,6 @@ package vn.ypp4.quanphan.mvc.customDI.container;
 import vn.ypp4.quanphan.mvc.customDI.core.MyBeanFactory;
 import vn.ypp4.quanphan.mvc.customDI.metadata.MyAnnotationResolver;
 import vn.ypp4.quanphan.mvc.customDI.scanner.MyClassPathScanner;
-
 import java.util.Set;
 
 public class MyApplicationContext {
@@ -20,7 +19,6 @@ public class MyApplicationContext {
                 .forEach(beanFactory::registerBeanDefinition);
         beanFactory.initializeSingletons();
     }
-
 
     public <T> T getBean(Class<T> type) {
         return beanFactory.getBean(type);

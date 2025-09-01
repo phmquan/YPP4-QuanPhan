@@ -1,4 +1,5 @@
 package vn.ypp4.quanphan.mvc;
+
 import org.junit.jupiter.api.Test;
 import vn.ypp4.quanphan.mvc.customDI.container.MyApplicationContext;
 import vn.ypp4.quanphan.mvc.MyHandlerMapping;
@@ -8,10 +9,11 @@ import vn.ypp4.quanphan.mvc.test.UserController;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMyHandlerMapping {
-    private final MyApplicationContext myApplicationContext=new MyApplicationContext("vn.ypp4.quanphan");
+    private final MyApplicationContext myApplicationContext = new MyApplicationContext("vn.ypp4.quanphan");
+
     @Test
     void testFindHandlerByUrlAndMethod() throws Exception {
-        MyHandlerMapping mapping = new MyHandlerMapping("vn.ypp4.quanphan",myApplicationContext);
+        MyHandlerMapping mapping = new MyHandlerMapping("vn.ypp4.quanphan", myApplicationContext);
 
         MyHandlerMethod handler = mapping.getHandler("/user/detail", "POST");
 
@@ -22,7 +24,7 @@ public class TestMyHandlerMapping {
 
     @Test
     void testHandlerForDefaultReturn() throws Exception {
-        MyHandlerMapping mapping = new MyHandlerMapping("vn.ypp4.quanphan",myApplicationContext);
+        MyHandlerMapping mapping = new MyHandlerMapping("vn.ypp4.quanphan", myApplicationContext);
 
         MyHandlerMethod handler = mapping.getHandler("/user", "GET");
 
@@ -32,7 +34,7 @@ public class TestMyHandlerMapping {
 
     @Test
     void testHandlerForHello() throws Exception {
-        MyHandlerMapping mapping = new MyHandlerMapping("vn.ypp4.quanphan",myApplicationContext);
+        MyHandlerMapping mapping = new MyHandlerMapping("vn.ypp4.quanphan", myApplicationContext);
 
         MyHandlerMethod handler = mapping.getHandler("/user/hello", "GET");
 

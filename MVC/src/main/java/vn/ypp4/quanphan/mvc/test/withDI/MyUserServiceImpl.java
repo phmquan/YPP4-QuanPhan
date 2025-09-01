@@ -8,6 +8,6 @@ import vn.ypp4.quanphan.mvc.customDI.annotation.MyService;
 public class MyUserServiceImpl implements MyUserService {
     @Override
     public String getUserById(int id) {
-        return "Get user with id: "+id;
+        return "Get user with id: " + id;
     }
 }

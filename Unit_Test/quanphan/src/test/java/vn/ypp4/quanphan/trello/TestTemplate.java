@@ -36,10 +36,7 @@ public class TestTemplate {
     @BeforeEach
     void setUp() {
         sampleCategory = new TemplateCategoryResponseDTO();
-        // Set sample data - adjust according to your DTO structure
-
         sampleCategories = Arrays.asList(sampleCategory, sampleCategory, sampleCategory);
-
         sampleTemplate = new TemplateResponseDTO();
         sampleTemplates = Arrays.asList(sampleTemplate, sampleTemplate, sampleTemplate);
     }
@@ -50,15 +47,13 @@ public class TestTemplate {
         int numCategoryRequest = 3;
         ResponseEntity<List<TemplateCategoryResponseDTO>> expectedResponse = ResponseEntity.ok(sampleCategories);
         when(templateService.getTemplateCategories(numCategoryRequest)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<List<TemplateCategoryResponseDTO>> result = templateController
                 .getTemplateCategories(numCategoryRequest);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
-        assertEquals(3, result.getBody().size());
+        assertEquals(numCategoryRequest, result.getBody().size());
         verify(templateService, times(1)).getTemplateCategories(numCategoryRequest);
     }
 
@@ -75,7 +70,7 @@ public class TestTemplate {
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
-        assertEquals(3, result.getBody().size());
+        assertEquals(numTemplateRequest, result.getBody().size());
         verify(templateService, times(1)).getTemplate(numTemplateRequest);
     }
 
@@ -117,11 +112,9 @@ public class TestTemplate {
         ResponseEntity<List<TemplateCategoryResponseDTO>> expectedResponse = ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         when(templateService.getTemplateCategories(numCategoryRequest)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<List<TemplateCategoryResponseDTO>> result = templateController
                 .getTemplateCategories(numCategoryRequest);
-
         // Assert
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
         verify(templateService, times(1)).getTemplateCategories(numCategoryRequest);
@@ -131,15 +124,15 @@ public class TestTemplate {
     void getTemplate_EmptyList() {
         // Arrange
         int numTemplateRequest = 0;
-        List<TemplateResponseDTO> emptyList = Arrays.asList();
+        List<TemplateResponseDTO> emptyList = List.of();
         ResponseEntity<List<TemplateResponseDTO>> expectedResponse = ResponseEntity.ok(emptyList);
         when(templateService.getTemplate(numTemplateRequest)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<List<TemplateResponseDTO>> result = templateController.getTemplate(numTemplateRequest);
 
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertNotNull(result.getBody());
         assertEquals(0, result.getBody().size());
         verify(templateService, times(1)).getTemplate(numTemplateRequest);
     }

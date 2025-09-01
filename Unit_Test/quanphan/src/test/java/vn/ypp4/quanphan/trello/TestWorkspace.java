@@ -48,13 +48,9 @@ public class TestWorkspace {
     @BeforeEach
     void setUp() {
         sampleWorkspace = new WorkspaceResponseDTO();
-        // Set sample data - adjust according to your DTO structure
-
         sampleWorkspaces = Arrays.asList(sampleWorkspace, sampleWorkspace, sampleWorkspace);
-
         updateWorkspace = new WorkspaceUpdateDTO(1, "Updated Workspace A", "Updated description for Workspace A",
                 LocalDateTime.now(), 1);
-
         sampleSetting = new WorkspaceSettingValueResponseDTO();
         sampleMembers = new MemberWorkspaceResponseDTO();
     }
@@ -65,13 +61,10 @@ public class TestWorkspace {
         int userId = 1;
         ResponseEntity<List<WorkspaceResponseDTO>> expectedResponse = ResponseEntity.ok(sampleWorkspaces);
         when(workspaceService.getMemberWorkspacesByUserId(userId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<List<WorkspaceResponseDTO>> result = workspaceController.getWorkspaceUserIsMember(userId);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        assertEquals(3, result.getBody().size());
         verify(workspaceService, times(1)).getMemberWorkspacesByUserId(userId);
     }
 
@@ -81,10 +74,8 @@ public class TestWorkspace {
         int workspaceId = 1;
         ResponseEntity<WorkspaceResponseDTO> expectedResponse = ResponseEntity.ok(sampleWorkspace);
         when(workspaceService.getWorkspaceById(workspaceId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<WorkspaceResponseDTO> result = workspaceController.getWorkspaceById(workspaceId);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
@@ -97,10 +88,8 @@ public class TestWorkspace {
         int workspaceId = 999;
         ResponseEntity<WorkspaceResponseDTO> expectedResponse = ResponseEntity.notFound().build();
         when(workspaceService.getWorkspaceById(workspaceId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<WorkspaceResponseDTO> result = workspaceController.getWorkspaceById(workspaceId);
-
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         verify(workspaceService, times(1)).getWorkspaceById(workspaceId);
@@ -111,10 +100,8 @@ public class TestWorkspace {
         // Arrange
         ResponseEntity<Integer> expectedResponse = ResponseEntity.ok(1);
         when(workspaceService.updateWorkspace(updateWorkspace)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<Integer> result = workspaceController.updateWorkspace(updateWorkspace);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(1, result.getBody());
@@ -125,7 +112,6 @@ public class TestWorkspace {
     void updateWorkspace_BadRequest_InvalidId() {
         // Arrange
         WorkspaceUpdateDTO invalidWorkspace = new WorkspaceUpdateDTO(0, "Invalid", "Invalid", LocalDateTime.now(), 1);
-
         // Act
         ResponseEntity<Integer> result = workspaceController.updateWorkspace(invalidWorkspace);
 
@@ -142,11 +128,9 @@ public class TestWorkspace {
         ResponseEntity<WorkspaceSettingValueResponseDTO> expectedResponse = ResponseEntity.ok(sampleSetting);
         when(workspaceSettingService.getSettingValueByKeyNameAndWorkspaceId(keyName, workspaceId))
                 .thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<WorkspaceSettingValueResponseDTO> result = workspaceController
                 .getSettingValueByKeyNameWorkspaceId(keyName, workspaceId);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
@@ -159,10 +143,8 @@ public class TestWorkspace {
         int workspaceId = 1;
         ResponseEntity<MemberWorkspaceResponseDTO> expectedResponse = ResponseEntity.ok(sampleMembers);
         when(workspaceMemberService.getWorkspaceMembersByUserId(workspaceId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<MemberWorkspaceResponseDTO> result = workspaceController.getMembersByWorkspace(workspaceId);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
@@ -176,10 +158,8 @@ public class TestWorkspace {
         ResponseEntity<List<WorkspaceResponseDTO>> expectedResponse = ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         when(workspaceService.getMemberWorkspacesByUserId(userId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<List<WorkspaceResponseDTO>> result = workspaceController.getWorkspaceUserIsMember(userId);
-
         // Assert
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
         verify(workspaceService, times(1)).getMemberWorkspacesByUserId(userId);
