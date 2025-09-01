@@ -1,6 +1,7 @@
 package vn.ypp4.quanphan.api.service.workspace;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import vn.ypp4.quanphan.api.util.exception.WorkspaceNotFoundException;
 @RequiredArgsConstructor
 public class WorkspaceSettingServiceImpl implements WorkspaceSettingService {
     private final WorkspaceRepository workspaceRepository;
+    @Qualifier("workspaceSettingRepositoryImpl")
     private final WorkspaceSettingRepository settingRepository;
 
     @Override
@@ -23,11 +25,8 @@ public class WorkspaceSettingServiceImpl implements WorkspaceSettingService {
             if (!keyName.isEmpty() && workspaceRepository.existsById(workspaceId)) {
                 WorkspaceSettingValueResponseDTO setting = settingRepository.findByKeyNameAndOwnerId(keyName,
                         workspaceId);
-                if (setting != null) {
-                    return ResponseEntity.ok(setting);
-                } else {
-                    return ResponseEntity.notFound().build();
-                }
+                return setting!=null?ResponseEntity.ok(setting):
+                        ResponseEntity.notFound().build();
             } else {
                 throw new WorkspaceNotFoundException("Workspace or Key Name not found");
             }

@@ -15,7 +15,7 @@ public class MyUserController {
     @Autowired
     private MyUserService myUserService;
 
-    @MyRequestMapping(value="")
+    @MyRequestMapping(value = "")
     public String showUser(@MyRequestParam("id") int id) {
         return myUserService.getUserById(id);
     }

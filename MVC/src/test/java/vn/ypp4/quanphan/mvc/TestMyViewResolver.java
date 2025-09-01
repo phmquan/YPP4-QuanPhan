@@ -32,10 +32,8 @@ public class TestMyViewResolver {
         mv.addObject("username", "Quan");
         when(request.getRequestDispatcher("/templates/index.jsp"))
                 .thenReturn(dispatcher);
-
         // when
         viewResolver.render(mv, request, response);
-
         // then
         verify(request).setAttribute("username", "Quan");
         verify(dispatcher).forward(request, response);
@@ -52,8 +50,7 @@ public class TestMyViewResolver {
         // then
         verify(response).sendError(
                 eq(HttpServletResponse.SC_INTERNAL_SERVER_ERROR),
-                anyString()
-        );
+                anyString());
         verifyNoMoreInteractions(dispatcher);
     }
 }

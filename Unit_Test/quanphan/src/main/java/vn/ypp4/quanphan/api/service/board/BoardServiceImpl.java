@@ -40,11 +40,8 @@ public class BoardServiceImpl implements BoardService {
     public ResponseEntity<BoardResponseDTO> getBoardById(int boardId) {
         try {
             BoardResponseDTO board = userBoardRepository.findById(boardId);
-            if (board != null) {
-                return ResponseEntity.ok(board);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            return board != null?ResponseEntity.ok(board):
+                    ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -76,7 +73,8 @@ public class BoardServiceImpl implements BoardService {
         try {
             List<BoardResponseDTO> boards = userBoardRepository.findMemberBoardsByUserIdAndWorkspaceId(userId,
                     workspaceId);
-            return ResponseEntity.ok(boards);
+            return boards!=null? ResponseEntity.ok(boards):
+                    ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

@@ -31,8 +31,6 @@ public class TestUser {
     @BeforeEach
     void setUp() {
         sampleUser = new UserResponseDTO();
-        // Set sample data for user - adjust according to your DTO structure
-
         updateUser = new UserUpdateDTO(1, "", "");
     }
 
@@ -42,10 +40,8 @@ public class TestUser {
         int userId = 1;
         ResponseEntity<UserResponseDTO> expectedResponse = ResponseEntity.ok(sampleUser);
         when(userService.getUserByUserId(userId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<UserResponseDTO> result = userController.getUserByUserId(userId);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
@@ -58,10 +54,8 @@ public class TestUser {
         int userId = 999;
         ResponseEntity<UserResponseDTO> expectedResponse = ResponseEntity.notFound().build();
         when(userService.getUserByUserId(userId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<UserResponseDTO> result = userController.getUserByUserId(userId);
-
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         verify(userService, times(1)).getUserByUserId(userId);
@@ -72,10 +66,8 @@ public class TestUser {
         // Arrange
         ResponseEntity<Integer> expectedResponse = ResponseEntity.ok(1);
         when(userService.updateUserProfile(updateUser)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<Integer> result = userController.updateUserProfile(updateUser);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(1, result.getBody());
@@ -88,10 +80,8 @@ public class TestUser {
         UserUpdateDTO invalidUser = new UserUpdateDTO(0, "", ""); // Invalid ID
         ResponseEntity<Integer> expectedResponse = ResponseEntity.badRequest().build();
         when(userService.updateUserProfile(invalidUser)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<Integer> result = userController.updateUserProfile(invalidUser);
-
         // Assert
         assertEquals(HttpStatus.BAD_REQUEST, result.getStatusCode());
         verify(userService, times(1)).updateUserProfile(invalidUser);
@@ -104,10 +94,8 @@ public class TestUser {
         ResponseEntity<UserResponseDTO> expectedResponse = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .build();
         when(userService.getUserByUserId(userId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<UserResponseDTO> result = userController.getUserByUserId(userId);
-
         // Assert
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
         verify(userService, times(1)).getUserByUserId(userId);

@@ -1,11 +1,12 @@
 package vn.ypp4.quanphan.mvc.handlerAdapter.resolver;
+
 import jakarta.servlet.http.HttpServletRequest;
 import vn.ypp4.quanphan.mvc.customDI.annotation.MyRequestParam;
 import java.lang.reflect.Parameter;
 import java.util.Map;
 import static org.apache.tomcat.util.IntrospectionUtils.convert;
 
-public class RequestParamResolver implements ArgumentResolver{
+public class RequestParamResolver implements ArgumentResolver {
     @Override
     public boolean supports(Parameter parameter) {
         return parameter.isAnnotationPresent(MyRequestParam.class);

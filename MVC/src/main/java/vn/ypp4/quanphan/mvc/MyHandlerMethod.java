@@ -1,4 +1,5 @@
 package vn.ypp4.quanphan.mvc;
+
 import lombok.Getter;
 import java.lang.reflect.Method;
 
@@ -12,4 +13,3 @@ public class MyHandlerMethod {
         this.method = method;
     }
 }
-

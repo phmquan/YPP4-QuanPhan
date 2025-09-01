@@ -11,49 +11,38 @@ import vn.ypp4.quanphan.mvc.customDI.test.OrderController;
 import vn.ypp4.quanphan.mvc.customDI.test.OrderServiceImpl;
 // import vn.ypp4.quanphan.api.repository.board.UserBoardRepository;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 @SpringBootTest
 public class TestBeanFactory {
     MyAnnotationResolver myAnnotationResolver = new MyAnnotationResolver();
     MyBeanFactory myBeanFactory = new MyBeanFactory();
-    // @Test
-    // void testRegisterBeanDefinition(){
-    //     //Arrange
-    //     MyBeanDefinition bean=new MyBeanDefinition(UserBoardRepository.class,"userBoardRepository","singleton");
-    //     //Act
-    //     myBeanFactory.registerBeanDefinition(bean);
-    //     //Assert
-    //     assertNotNull(myBeanFactory.getBean(UserBoardRepository.class));
-    // }
+
     @Test
-    void testCreateOrGetBean(){
+    void testCreateOrGetBean() {
         MyBeanDefinition serviceBean = myAnnotationResolver.createBeanDefinition(OrderServiceImpl.class);
-        Object service= myBeanFactory.createOrGetBean(serviceBean);
+        Object service = myBeanFactory.createOrGetBean(serviceBean);
         myBeanFactory.registerBeanDefinition(serviceBean);
-       //Arrange
-        MyBeanDefinition bean=new MyBeanDefinition(OrderController.class,"orderController","singleton");
-        //Act
-        Object result=myBeanFactory.createOrGetBean(bean);
+        // Arrange
+        MyBeanDefinition bean = new MyBeanDefinition(OrderController.class, "orderController", "singleton");
+        // Act
+        Object result = myBeanFactory.createOrGetBean(bean);
 
         Assertions.assertNotNull(result);
     }
+
     @Test
-    void testInitializeSingleton(){
+    void testInitializeSingleton() {
         // Register dependency
         myBeanFactory.registerBeanDefinition(
-                new MyBeanDefinition(OrderServiceImpl.class, "orderServiceImpl","OrderService",null, "singleton")
-        );
+                new MyBeanDefinition(OrderServiceImpl.class, "orderServiceImpl", "OrderService", null, "singleton"));
 
         // Register controller
         myBeanFactory.registerBeanDefinition(
-                new MyBeanDefinition(OrderController.class,"orderController","singleton")
-        );
+                new MyBeanDefinition(OrderController.class, "orderController", "singleton"));
 
         myBeanFactory.initializeSingletons();
 
         OrderController result = myBeanFactory.getBean(OrderController.class);
         Assertions.assertNotNull(result);
-//        Assertions.assertNotNull(result.getOrderService());
+        // Assertions.assertNotNull(result.getOrderService());
     }
 }

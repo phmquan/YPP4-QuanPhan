@@ -8,13 +8,6 @@ import java.io.IOException;
 @SpringBootApplication
 @EnableCaching
 public class QuanphanApplication {
-
 	public static void main(String[] args) throws IOException {
-
-
-
-
-
 	}
-
 }

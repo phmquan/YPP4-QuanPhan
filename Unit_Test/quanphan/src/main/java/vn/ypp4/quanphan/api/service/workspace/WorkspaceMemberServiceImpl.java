@@ -19,11 +19,8 @@ public class WorkspaceMemberServiceImpl implements WorkspaceMemberService {
         try {
             if (workspaceRepository.existsById(workspaceId)) {
                 MemberWorkspaceResponseDTO members = memberWorkspaceRepository.getWorkspaceMembersByUserId(workspaceId);
-                if (members != null) {
-                    return ResponseEntity.ok(members);
-                } else {
-                    return ResponseEntity.notFound().build();
-                }
+                return members!=null? ResponseEntity.ok(members) :
+                        ResponseEntity.notFound().build();
             } else {
                 return ResponseEntity.notFound().build();
             }

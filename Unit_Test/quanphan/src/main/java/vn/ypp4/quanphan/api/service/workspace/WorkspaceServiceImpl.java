@@ -31,11 +31,8 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     public ResponseEntity<WorkspaceResponseDTO> getWorkspaceById(int workspaceId) {
         try {
             WorkspaceResponseDTO workspace = workspaceRepository.findById(workspaceId);
-            if (workspace != null) {
-                return ResponseEntity.ok(workspace);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            return workspace!=null?ResponseEntity.ok(workspace):
+                    ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

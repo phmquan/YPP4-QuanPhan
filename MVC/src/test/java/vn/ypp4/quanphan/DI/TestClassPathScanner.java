@@ -1,4 +1,5 @@
 package vn.ypp4.quanphan.DI;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockedStatic;
@@ -13,7 +14,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class TestClassPathScanner {
     @InjectMocks
-    private MyClassPathScanner stereoTypeScanner=new MyClassPathScanner();
+    private MyClassPathScanner stereoTypeScanner = new MyClassPathScanner();
 
     @Test
     void testScanStereoType_WithEmptyStereotypeList() {

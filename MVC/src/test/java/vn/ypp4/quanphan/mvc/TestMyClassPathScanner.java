@@ -1,4 +1,5 @@
 package vn.ypp4.quanphan.mvc;
+
 import org.junit.jupiter.api.Test;
 import vn.ypp4.quanphan.mvc.customDI.annotation.MyController;
 import vn.ypp4.quanphan.mvc.customDI.scanner.MyClassPathScanner;
@@ -19,7 +20,6 @@ public class TestMyClassPathScanner {
         // Assert
         assertTrue(
                 controllers.stream().allMatch(c -> c.isAnnotationPresent(MyController.class)),
-                "All found classes must have @MyController"
-        );
+                "All found classes must have @MyController");
     }
 }

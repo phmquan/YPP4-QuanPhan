@@ -33,9 +33,7 @@ class TestBoard {
     @BeforeEach
     void setUp() {
         sampleBoard = new BoardResponseDTO();
-        // Set sample data for board - adjust according to your DTO structure
-
-        sampleBoards = Arrays.asList(sampleBoard);
+        sampleBoards = List.of(sampleBoard);
     }
 
     @Test
@@ -44,10 +42,8 @@ class TestBoard {
         int userId = 1;
         ResponseEntity<List<BoardResponseDTO>> expectedResponse = ResponseEntity.ok(sampleBoards);
         when(boardService.getStarredBoardsByUserId(userId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<List<BoardResponseDTO>> result = boardController.getStarredBoards(userId);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(1, result.getBody().size());
@@ -61,10 +57,8 @@ class TestBoard {
         int numBoardRequest = 1;
         ResponseEntity<List<BoardResponseDTO>> expectedResponse = ResponseEntity.ok(sampleBoards);
         when(boardService.getViewedBoardsByUserId(userId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<List<BoardResponseDTO>> result = boardController.getHistoryViewedBoards(userId, numBoardRequest);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(1, result.getBody().size());
@@ -77,10 +71,8 @@ class TestBoard {
         int boardId = 1;
         ResponseEntity<BoardResponseDTO> expectedResponse = ResponseEntity.ok(sampleBoard);
         when(boardService.getBoardById(boardId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<BoardResponseDTO> result = boardController.getBoardById(boardId);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertNotNull(result.getBody());
@@ -93,10 +85,8 @@ class TestBoard {
         int boardId = 999;
         ResponseEntity<BoardResponseDTO> expectedResponse = ResponseEntity.notFound().build();
         when(boardService.getBoardById(boardId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<BoardResponseDTO> result = boardController.getBoardById(boardId);
-
         // Assert
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
         verify(boardService, times(1)).getBoardById(boardId);
@@ -109,10 +99,8 @@ class TestBoard {
         List<BoardResponseDTO> multipleBoards = Arrays.asList(sampleBoard, sampleBoard, sampleBoard);
         ResponseEntity<List<BoardResponseDTO>> expectedResponse = ResponseEntity.ok(multipleBoards);
         when(boardService.getMemberBoardsByUserId(userId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<List<BoardResponseDTO>> result = boardController.getMemberBoardsByUserId(userId);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(3, result.getBody().size());
@@ -126,11 +114,9 @@ class TestBoard {
         int workspaceId = 1;
         ResponseEntity<List<BoardResponseDTO>> expectedResponse = ResponseEntity.ok(sampleBoards);
         when(boardService.getStarredBoardsByUserIdAndWorkspaceId(userId, workspaceId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<List<BoardResponseDTO>> result = boardController.getStarredBoardsByUserAndWorkspace(userId,
                 workspaceId);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(1, result.getBody().size());
@@ -144,11 +130,9 @@ class TestBoard {
         int workspaceId = 1;
         ResponseEntity<List<BoardResponseDTO>> expectedResponse = ResponseEntity.ok(sampleBoards);
         when(boardService.getMemberBoardsByUserIdAndWorkspaceId(userId, workspaceId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<List<BoardResponseDTO>> result = boardController.getMemberBoardsByUserIdAndWorkspaceId(userId,
                 workspaceId);
-
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(1, result.getBody().size());
@@ -162,10 +146,8 @@ class TestBoard {
         ResponseEntity<List<BoardResponseDTO>> expectedResponse = ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         when(boardService.getStarredBoardsByUserId(userId)).thenReturn(expectedResponse);
-
         // Act
         ResponseEntity<List<BoardResponseDTO>> result = boardController.getStarredBoards(userId);
-
         // Assert
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
         verify(boardService, times(1)).getStarredBoardsByUserId(userId);
