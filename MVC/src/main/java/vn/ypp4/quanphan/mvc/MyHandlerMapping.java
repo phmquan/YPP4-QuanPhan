@@ -13,13 +13,6 @@ public class MyHandlerMapping {
     private final MyClassPathScanner scanner = new MyClassPathScanner();
     private MyApplicationContext myApplicationContext;
 
-    /***
-     * Scan through class and get all class with @MyController annotation and which
-     * each method in class, iterate through all method with @MyRequestParam
-     * and save to a Hashmap
-     * 
-     * @param basePackage
-     */
     public MyHandlerMapping(String basePackage, MyApplicationContext myApplicationContext) {
         scanControllers(basePackage, myApplicationContext);
     }
@@ -38,8 +31,6 @@ public class MyHandlerMapping {
             for (Method method : controllerClass.getDeclaredMethods()) {
                 if (method.isAnnotationPresent(MyRequestMapping.class)) {
                     MyRequestMapping mapping = method.getAnnotation(MyRequestMapping.class);
-
-                    // Fix path construction to handle empty values properly
                     String methodPath = mapping.value();
                     String fullPath;
 
@@ -55,9 +46,6 @@ public class MyHandlerMapping {
 
                     String key = mapping.method().toString() + ":" + fullPath;
                     handlerMap.put(key, new MyHandlerMethod(controllerInstance, method));
-
-                    // Debug output to see what mappings are being created
-                    System.out.println("Mapped: " + key + " -> " + controllerClass.getSimpleName() + "." + method.getName());
                 }
             }
         }
